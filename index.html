@@ -47,7 +47,7 @@
         .title { font-size: 1.2rem; font-weight: bold; margin-bottom: 10px; color: #212529; }
         .summary { color: #495057; line-height: 1.6; margin-bottom: 10px; }
         .meta { font-size: 0.85rem; color: #6c757d; }
-        .loading { text-align: center; padding: 50px; color: #6c757d; }
+        .loading { text-align: center; padding: 50px; color: #6c757d; font-size: 1.1rem; }
     </style>
 </head>
 <body>
@@ -74,47 +74,42 @@
     </div>
 
     <script>
-        const TOKEN = '8357465779:AAFURdsO5PYWapA93531cMF0mRl_AAmyf_k';
         let allNews = [];
         let speech = window.speechSynthesis;
 
         async function loadNews() {
             const lang = document.getElementById('lang').value;
             const feed = document.getElementById('feed');
-            feed.innerHTML = '<div class="loading">Loading...</div>';
+            feed.innerHTML = '<div class="loading">⏳ Loading...</div>';
             
             try {
-                const res = await fetch(`https://api.telegram.org/bot${TOKEN}/getUpdates?limit=100`);
+                // Read from news.json (saved by bot)
+                const res = await fetch(`news.json?t=${Date.now()}`);
                 const data = await res.json();
                 
                 allNews = [];
                 
-                data.result.forEach(u => {
-                    if (u.channel_post?.text) {
-                        try {
-                            const json = JSON.parse(u.channel_post.text);
-                            if (json.lang === lang && json.news) {
-                                json.news.forEach(n => allNews.push(n));
-                            }
-                        } catch(e) {}
+                data.forEach(item => {
+                    if (item.lang === lang && item.news) {
+                        item.news.forEach(n => allNews.push(n));
                     }
                 });
                 
                 if (allNews.length === 0) {
-                    feed.innerHTML = '<div class="loading">No news found. Run bot first!</div>';
+                    feed.innerHTML = '<div class="loading">📭 No news found. Run bot first!</div>';
                     return;
                 }
                 
                 feed.innerHTML = allNews.map((n, i) => `
-                    <div class="news-card" onclick="play(${i})">
+                    <div class="news-card" id="card-${i}" onclick="play(${i})">
                         <div class="title">${n.title}</div>
                         <div class="summary">${n.summary}</div>
-                        <div class="meta">📰 ${n.source}</div>
+                        <div class="meta">📰 ${n.source} • 🕒 ${new Date(n.time).toLocaleString()}</div>
                     </div>
                 `).join('');
                 
             } catch(e) {
-                feed.innerHTML = `<div class="loading">Error: ${e.message}</div>`;
+                feed.innerHTML = `<div class="loading">❌ Error: ${e.message}<br><br>Make sure news.json exists in same folder!</div>`;
             }
         }
         
@@ -128,17 +123,37 @@
                 c.classList.toggle('playing', i === j);
             });
             
-            u.onend = () => document.querySelectorAll('.news-card')[i].classList.remove('playing');
+            u.onend = () => {
+                document.getElementById(`card-${i}`)?.classList.remove('playing');
+            };
+            
             speech.speak(u);
         }
         
         function playAll() {
+            if (allNews.length === 0) return;
             let i = 0;
+            
             function next() {
                 if (i >= allNews.length) return;
-                play(i);
-                setTimeout(() => { i++; next(); }, 5000);
+                speech.cancel();
+                const n = allNews[i];
+                const u = new SpeechSynthesisUtterance(`${n.title}. ${n.summary}`);
+                u.rate = 0.9;
+                
+                document.querySelectorAll('.news-card').forEach((c, j) => {
+                    c.classList.toggle('playing', i === j);
+                });
+                
+                u.onend = () => {
+                    document.getElementById(`card-${i}`)?.classList.remove('playing');
+                    i++;
+                    next();
+                };
+                
+                speech.speak(u);
             }
+            
             next();
         }
         
