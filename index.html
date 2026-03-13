@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Flash News Flow</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        .header { text-align: center; color: white; padding: 40px 0; }
+        .header h1 { font-size: 3rem; margin-bottom: 10px; }
+        .controls { 
+            background: rgba(255,255,255,0.95); 
+            padding: 20px; 
+            border-radius: 15px; 
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        select, button { 
+            padding: 12px 20px; 
+            border-radius: 8px; 
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        button { background: #667eea; color: white; font-weight: bold; }
+        button:hover { background: #5568d3; }
+        .feed { background: white; border-radius: 15px; padding: 30px; }
+        .news-card { 
+            background: #f8f9fa; 
+            padding: 20px; 
+            margin-bottom: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s;
+        }
+        .news-card:hover { transform: translateX(5px); background: #e9ecef; }
+        .news-card.playing { border-left-color: #28a745; background: #d4edda; }
+        .title { font-size: 1.2rem; font-weight: bold; margin-bottom: 10px; color: #212529; }
+        .summary { color: #495057; line-height: 1.6; margin-bottom: 10px; }
+        .meta { font-size: 0.85rem; color: #6c757d; }
+        .loading { text-align: center; padding: 50px; color: #6c757d; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎙️ Flash News Flow</h1>
+            <p>AI-Powered Audio News</p>
+        </div>
+        
+        <div class="controls">
+            <select id="lang" onchange="loadNews()">
+                <option value="en">🇬🇧 English</option>
+                <option value="hi">🇮🇳 हिंदी</option>
+                <option value="ta">🇮🇳 தமிழ்</option>
+            </select>
+            <button onclick="loadNews()">🔄 Refresh</button>
+            <button onclick="playAll()">▶️ Play All</button>
+            <button onclick="window.speechSynthesis.cancel()">⏹️ Stop</button>
+        </div>
+        
+        <div class="feed" id="feed">
+            <div class="loading">Loading news...</div>
+        </div>
+    </div>
+
+    <script>
+        const TOKEN = '8357465779:AAFURdsO5PYWapA93531cMF0mRl_AAmyf_k';
+        let allNews = [];
+        let speech = window.speechSynthesis;
+
+        async function loadNews() {
+            const lang = document.getElementById('lang').value;
+            const feed = document.getElementById('feed');
+            feed.innerHTML = '<div class="loading">Loading...</div>';
+            
+            try {
+                const res = await fetch(`https://api.telegram.org/bot${TOKEN}/getUpdates?limit=100`);
+                const data = await res.json();
+                
+                allNews = [];
+                
+                data.result.forEach(u => {
+                    if (u.channel_post?.text) {
+                        try {
+                            const json = JSON.parse(u.channel_post.text);
+                            if (json.lang === lang && json.news) {
+                                json.news.forEach(n => allNews.push(n));
+                            }
+                        } catch(e) {}
+                    }
+                });
+                
+                if (allNews.length === 0) {
+                    feed.innerHTML = '<div class="loading">No news found. Run bot first!</div>';
+                    return;
+                }
+                
+                feed.innerHTML = allNews.map((n, i) => `
+                    <div class="news-card" onclick="play(${i})">
+                        <div class="title">${n.title}</div>
+                        <div class="summary">${n.summary}</div>
+                        <div class="meta">📰 ${n.source}</div>
+                    </div>
+                `).join('');
+                
+            } catch(e) {
+                feed.innerHTML = `<div class="loading">Error: ${e.message}</div>`;
+            }
+        }
+        
+        function play(i) {
+            speech.cancel();
+            const n = allNews[i];
+            const u = new SpeechSynthesisUtterance(`${n.title}. ${n.summary}`);
+            u.rate = 0.9;
+            
+            document.querySelectorAll('.news-card').forEach((c, j) => {
+                c.classList.toggle('playing', i === j);
+            });
+            
+            u.onend = () => document.querySelectorAll('.news-card')[i].classList.remove('playing');
+            speech.speak(u);
+        }
+        
+        function playAll() {
+            let i = 0;
+            function next() {
+                if (i >= allNews.length) return;
+                play(i);
+                setTimeout(() => { i++; next(); }, 5000);
+            }
+            next();
+        }
+        
+        loadNews();
+    </script>
+</body>
+</html>
