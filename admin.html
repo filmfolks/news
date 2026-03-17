@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Flow Pro — Admin Panel</title>
+    <style>
+        :root {
+            --primary: #2563eb; --primary-dark: #1e40af; --bg: #f1f5f9;
+            --surface: #ffffff; --text: #0f172a; --text-sub: #64748b;
+            --border: #e2e8f0; --success: #10b981; --warning: #f59e0b;
+            --danger: #ef4444; --groq: #f97316;
+            --shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        [data-theme="dark"] {
+            --bg: #0f172a; --surface: #1e293b; --text: #f1f5f9;
+            --text-sub: #94a3b8; --border: #334155;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+        /* Login Screen */
+        .login-screen {
+            min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px;
+        }
+        .login-box {
+            background: var(--surface); padding: 40px; border-radius: 24px; width: 100%;
+            max-width: 400px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); border: 1px solid var(--border);
+        }
+        .login-logo { font-size: 1.5rem; font-weight: 800; color: var(--primary); margin-bottom: 8px; }
+        .login-sub { color: var(--text-sub); font-size: 0.9rem; margin-bottom: 28px; }
+        .login-box label { display: block; font-size: 0.82rem; font-weight: 700; color: var(--text-sub); margin-bottom: 6px; text-transform: uppercase; }
+        .login-box input { width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: 10px; font-size: 0.95rem; margin-bottom: 18px; background: var(--bg); color: var(--text); outline: none; }
+        .login-box input:focus { border-color: var(--primary); }
+        .btn-primary { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 12px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background 0.2s; }
+        .btn-primary:hover { background: var(--primary-dark); }
+        .login-err { color: var(--danger); font-size: 0.85rem; margin-top: -10px; margin-bottom: 14px; display: none; }
+
+        /* Admin Layout */
+        .admin-layout { display: none; min-height: 100vh; }
+        .admin-layout.active { display: flex; }
+
+        /* Sidebar */
+        .sidebar {
+            width: 240px; background: var(--surface); border-right: 1px solid var(--border);
+            display: flex; flex-direction: column; min-height: 100vh; position: sticky; top: 0; flex-shrink: 0;
+        }
+        .sidebar-logo { padding: 24px 20px 16px; font-size: 1.1rem; font-weight: 800; color: var(--primary); border-bottom: 1px solid var(--border); }
+        .sidebar-logo span { font-size: 0.65rem; background: var(--primary); color: white; padding: 2px 6px; border-radius: 4px; font-weight: 700; margin-left: 6px; }
+        .sidebar-nav { flex: 1; padding: 12px 0; }
+        .nav-item {
+            display: flex; align-items: center; gap: 10px; padding: 12px 20px;
+            font-size: 0.9rem; font-weight: 600; color: var(--text-sub); cursor: pointer;
+            border-radius: 0; transition: all 0.15s; border-left: 3px solid transparent;
+        }
+        .nav-item:hover { background: rgba(37,99,235,0.06); color: var(--primary); }
+        .nav-item.active { background: rgba(37,99,235,0.08); color: var(--primary); border-left-color: var(--primary); }
+        .nav-icon { font-size: 1.1rem; }
+        .sidebar-footer { padding: 16px 20px; border-top: 1px solid var(--border); }
+        .logout-btn { width: 100%; padding: 10px; border: 1px solid var(--border); background: transparent; color: var(--text-sub); border-radius: 10px; font-size: 0.85rem; cursor: pointer; font-weight: 600; transition: all 0.2s; }
+        .logout-btn:hover { background: var(--danger); color: white; border-color: var(--danger); }
+
+        /* Main Content */
+        .main-content { flex: 1; padding: 28px; overflow-y: auto; max-height: 100vh; }
+        .page-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 6px; }
+        .page-sub { color: var(--text-sub); font-size: 0.9rem; margin-bottom: 24px; }
+
+        .panel { background: var(--surface); border-radius: 16px; padding: 24px; border: 1px solid var(--border); margin-bottom: 24px; box-shadow: var(--shadow); }
+        .panel-title { font-size: 1rem; font-weight: 700; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
+
+        /* Form elements */
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; font-size: 0.82rem; font-weight: 700; color: var(--text-sub); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.4px; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 11px 14px; border: 1px solid var(--border); border-radius: 10px; font-size: 0.95rem; background: var(--bg); color: var(--text); outline: none; font-family: inherit; }
+        .form-group textarea { min-height: 100px; resize: vertical; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--primary); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+        .btn { padding: 11px 22px; border: none; border-radius: 10px; font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+        .btn-sm { padding: 7px 14px; font-size: 0.82rem; }
+        .btn-blue { background: var(--primary); color: white; }
+        .btn-blue:hover { background: var(--primary-dark); }
+        .btn-green { background: var(--success); color: white; }
+        .btn-green:hover { background: #059669; }
+        .btn-red { background: var(--danger); color: white; }
+        .btn-red:hover { background: #dc2626; }
+        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-sub); }
+        .btn-outline:hover { background: var(--bg); }
+
+        /* Stats */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 24px; }
+        .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px; box-shadow: var(--shadow); }
+        .stat-value { font-size: 2rem; font-weight: 800; color: var(--primary); }
+        .stat-label { font-size: 0.8rem; color: var(--text-sub); font-weight: 600; margin-top: 4px; }
+
+        /* Table */
+        .data-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+        .data-table th { padding: 10px 14px; text-align: left; background: var(--bg); font-size: 0.78rem; text-transform: uppercase; color: var(--text-sub); letter-spacing: 0.5px; border-bottom: 1px solid var(--border); }
+        .data-table td { padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+        .data-table tr:last-child td { border-bottom: none; }
+        .data-table tr:hover td { background: rgba(37,99,235,0.03); }
+
+        .tag { display: inline-block; padding: 3px 10px; border-radius: 10px; font-size: 0.72rem; font-weight: 700; }
+        .tag-blue { background: rgba(37,99,235,0.1); color: var(--primary); }
+        .tag-green { background: rgba(16,185,129,0.1); color: var(--success); }
+        .tag-orange { background: rgba(249,115,22,0.1); color: var(--groq); }
+
+        /* AI Settings */
+        .ai-config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .ai-card { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
+        .ai-card-title { font-weight: 700; font-size: 0.9rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+
+        /* Toggle */
+        .toggle-switch { position: relative; width: 48px; height: 24px; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: var(--border); border-radius: 34px; transition: 0.3s; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px; background: white; border-radius: 50%; transition: 0.3s; }
+        input:checked + .slider { background: var(--primary); }
+        input:checked + .slider:before { transform: translateX(24px); }
+        .toggle-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+
+        /* Section pages */
+        .section-page { display: none; }
+        .section-page.active { display: block; }
+
+        /* Toast */
+        .toast {
+            position: fixed; bottom: 30px; right: 30px; padding: 14px 22px;
+            background: #1e293b; color: white; border-radius: 12px; font-size: 0.9rem;
+            font-weight: 600; z-index: 9999; opacity: 0; transform: translateY(10px);
+            transition: all 0.3s; pointer-events: none; max-width: 320px;
+        }
+        .toast.show { opacity: 1; transform: translateY(0); }
+
+        @media (max-width: 768px) {
+            .sidebar { width: 200px; }
+            .form-row { grid-template-columns: 1fr; }
+            .ai-config-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 600px) {
+            .admin-layout { flex-direction: column; }
+            .sidebar { width: 100%; min-height: auto; position: static; flex-direction: row; overflow-x: auto; }
+            .sidebar-nav { display: flex; flex-direction: row; padding: 8px; }
+            .nav-item { padding: 8px 12px; border-left: none; border-bottom: 3px solid transparent; white-space: nowrap; }
+            .nav-item.active { border-left-color: transparent; border-bottom-color: var(--primary); }
+            .sidebar-footer { display: none; }
+        }
+    </style>
+</head>
+<body data-theme="light">
+
+<!-- LOGIN SCREEN -->
+<div class="login-screen" id="login-screen">
+    <div class="login-box">
+        <div class="login-logo">News Flow <span>ADMIN</span></div>
+        <div class="login-sub">Sign in to manage your news platform</div>
+        <label>Username</label>
+        <input type="text" id="login-user" placeholder="admin" autocomplete="username">
+        <label>Password</label>
+        <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter') admin.login()">
+        <p class="login-err" id="login-err">❌ Invalid credentials. Please try again.</p>
+        <button class="btn-primary" onclick="admin.login()">Sign In →</button>
+    </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div class="admin-layout" id="admin-layout">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-logo">News Flow <span>ADMIN</span></div>
+        <nav class="sidebar-nav">
+            <div class="nav-item active" onclick="admin.showSection('dashboard', this)"><span class="nav-icon">📊</span> Dashboard</div>
+            <div class="nav-item" onclick="admin.showSection('post-news', this)"><span class="nav-icon">✍️</span> Post News</div>
+            <div class="nav-item" onclick="admin.showSection('manage-news', this)"><span class="nav-icon">📰</span> Manage Posts</div>
+            <div class="nav-item" onclick="admin.showSection('rss-feeds', this)"><span class="nav-icon">📡</span> RSS Feeds</div>
+            <div class="nav-item" onclick="admin.showSection('ai-settings', this)"><span class="nav-icon">🤖</span> AI Settings</div>
+            <div class="nav-item" onclick="admin.showSection('admin-prefs', this)"><span class="nav-icon">⚙️</span> Preferences</div>
+        </nav>
+        <div class="sidebar-footer">
+            <button class="logout-btn" onclick="admin.logout()">🚪 Sign Out</button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+
+        <!-- DASHBOARD -->
+        <div class="section-page active" id="sec-dashboard">
+            <div class="page-title">📊 Dashboard</div>
+            <div class="page-sub">Overview of your News Flow platform</div>
+            <div class="stats-grid" id="stats-grid">
+                <div class="stat-card"><div class="stat-value" id="stat-manual">0</div><div class="stat-label">Manual Posts</div></div>
+                <div class="stat-card"><div class="stat-value" id="stat-feeds">0</div><div class="stat-label">Custom RSS Feeds</div></div>
+                <div class="stat-card"><div class="stat-value" id="stat-cache">—</div><div class="stat-label">Cache Status</div></div>
+                <div class="stat-card"><div class="stat-value" id="stat-ai">Groq</div><div class="stat-label">Active AI</div></div>
+            </div>
+            <div class="panel">
+                <div class="panel-title">⚡ Quick Actions</div>
+                <div style="display:flex; gap:12px; flex-wrap:wrap;">
+                    <button class="btn btn-blue" onclick="admin.showSection('post-news', document.querySelector('.nav-item:nth-child(2)'))">✍️ Post New Article</button>
+                    <button class="btn btn-green" onclick="admin.showSection('rss-feeds', document.querySelector('.nav-item:nth-child(4)'))">📡 Add RSS Feed</button>
+                    <button class="btn btn-outline" onclick="admin.clearCache()">🗑️ Clear News Cache</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- POST NEWS -->
+        <div class="section-page" id="sec-post-news">
+            <div class="page-title">✍️ Post Manual News</div>
+            <div class="page-sub">Articles posted here will appear in the user feed with an "Editor's Pick" badge</div>
+            <div class="panel">
+                <div class="form-group">
+                    <label>Article Title *</label>
+                    <input type="text" id="post-title" placeholder="Enter a compelling headline...">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="post-category">
+                            <option value="all">🌐 All / General</option>
+                            <option value="top">🔥 Top News</option>
+                            <option value="india">🇮🇳 India</option>
+                            <option value="world">🌍 World</option>
+                            <option value="technology">💻 Technology</option>
+                            <option value="business">💼 Business</option>
+                            <option value="sports">⚽ Sports</option>
+                            <option value="entertainment">🎬 Entertainment</option>
+                            <option value="health">🏥 Health</option>
+                            <option value="science">🔬 Science</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Source / Author</label>
+                        <input type="text" id="post-source" placeholder="e.g. Editorial Team">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Article Body *</label>
+                    <textarea id="post-body" placeholder="Write the full news article or summary here..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Custom Summary (optional — leave blank to use body as summary)</label>
+                    <textarea id="post-summary" placeholder="Short 2-3 sentence summary for the card..." style="min-height: 75px;"></textarea>
+                </div>
+                <div style="display:flex; gap:12px;">
+                    <button class="btn btn-blue" onclick="admin.publishPost()">🚀 Publish to Feed</button>
+                    <button class="btn btn-outline" onclick="admin.clearPostForm()">✕ Clear</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MANAGE NEWS -->
+        <div class="section-page" id="sec-manage-news">
+            <div class="page-title">📰 Manage Manual Posts</div>
+            <div class="page-sub">View and delete your manually posted articles</div>
+            <div class="panel">
+                <div id="manual-news-list">
+                    <p style="color: var(--text-sub); text-align:center; padding:20px;">No manual posts yet. <a href="#" onclick="admin.showSection('post-news', null)" style="color:var(--primary)">Post one now →</a></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- RSS FEEDS -->
+        <div class="section-page" id="sec-rss-feeds">
+            <div class="page-title">📡 RSS Feed Management</div>
+            <div class="page-sub">Add custom RSS feeds that will be available to all users</div>
+            <div class="panel">
+                <div class="panel-title">➕ Add New RSS Feed</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Feed Name</label>
+                        <input type="text" id="rss-name" placeholder="e.g. NDTV India">
+                    </div>
+                    <div class="form-group">
+                        <label>Language</label>
+                        <select id="rss-lang">
+                            <option value="en">English</option>
+                            <option value="hi">Hindi</option>
+                            <option value="ta">Tamil</option>
+                            <option value="te">Telugu</option>
+                            <option value="kn">Kannada</option>
+                            <option value="mr">Marathi</option>
+                            <option value="bn">Bengali</option>
+                            <option value="ml">Malayalam</option>
+                            <option value="es">Spanish</option>
+                            <option value="fr">French</option>
+                            <option value="de">German</option>
+                            <option value="ru">Russian</option>
+                            <option value="ja">Japanese</option>
+                            <option value="ar">Arabic</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>RSS Feed URL *</label>
+                    <input type="url" id="rss-url" placeholder="https://example.com/rss/feed.xml">
+                </div>
+                <button class="btn btn-green" onclick="admin.addFeed()">📡 Add Feed</button>
+            </div>
+            <div class="panel">
+                <div class="panel-title">📋 Active Custom Feeds</div>
+                <div id="feeds-list">
+                    <p style="color: var(--text-sub); text-align:center; padding:20px;">No custom feeds added yet.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI SETTINGS -->
+        <div class="section-page" id="sec-ai-settings">
+            <div class="page-title">🤖 AI Configuration</div>
+            <div class="page-sub">Configure AI providers for news summarization (admin-only settings)</div>
+            <div class="panel">
+                <div class="panel-title">🔑 API Keys & Services</div>
+                <div class="ai-config-grid">
+                    <div class="ai-card">
+                        <div class="ai-card-title">⚡ Groq AI <span class="tag tag-green">Primary</span></div>
+                        <div class="form-group">
+                            <label>Groq API Key</label>
+                            <input type="password" id="ai-groq-key" placeholder="gsk_...">
+                        </div>
+                        <div class="form-group">
+                            <label>Model</label>
+                            <select id="ai-groq-model">
+                                <option value="llama-3.3-70b-versatile">Llama 3.3 70B (Recommended)</option>
+                                <option value="llama-3.1-8b-instant">Llama 3.1 8B (Fast)</option>
+                                <option value="mixtral-8x7b-32768">Mixtral 8x7B</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="ai-card">
+                        <div class="ai-card-title">🤖 LM Studio <span class="tag tag-blue">Local</span></div>
+                        <div class="toggle-row">
+                            <span style="font-size:0.85rem; font-weight:600;">Enable LM Studio</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="ai-lm-toggle" onchange="admin.toggleLMStudio()">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>Server URL</label>
+                            <input type="text" id="ai-lm-url" placeholder="http://localhost:1234">
+                        </div>
+                    </div>
+                    <div class="ai-card">
+                        <div class="ai-card-title">🤗 Hugging Face <span class="tag tag-blue">Optional</span></div>
+                        <div class="form-group">
+                            <label>HF API Token</label>
+                            <input type="password" id="ai-hf-token" placeholder="hf_...">
+                        </div>
+                    </div>
+                    <div class="ai-card">
+                        <div class="ai-card-title">💎 Google Gemini <span class="tag tag-blue">Optional</span></div>
+                        <div class="form-group">
+                            <label>Gemini API Key</label>
+                            <input type="password" id="ai-gemini-key" placeholder="AIzaSy...">
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <button class="btn btn-blue" onclick="admin.saveAISettings()">💾 Save AI Settings</button>
+            </div>
+        </div>
+
+        <!-- PREFERENCES -->
+        <div class="section-page" id="sec-admin-prefs">
+            <div class="page-title">⚙️ Admin Preferences</div>
+            <div class="page-sub">Configure your admin panel and platform settings</div>
+            <div class="panel">
+                <div class="panel-title">🔐 Change Admin Password</div>
+                <div class="form-group"><label>New Username</label><input type="text" id="pref-username" placeholder="admin"></div>
+                <div class="form-group"><label>New Password</label><input type="password" id="pref-password" placeholder="Leave blank to keep current"></div>
+                <div class="form-group"><label>Confirm Password</label><input type="password" id="pref-password2" placeholder="Repeat new password"></div>
+                <button class="btn btn-blue" onclick="admin.saveCredentials()">🔑 Update Credentials</button>
+            </div>
+            <div class="panel">
+                <div class="panel-title">🎨 Interface</div>
+                <div class="toggle-row">
+                    <span style="font-weight:600; font-size:0.9rem;">Dark Mode</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="pref-dark" onchange="admin.toggleDark()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="panel">
+                <div class="panel-title">🗑️ Data Management</div>
+                <div style="display:flex; gap:12px; flex-wrap:wrap;">
+                    <button class="btn btn-red btn-sm" onclick="admin.clearAllManualPosts()">🗑️ Delete All Manual Posts</button>
+                    <button class="btn btn-outline btn-sm" onclick="admin.clearCache()">♻️ Clear News Cache</button>
+                    <button class="btn btn-outline btn-sm" onclick="admin.clearAllFeeds()">🗑️ Remove All Custom Feeds</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== STORAGE KEYS =====
+const STORE = {
+    NEWS_CACHE: 'newsflow_cache',
+    MANUAL_NEWS: 'newsflow_manual',
+    CUSTOM_FEEDS: 'newsflow_custom_feeds',
+    CACHE_TS: 'newsflow_cache_ts',
+    ADMIN_USER: 'newsflow_admin_user',
+    ADMIN_PASS: 'newsflow_admin_pass',
+    AI_SETTINGS: 'newsflow_ai_settings'
+};
+
+// Default credentials (change after first login!)
+const DEFAULT_USER = 'admin';
+const DEFAULT_PASS = 'admin123';
+
+const admin = {
+    // ===== AUTH =====
+    login() {
+        const u = document.getElementById('login-user').value.trim();
+        const p = document.getElementById('login-pass').value;
+        const savedUser = localStorage.getItem(STORE.ADMIN_USER) || DEFAULT_USER;
+        const savedPass = localStorage.getItem(STORE.ADMIN_PASS) || DEFAULT_PASS;
+
+        if (u === savedUser && p === savedPass) {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('admin-layout').classList.add('active');
+            document.getElementById('login-err').style.display = 'none';
+            this.initPanel();
+        } else {
+            document.getElementById('login-err').style.display = 'block';
+            document.getElementById('login-pass').value = '';
+        }
+    },
+
+    logout() {
+        document.getElementById('admin-layout').classList.remove('active');
+        document.getElementById('login-screen').style.display = 'flex';
+        document.getElementById('login-user').value = '';
+        document.getElementById('login-pass').value = '';
+    },
+
+    initPanel() {
+        this.loadDashboard();
+        this.loadAISettings();
+        this.loadPrefs();
+
+        // Dark mode
+        const dark = localStorage.getItem('theme') === 'dark';
+        document.body.setAttribute('data-theme', dark ? 'dark' : 'light');
+        document.getElementById('pref-dark').checked = dark;
+    },
+
+    // ===== NAVIGATION =====
+    showSection(id, btn) {
+        document.querySelectorAll('.section-page').forEach(p => p.classList.remove('active'));
+        document.getElementById(`sec-${id}`).classList.add('active');
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        if (btn) btn.classList.add('active');
+
+        if (id === 'dashboard') this.loadDashboard();
+        if (id === 'manage-news') this.renderManualNewsList();
+        if (id === 'rss-feeds') this.renderFeedsList();
+    },
+
+    // ===== DASHBOARD =====
+    loadDashboard() {
+        const manual = this.getManualPosts();
+        const feeds = this.getCustomFeeds();
+        document.getElementById('stat-manual').textContent = manual.length;
+        document.getElementById('stat-feeds').textContent = feeds.length;
+        const cacheTs = parseInt(localStorage.getItem(STORE.CACHE_TS) || '0');
+        const age = cacheTs ? Math.round((Date.now() - cacheTs) / 60000) : null;
+        document.getElementById('stat-cache').textContent = age !== null ? (age < 60 ? `${age}m old` : `${Math.round(age/60)}h old`) : 'Empty';
+        const aiSettings = this.getAISettings();
+        document.getElementById('stat-ai').textContent = aiSettings.groqKey ? 'Groq ✅' : 'Basic';
+    },
+
+    // ===== POST NEWS =====
+    publishPost() {
+        const title = document.getElementById('post-title').value.trim();
+        const body = document.getElementById('post-body').value.trim();
+        const summary = document.getElementById('post-summary').value.trim();
+        const category = document.getElementById('post-category').value;
+        const source = document.getElementById('post-source').value.trim() || 'Editorial';
+
+        if (!title || !body) { this.toast('⚠️ Title and body are required!', 'warn'); return; }
+
+        const posts = this.getManualPosts();
+        posts.unshift({
+            id: Date.now(),
+            title,
+            body,
+            summary: summary || body.substring(0, 200) + '...',
+            category,
+            source,
+            date: new Date().toISOString()
+        });
+        localStorage.setItem(STORE.MANUAL_NEWS, JSON.stringify(posts));
+        this.toast('✅ Article published to user feed!');
+        this.clearPostForm();
+        this.loadDashboard();
+    },
+
+    clearPostForm() {
+        ['post-title','post-body','post-summary','post-source'].forEach(id => document.getElementById(id).value = '');
+        document.getElementById('post-category').value = 'all';
+    },
+
+    // ===== MANAGE NEWS =====
+    getManualPosts() {
+        try { return JSON.parse(localStorage.getItem(STORE.MANUAL_NEWS) || '[]'); } catch { return []; }
+    },
+
+    renderManualNewsList() {
+        const posts = this.getManualPosts();
+        const container = document.getElementById('manual-news-list');
+        if (posts.length === 0) {
+            container.innerHTML = '<p style="color:var(--text-sub);text-align:center;padding:20px;">No manual posts yet.</p>';
+            return;
+        }
+        container.innerHTML = `<table class="data-table">
+            <thead><tr><th>Title</th><th>Category</th><th>Date</th><th>Action</th></tr></thead>
+            <tbody>${posts.map(p => `
+                <tr>
+                    <td><strong>${p.title}</strong><br><small style="color:var(--text-sub)">${p.source}</small></td>
+                    <td><span class="tag tag-blue">${p.category}</span></td>
+                    <td style="white-space:nowrap">${new Date(p.date).toLocaleDateString()}</td>
+                    <td><button class="btn btn-red btn-sm" onclick="admin.deletePost(${p.id})">🗑️ Delete</button></td>
+                </tr>`).join('')}
+            </tbody></table>`;
+    },
+
+    deletePost(id) {
+        if (!confirm('Delete this post?')) return;
+        const posts = this.getManualPosts().filter(p => p.id !== id);
+        localStorage.setItem(STORE.MANUAL_NEWS, JSON.stringify(posts));
+        this.renderManualNewsList();
+        this.toast('🗑️ Post deleted');
+    },
+
+    clearAllManualPosts() {
+        if (!confirm('Delete ALL manual posts? This cannot be undone.')) return;
+        localStorage.removeItem(STORE.MANUAL_NEWS);
+        this.renderManualNewsList();
+        this.loadDashboard();
+        this.toast('🗑️ All manual posts deleted');
+    },
+
+    // ===== RSS FEEDS =====
+    getCustomFeeds() {
+        try { return JSON.parse(localStorage.getItem(STORE.CUSTOM_FEEDS) || '[]'); } catch { return []; }
+    },
+
+    addFeed() {
+        const name = document.getElementById('rss-name').value.trim();
+        const url = document.getElementById('rss-url').value.trim();
+        const lang = document.getElementById('rss-lang').value;
+
+        if (!url) { this.toast('⚠️ Feed URL is required!', 'warn'); return; }
+
+        try { new URL(url); } catch { this.toast('⚠️ Please enter a valid URL', 'warn'); return; }
+
+        const feeds = this.getCustomFeeds();
+        if (feeds.find(f => f.url === url)) { this.toast('⚠️ This feed already exists', 'warn'); return; }
+
+        feeds.push({ id: Date.now(), name: name || new URL(url).hostname, url, lang, addedAt: new Date().toISOString() });
+        localStorage.setItem(STORE.CUSTOM_FEEDS, JSON.stringify(feeds));
+        document.getElementById('rss-name').value = '';
+        document.getElementById('rss-url').value = '';
+        this.renderFeedsList();
+        this.loadDashboard();
+        this.toast('📡 RSS Feed added! Users will see it on next refresh.');
+    },
+
+    renderFeedsList() {
+        const feeds = this.getCustomFeeds();
+        const container = document.getElementById('feeds-list');
+        if (feeds.length === 0) {
+            container.innerHTML = '<p style="color:var(--text-sub);text-align:center;padding:20px;">No custom feeds added yet.</p>';
+            return;
+        }
+        container.innerHTML = `<table class="data-table">
+            <thead><tr><th>Name</th><th>URL</th><th>Lang</th><th>Action</th></tr></thead>
+            <tbody>${feeds.map(f => `
+                <tr>
+                    <td><strong>${f.name}</strong></td>
+                    <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><small>${f.url}</small></td>
+                    <td><span class="tag tag-orange">${f.lang}</span></td>
+                    <td><button class="btn btn-red btn-sm" onclick="admin.deleteFeed(${f.id})">🗑️</button></td>
+                </tr>`).join('')}
+            </tbody></table>`;
+    },
+
+    deleteFeed(id) {
+        const feeds = this.getCustomFeeds().filter(f => f.id !== id);
+        localStorage.setItem(STORE.CUSTOM_FEEDS, JSON.stringify(feeds));
+        this.renderFeedsList();
+        this.loadDashboard();
+        this.toast('🗑️ Feed removed');
+    },
+
+    clearAllFeeds() {
+        if (!confirm('Remove all custom feeds?')) return;
+        localStorage.removeItem(STORE.CUSTOM_FEEDS);
+        this.renderFeedsList();
+        this.loadDashboard();
+        this.toast('🗑️ All custom feeds removed');
+    },
+
+    // ===== AI SETTINGS =====
+    getAISettings() {
+        try { return JSON.parse(localStorage.getItem(STORE.AI_SETTINGS) || '{}'); } catch { return {}; }
+    },
+
+    loadAISettings() {
+        const s = this.getAISettings();
+        if (s.groqKey) document.getElementById('ai-groq-key').value = s.groqKey;
+        if (s.groqModel) document.getElementById('ai-groq-model').value = s.groqModel;
+        if (s.lmUrl) { document.getElementById('ai-lm-url').value = s.lmUrl; document.getElementById('ai-lm-toggle').checked = s.lmEnabled; }
+        if (s.hfToken) document.getElementById('ai-hf-token').value = s.hfToken;
+        if (s.geminiKey) document.getElementById('ai-gemini-key').value = s.geminiKey;
+    },
+
+    saveAISettings() {
+        const settings = {
+            groqKey: document.getElementById('ai-groq-key').value.trim(),
+            groqModel: document.getElementById('ai-groq-model').value,
+            lmEnabled: document.getElementById('ai-lm-toggle').checked,
+            lmUrl: document.getElementById('ai-lm-url').value.trim(),
+            hfToken: document.getElementById('ai-hf-token').value.trim(),
+            geminiKey: document.getElementById('ai-gemini-key').value.trim()
+        };
+        localStorage.setItem(STORE.AI_SETTINGS, JSON.stringify(settings));
+        // Also sync to legacy keys for backward compat
+        if (settings.lmUrl) localStorage.setItem('lmStudioUrl', settings.lmUrl);
+        if (settings.hfToken) localStorage.setItem('hfToken', settings.hfToken);
+        if (settings.geminiKey) localStorage.setItem('geminiKey', settings.geminiKey);
+        this.toast('✅ AI settings saved!');
+        this.loadDashboard();
+    },
+
+    toggleLMStudio() {
+        // Just UI toggle — saved on Save button
+    },
+
+    // ===== PREFERENCES =====
+    loadPrefs() {
+        const u = localStorage.getItem(STORE.ADMIN_USER) || DEFAULT_USER;
+        document.getElementById('pref-username').value = u;
+    },
+
+    saveCredentials() {
+        const u = document.getElementById('pref-username').value.trim();
+        const p = document.getElementById('pref-password').value;
+        const p2 = document.getElementById('pref-password2').value;
+        if (!u) { this.toast('⚠️ Username cannot be empty', 'warn'); return; }
+        if (p && p !== p2) { this.toast('⚠️ Passwords do not match', 'warn'); return; }
+        localStorage.setItem(STORE.ADMIN_USER, u);
+        if (p) localStorage.setItem(STORE.ADMIN_PASS, p);
+        document.getElementById('pref-password').value = '';
+        document.getElementById('pref-password2').value = '';
+        this.toast('✅ Credentials updated!');
+    },
+
+    toggleDark() {
+        const dark = document.getElementById('pref-dark').checked;
+        document.body.setAttribute('data-theme', dark ? 'dark' : 'light');
+        localStorage.setItem('theme', dark ? 'dark' : 'light');
+    },
+
+    clearCache() {
+        localStorage.removeItem(STORE.NEWS_CACHE);
+        localStorage.removeItem(STORE.CACHE_TS);
+        this.toast('♻️ Cache cleared — users will get fresh news');
+        this.loadDashboard();
+    },
+
+    // ===== TOAST =====
+    toast(msg, type = 'success') {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.style.background = type === 'warn' ? '#f59e0b' : '#1e293b';
+        t.classList.add('show');
+        clearTimeout(this._toastTimer);
+        this._toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+    }
+};
+
+// Auto-load dark mode
+(function() {
+    const dark = localStorage.getItem('theme') === 'dark';
+    if (dark) document.body.setAttribute('data-theme', 'dark');
+})();
+</script>
+</body>
+</html>
