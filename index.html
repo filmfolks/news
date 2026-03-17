@@ -1,3 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>News Flow Pro - AI Flash News</title>
+    <style>
+        :root {
+            --primary: #2563eb; --primary-dark: #1e40af; --bg: #f8fafc;
+            --surface: #ffffff; --text: #0f172a; --text-sub: #64748b;
+            --border: #e2e8f0; --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            --success: #10b981; --warning: #f59e0b; --groq: #f97316;
+        }
+        [data-theme="dark"] {
+            --primary: #60a5fa; --primary-dark: #3b82f6; --bg: #0f172a;
+            --surface: #1e293b; --text: #f8fafc; --text-sub: #94a3b8;
+            --border: #334155; --shadow: 0 4px 6px -1px rgba(0,0,0,0.5);
+            --groq: #fb923c;
+        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--bg); color: var(--text); height: 100vh; overflow: hidden;
+            transition: background 0.3s, color 0.3s;
+        }
+        .header {
+            position: fixed; top: 0; left: 0; right: 0; height: 60px;
+            background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border); display: flex; align-items: center;
+            justify-content: space-between; padding: 0 20px; z-index: 1000; transition: background 0.3s;
+        }
+        [data-theme="dark"] .header { background: rgba(30,41,59,0.85); }
+        .logo { font-weight: 800; font-size: 1.25rem; color: var(--primary); letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; }
+        .logo-badge { background: var(--primary); color: white; font-size: 0.6rem; padding: 2px 6px; border-radius: 4px; font-weight: 700; }
+        .header-actions { display: flex; gap: 10px; align-items: center; }
+        .icon-btn {
+            background: transparent; border: 1px solid var(--border); color: var(--text);
+            border-radius: 8px; width: 40px; height: 40px; display: flex; align-items: center;
+            justify-content: center; font-size: 1.1rem; cursor: pointer; transition: all 0.2s;
+        }
+        .icon-btn:active { transform: scale(0.95); background: var(--border); }
+        .status-indicator {
+            display: flex; align-items: center; gap: 6px; font-size: 0.75rem; color: var(--text-sub);
+            padding: 4px 10px; border-radius: 12px; background: var(--surface); border: 1px solid var(--border);
+        }
+        .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); animation: pulse 2s infinite; }
+        .status-dot.groq-mode { background: var(--groq); }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+        /* Category Bar */
+        .category-bar {
+            position: fixed; top: 60px; left: 0; right: 0; height: 44px;
+            background: var(--surface); border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 8px; padding: 0 16px;
+            overflow-x: auto; z-index: 999; scrollbar-width: none;
+        }
+        .category-bar::-webkit-scrollbar { display: none; }
+        .cat-btn {
+            white-space: nowrap; padding: 6px 14px; border-radius: 20px;
+            border: 1px solid var(--border); background: transparent; color: var(--text-sub);
+            font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
+        }
+        .cat-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+        .cat-btn:active { transform: scale(0.95); }
+
+        /* Feed */
+        .feed-container {
+            height: 100vh; padding-top: 114px; padding-bottom: 170px;
+            overflow-y: scroll; scroll-snap-type: y mandatory; scroll-behavior: smooth;
+        }
+        .card-wrapper {
+            min-height: calc(100vh - 284px); width: 100%; scroll-snap-align: center;
+            display: flex; align-items: center; justify-content: center; padding: 20px;
+        }
+        .card {
+            background: var(--surface); width: 100%; max-width: 700px; padding: 30px;
+            border-radius: 24px; border: 1px solid var(--border); box-shadow: var(--shadow);
+            display: flex; flex-direction: column; max-height: 68vh; overflow-y: auto;
+            position: relative; transition: transform 0.2s;
+        }
+        .card:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -5px rgba(0,0,0,0.15); }
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; gap: 12px; flex-wrap: wrap; }
+        .badge { background: rgba(37,99,235,0.1); color: var(--primary); padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+        .manual-badge { background: rgba(16,185,129,0.1); color: var(--success); padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+        .source-badge { background: rgba(16,185,129,0.1); color: var(--success); padding: 6px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+        .headline { font-size: 1.5rem; font-weight: 800; line-height: 1.3; margin-bottom: 16px; color: var(--text); }
+        .summary-section { background: rgba(37,99,235,0.05); padding: 16px; border-radius: 12px; margin-bottom: 16px; border-left: 3px solid var(--primary); }
+        .groq-section { background: rgba(249,115,22,0.05); border-left: 3px solid var(--groq); }
+        .basic-section { background: rgba(245,158,11,0.05); border-left: 3px solid var(--warning); }
+        .summary-label { font-size: 0.7rem; color: var(--primary); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+        .summary-label.groq { color: var(--groq); }
+        .body-text { font-size: 1.05rem; line-height: 1.7; color: var(--text-sub); }
+        .attribution { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); font-size: 0.85rem; color: var(--text-sub); font-style: italic; }
+
+        /* Controls */
+        .controls-bar {
+            position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
+            background: var(--surface); padding: 12px 30px; border-radius: 50px;
+            display: flex; align-items: center; gap: 30px;
+            box-shadow: 0 20px 40px -5px rgba(0,0,0,0.3); z-index: 1000; border: 1px solid var(--border);
+        }
+        .ctrl-btn { background: none; border: none; font-size: 1.6rem; cursor: pointer; color: var(--text-sub); transition: 0.2s; display: flex; align-items: center; justify-content: center; }
+        .ctrl-btn:active { transform: scale(0.85); color: var(--primary); }
+        .ctrl-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+        .play-btn { color: var(--primary); font-size: 2.2rem; }
+
+        /* Footer */
+        .footer {
+            position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,0.85);
+            border-top: 1px solid var(--border); padding: 8px 20px; text-align: center;
+            font-size: 0.75rem; color: var(--text-sub); z-index: 999; backdrop-filter: blur(12px);
+        }
+        [data-theme="dark"] .footer { background: rgba(30,41,59,0.85); }
+        .footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
+
+        /* Modal */
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 2000;
+            align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s;
+        }
+        .modal.open { display: flex; opacity: 1; }
+        .modal-box {
+            background: var(--surface); width: 90%; max-width: 500px; padding: 30px;
+            border-radius: 24px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+            border: 1px solid var(--border); transform: scale(0.9); transition: transform 0.3s;
+            max-height: 85vh; overflow-y: auto;
+        }
+        .modal.open .modal-box { transform: scale(1); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .modal-title { font-size: 1.2rem; font-weight: 800; margin: 0; }
+        .close-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-sub); }
+        label { display: block; font-size: 0.82rem; font-weight: 700; color: var(--text-sub); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        select, input {
+            width: 100%; padding: 12px 14px; margin-bottom: 20px; border-radius: 12px;
+            border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 0.95rem; outline: none;
+        }
+        select:focus { border-color: var(--primary); }
+
+        /* Voice Group Header in select */
+        optgroup { font-weight: 700; font-style: normal; }
+
+        .save-btn {
+            width: 100%; padding: 15px; background: var(--primary); color: white; border: none;
+            border-radius: 14px; font-size: 1rem; font-weight: 700; cursor: pointer;
+            box-shadow: 0 4px 12px rgba(37,99,235,0.3); transition: transform 0.1s, background 0.2s;
+        }
+        .save-btn:active { transform: scale(0.98); }
+        .save-btn:hover { background: var(--primary-dark); }
+
+        .voice-count-badge {
+            display: inline-block; background: rgba(37,99,235,0.1); color: var(--primary);
+            font-size: 0.7rem; padding: 2px 8px; border-radius: 10px; font-weight: 700; margin-left: 8px;
+        }
+
+        .info-box {
+            background: rgba(37,99,235,0.05); padding: 10px 14px; border-radius: 8px;
+            font-size: 0.82rem; margin-bottom: 16px; border-left: 3px solid var(--primary); color: var(--text-sub);
+        }
+
+        @media (min-width: 768px) {
+            .headline { font-size: 2rem; }
+            .card { padding: 40px; max-width: 800px; }
+            .body-text { font-size: 1.1rem; }
+            .controls-bar { padding: 16px 40px; gap: 40px; }
+        }
+    </style>
+</head>
+<body data-theme="light">
+
+<header class="header">
+    <div class="logo"><span>News Flow</span><span class="logo-badge">AI</span></div>
+    <div class="header-actions">
+        <div class="status-indicator" id="status">
+            <span class="status-dot" id="status-dot"></span>
+            <span id="status-text">Loading...</span>
+        </div>
+        <button class="icon-btn" onclick="ui.toggleTheme()" title="Toggle Dark Mode">🌓</button>
+        <button class="icon-btn" onclick="ui.openSettings()" title="Preferences">⚙️</button>
+    </div>
+</header>
+
+<!-- Category Bar -->
+<div class="category-bar">
+    <button class="cat-btn active" onclick="app.filterCategory('all', this)">🌐 All</button>
+    <button class="cat-btn" onclick="app.filterCategory('top', this)">🔥 Top</button>
+    <button class="cat-btn" onclick="app.filterCategory('india', this)">🇮🇳 India</button>
+    <button class="cat-btn" onclick="app.filterCategory('world', this)">🌍 World</button>
+    <button class="cat-btn" onclick="app.filterCategory('technology', this)">💻 Tech</button>
+    <button class="cat-btn" onclick="app.filterCategory('business', this)">💼 Business</button>
+    <button class="cat-btn" onclick="app.filterCategory('sports', this)">⚽ Sports</button>
+    <button class="cat-btn" onclick="app.filterCategory('entertainment', this)">🎬 Entertainment</button>
+    <button class="cat-btn" onclick="app.filterCategory('health', this)">🏥 Health</button>
+    <button class="cat-btn" onclick="app.filterCategory('science', this)">🔬 Science</button>
+</div>
+
+<!-- Settings Modal -->
+<div class="modal" id="settings">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h2 class="modal-title">⚙️ Preferences</h2>
+            <button class="close-btn" onclick="ui.closeSettings()">✕</button>
+        </div>
+
+        <label>News Language</label>
+        <select id="lang-select" onchange="ui.onLangChange()">
+            <option value="en">English</option>
+            <option value="hi">हिंदी (Hindi)</option>
+            <option value="ta">தமிழ் (Tamil)</option>
+            <option value="te">తెలుగు (Telugu)</option>
+            <option value="kn">ಕನ್ನಡ (Kannada)</option>
+            <option value="mr">मराठी (Marathi)</option>
+            <option value="bn">বাংলা (Bengali)</option>
+            <option value="ml">മലയാളം (Malayalam)</option>
+            <option value="or">ଓଡ଼ିଆ (Odia)</option>
+            <option value="es">Español (Spanish)</option>
+            <option value="fr">Français (French)</option>
+            <option value="de">Deutsch (German)</option>
+            <option value="ru">Русский (Russian)</option>
+            <option value="ja">日本語 (Japanese)</option>
+            <option value="ar">العربية (Arabic)</option>
+        </select>
+
+        <label>
+            Narrator Voice
+            <span class="voice-count-badge" id="voice-count-badge">0 voices</span>
+        </label>
+        <div class="info-box" id="voice-info-box">
+            Showing Google voices for the selected language. Select a voice and it applies instantly — no page reload needed.
+        </div>
+        <select id="voice-select" onchange="ui.onVoiceChange()" size="6" style="height:160px; margin-bottom:16px;"></select>
+
+        <button class="save-btn" onclick="ui.savePrefs()">💾 Save & Apply</button>
+    </div>
+</div>
+
+<!-- Feed -->
+<div class="feed-container" id="feed">
+    <div class="card-wrapper">
+        <div class="card">
+            <div class="card-header"><div class="badge">⚡ WELCOME</div></div>
+            <div class="headline">News Flow Pro is Loading...</div>
+            <div class="body-text"><p>Fetching the latest news. Please wait a moment.</p></div>
+        </div>
+    </div>
+</div>
+
+<!-- Controls -->
+<div class="controls-bar">
+    <button class="ctrl-btn" onclick="app.prev()" id="prev-btn">⏮</button>
+    <button class="ctrl-btn play-btn" id="play-btn" onclick="app.togglePlay()">▶</button>
+    <button class="ctrl-btn" onclick="app.next()" id="next-btn">⏭</button>
+</div>
+
+<footer class="footer">
+    Copyright © 2026 | Designed by <a href="https://thosho.github.io/" target="_blank" rel="noopener noreferrer">Thosho Tech</a>
+</footer>
+
+<script>
+// ============================================================
+//  HARDCODED GOOGLE TTS VOICES — ALL NEWSFLOW LANGUAGES
+//  Format: { name, lang, gender, quality }
+//  These are the actual Google voice names as they appear in
+//  Chrome's Web Speech API speechSynthesis.getVoices()
+// ============================================================
+const GOOGLE_VOICES = {
+
+    // ── ENGLISH (en) ─────────────────────────────────────────
+    'en': [
+        // Google US
+        { name: 'Google US English',           lang: 'en-US', gender: '♀', quality: 'Standard' },
+        { name: 'Google US English Male',       lang: 'en-US', gender: '♂', quality: 'Standard' },
+        // Google UK
+        { name: 'Google UK English Female',     lang: 'en-GB', gender: '♀', quality: 'Standard' },
+        { name: 'Google UK English Male',       lang: 'en-GB', gender: '♂', quality: 'Standard' },
+        // Google India
+        { name: 'Google हिन्दी',               lang: 'hi-IN', gender: '♀', quality: 'Standard' }, // fallback for en-IN
+        // System voices (loaded dynamically, listed as fallback)
+        { name: 'Microsoft Zira - English (United States)',   lang: 'en-US', gender: '♀', quality: 'System' },
+        { name: 'Microsoft David - English (United States)',  lang: 'en-US', gender: '♂', quality: 'System' },
+        { name: 'Microsoft Mark - English (United States)',   lang: 'en-US', gender: '♂', quality: 'System' },
+        { name: 'Samantha',   lang: 'en-US', gender: '♀', quality: 'System (macOS)' },
+        { name: 'Alex',       lang: 'en-US', gender: '♂', quality: 'System (macOS)' },
+        { name: 'Victoria',   lang: 'en-US', gender: '♀', quality: 'System (macOS)' },
+        { name: 'Karen',      lang: 'en-AU', gender: '♀', quality: 'System (macOS)' },
+        { name: 'Daniel',     lang: 'en-GB', gender: '♂', quality: 'System (macOS)' },
+        { name: 'Moira',      lang: 'en-IE', gender: '♀', quality: 'System (macOS)' },
+        { name: 'Tessa',      lang: 'en-ZA', gender: '♀', quality: 'System (macOS)' },
+        { name: 'Rishi',      lang: 'en-IN', gender: '♂', quality: 'System (macOS)' },
+    ],
+
+    // ── HINDI (hi) ───────────────────────────────────────────
+    'hi': [
+        { name: 'Google हिन्दी',               lang: 'hi-IN', gender: '♀', quality: 'Google' },
+        { name: 'Microsoft Hemant - Hindi (India)',  lang: 'hi-IN', gender: '♂', quality: 'System' },
+        { name: 'Microsoft Kalpana - Hindi (India)', lang: 'hi-IN', gender: '♀', quality: 'System' },
+        { name: 'Lekha',                        lang: 'hi-IN', gender: '♀', quality: 'System (macOS)' },
+    ],
+
+    // ── TAMIL (ta) ───────────────────────────────────────────
+    'ta': [
+        { name: 'Google தமிழ்',                lang: 'ta-IN', gender: '♀', quality: 'Google' },
+        { name: 'Microsoft Valluvar - Tamil (India)', lang: 'ta-IN', gender: '♂', quality: 'System' },
+        { name: 'Ioana',                        lang: 'ta-IN', gender: '♀', quality: 'System (macOS)' },
+        { name: 'Veena',                        lang: 'ta-IN', gender: '♀', quality: 'System (macOS)' },
+    ],
+
+    // ── TELUGU (te) ──────────────────────────────────────────
+    'te': [
+        { name: 'Google తెలుగు',               lang: 'te-IN', gender: '♀', quality: 'Google' },
+        { name: 'Microsoft Chitra - Telugu (India)', lang: 'te-IN', gender: '♀', quality: 'System' },
+        { name: 'Microsoft Subramanian - Telugu (India)', lang: 'te-IN', gender: '♂', quality: 'System' },
+    ],
+
+    // ── KANNADA (kn) ─────────────────────────────────────────
+    'kn': [
+        { name: 'Google ಕನ್ನಡ',               lang: 'kn-IN', gender: '♀', quality: 'Google' },
+        { name: 'Microsoft Dhwani - Kannada (India)', lang: 'kn-IN', gender: '♀', quality: 'System' },
+        { name: 'Microsoft Ravi - Kannada (India)',   lang: 'kn-IN', gender: '♂', quality: 'System' },
+    ],
+
+    // ── MARATHI (mr) ─────────────────────────────────────────
+    'mr': [
+        { name: 'Google मराठी',                lang: 'mr-IN', gender: '♀', quality: 'Google' },
+        { name: 'Microsoft Aarohi - Marathi (India)', lang: 'mr-IN', gender: '♀', quality: 'System' },
+        { name: 'Microsoft Manohar - Marathi (India)', lang: 'mr-IN', gender: '♂', quality: 'System' },
+    ],
+
+    // ── BENGALI (bn) ─────────────────────────────────────────
+    'bn': [
+        { name: 'Google বাংলা',                lang: 'bn-IN', gender: '♀', quality: 'Google' },
+        { name: 'Google বাংলা বাংলাদেশ',      lang: 'bn-BD', gender: '♀', quality: 'Google' },
+        { name: 'Microsoft Bashkar - Bengali (India)',   lang: 'bn-IN', gender: '♂', quality: 'System' },
+        { name: 'Microsoft Tanishaa - Bengali (India)',  lang: 'bn-IN', gender: '♀', quality: 'System' },
+        { name: 'Microsoft Nabanita - Bengali (India)',  lang: 'bn-IN', gender: '♀', quality: 'System' },
+    ],
+
+    // ── MALAYALAM (ml) ───────────────────────────────────────
+    'ml': [
+        { name: 'Google മലയാളം',               lang: 'ml-IN', gender: '♀', quality: 'Google' },
+        { name: 'Microsoft Sobhana - Malayalam (India)', lang: 'ml-IN', gender: '♀', quality: 'System' },
+    ],
+
+    // ── ODIA (or) ────────────────────────────────────────────
+    'or': [
+        { name: 'Google ଓଡ଼ିଆ',               lang: 'or-IN', gender: '♀', quality: 'Google' },
+        { name: 'Microsoft Subhadra - Odia (India)', lang: 'or-IN', gender: '♀', quality: 'System' },
+        { name: 'Microsoft Kalyan - Odia (India)',   lang: 'or-IN', gender: '♂', quality: 'System' },
+    ],
+
+    // ── SPANISH (es) ─────────────────────────────────────────
+    'es': [
+        { name: 'Google español',              lang: 'es-ES', gender: '♀', quality: 'Google' },
+        { name: 'Google español de Estados Unidos', lang: 'es-US', gender: '♀', quality: 'Google' },
+        { name: 'Microsoft Helena - Spanish (Spain)',    lang: 'es-ES', gender: '♀', quality: 'System' },
+        { name: 'Microsoft Pablo - Spanish (Spain)',     lang: 'es-ES', gender: '♂', quality: 'System' },
+        { name: 'Microsoft Laura - Spanish (Mexico)',    lang: 'es-MX', gender: '♀', quality: 'System' },
+        { name: 'Microsoft Raul - Spanish (Mexico)',     lang: 'es-MX', gender: '♂', quality: 'System' },
+        { name: 'Jorge',   lang: 'es-ES', gender: '♂', quality: 'System (macOS)' },
+        { name: 'Monica',  lang: 'es-ES', gender: '♀', quality: 'System (macOS)' },
+        { name: 'Paulina', lang: 'es-MX', gender: '♀', quality: 'System (macOS)' },
+    ],
+
+    // ── FRENCH (fr) ──────────────────────────────────────────
+    'fr': [
+        { name: 'Google français',             lang: 'fr-FR', gender: '♀', quality: 'Google' },
+        { name: 'Microsoft Hortense - French (France)',  lang: 'fr-FR', gender: '♀', quality: 'System' },
+        { name: 'Microsoft Paul - French (France)',      lang: 'fr-FR', gender: '♂', quality: 'System' },
+        { name: 'Microsoft Guillaume - French (Canada)', lang: 'fr-CA', gender: '♂', quality: 'System' },
+        { name: 'Microsoft Caroline - French (Canada)',  lang: 'fr-CA', gender: '♀', quality: 'System' },
+        { name: 'Thomas',  lang: 'fr-FR', gender: '♂', quality: 'System (macOS)' },
+        { name: 'Aurelie', lang: 'fr-FR', gender: '♀', quality: 'System (macOS)' },
+    ],
+
+    // ── GERMAN (de) ──────────────────────────────────────────
+    'de': [
+        { name: 'Google Deutsch',              lang: 'de-DE', gender: '♀', quality: 'Google' },
+        { name: 'Microsoft Hedda - German (Germany)',  lang: 'de-DE', gender: '♀', quality: 'System' },
+        { name: 'Microsoft Stefan - German (Germany)', lang: 'de-DE', gender: '♂', quality: 'System' },
+        { name: 'Anna',    lang: 'de-DE', gender: '♀', quality: 'System (macOS)' },
+        { name: 'Yannick', lang: 'de-DE', gender: '♂', quality: 'System (macOS)' },
+    ],
+
+    // ── RUSSIAN (ru) ─────────────────────────────────────────
+    'ru': [
+        { name: 'Google русский',              lang: 'ru-RU', gender: '♀', quality: 'Google' },
+        { name: 'Microsoft Irina - Russian (Russia)', lang: 'ru-RU', gender: '♀', quality: 'System' },
+        { name: 'Microsoft Pavel - Russian (Russia)', lang: 'ru-RU', gender: '♂', quality: 'System' },
+        { name: 'Milena',  lang: 'ru-RU', gender: '♀', quality: 'System (macOS)' },
+        { name: 'Yuri',    lang: 'ru-RU', gender: '♂', quality: 'System (macOS)' },
+    ],
+
+    // ── JAPANESE (ja) ────────────────────────────────────────
+    'ja': [
+        { name: 'Google 日本語',               lang: 'ja-JP', gender: '♀', quality: 'Google' },
+        { name: 'Microsoft Haruka - Japanese (Japan)', lang: 'ja-JP', gender: '♀', quality: 'System' },
+        { name: 'Microsoft Ichiro - Japanese (Japan)', lang: 'ja-JP', gender: '♂', quality: 'System' },
+        { name: 'Microsoft Ayumi - Japanese (Japan)',  lang: 'ja-JP', gender: '♀', quality: 'System' },
+        { name: 'Otoya',   lang: 'ja-JP', gender: '♂', quality: 'System (macOS)' },
+        { name: 'Kyoko',   lang: 'ja-JP', gender: '♀', quality: 'System (macOS)' },
+    ],
+
+    // ── ARABIC (ar) ──────────────────────────────────────────
+    'ar': [
+        { name: 'Google العربية',              lang: 'ar-XA', gender: '♀', quality: 'Google' },
+        { name: 'Microsoft Hoda - Arabic (Egypt)',         lang: 'ar-EG', gender: '♀', quality: 'System' },
+        { name: 'Microsoft Naayf - Arabic (Saudi Arabia)', lang: 'ar-SA', gender: '♂', quality: 'System' },
+        { name: 'Maged',   lang: 'ar-SA', gender: '♂', quality: 'System (macOS)' },
+    ],
+};
+
+// ── LANG DISPLAY NAMES ───────────────────────────────────────
+const LANG_NAMES = {
+    en: 'English', hi: 'हिंदी', ta: 'தமிழ்', te: 'తెలుగు', kn: 'ಕನ್ನಡ',
+    mr: 'मराठी', bn: 'বাংলা', ml: 'മലയാളം', or: 'ଓଡ଼ିଆ',
+    es: 'Español', fr: 'Français', de: 'Deutsch', ru: 'Русский', ja: '日本語', ar: 'العربية'
+};
+
+// ── STORAGE KEYS ─────────────────────────────────────────────
+const STORE = {
+    NEWS_CACHE: 'newsflow_cache',
+    MANUAL_NEWS: 'newsflow_manual',
+    CUSTOM_FEEDS: 'newsflow_custom_feeds',
+    CACHE_TS: 'newsflow_cache_ts',
+    CACHE_DURATION: 24 * 60 * 60 * 1000
+};
+
+// ── GROQ CONFIG ──────────────────────────────────────────────
+const GROQ_API_KEY = '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';
+const CONFIG = {
+    GROQ_API_URL: 'https://api.groq.com/openai/v1/chat/completions',
+    PROXY_URL: 'https://api.allorigins.win/get?url=',
+    GROQ_TIMEOUT: 10000
+};
+
+// ── RSS FEEDS ────────────────────────────────────────────────
+const BASE_FEEDS = {
+    all: {
+        en: ['https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en','https://timesofindia.indiatimes.com/rssfeedstopstories.cms'],
+        hi: ['https://news.google.com/rss?hl=hi&gl=IN&ceid=IN:hi','https://www.amarujala.com/rss/breaking-news.xml'],
+        ta: ['https://news.google.com/rss?hl=ta&gl=IN&ceid=IN:ta'],
+        te: ['https://news.google.com/rss?hl=te&gl=IN&ceid=IN:te'],
+        kn: ['https://news.google.com/rss?hl=kn&gl=IN&ceid=IN:kn'],
+        mr: ['https://news.google.com/rss?hl=mr&gl=IN&ceid=IN:mr'],
+        bn: ['https://news.google.com/rss?hl=bn&gl=IN&ceid=IN:bn'],
+        ml: ['https://news.google.com/rss?hl=ml&gl=IN&ceid=IN:ml'],
+        or: ['https://news.google.com/rss?hl=or&gl=IN&ceid=IN:or'],
+        es: ['https://news.google.com/rss?hl=es&gl=ES&ceid=ES:es'],
+        fr: ['https://news.google.com/rss?hl=fr&gl=FR&ceid=FR:fr'],
+        de: ['https://news.google.com/rss?hl=de&gl=DE&ceid=DE:de'],
+        ru: ['https://news.google.com/rss?hl=ru&gl=RU&ceid=RU:ru'],
+        ja: ['https://news.google.com/rss?hl=ja&gl=JP&ceid=JP:ja'],
+        ar: ['https://news.google.com/rss?hl=ar&gl=EG&ceid=EG:ar']
+    },
+    technology:    { en: ['https://news.google.com/rss/search?q=technology&hl=en-US&gl=US&ceid=US:en'] },
+    business:      { en: ['https://news.google.com/rss/search?q=business+finance&hl=en-US&gl=US&ceid=US:en'] },
+    sports:        { en: ['https://news.google.com/rss/search?q=sports&hl=en-US&gl=US&ceid=US:en'] },
+    entertainment: { en: ['https://news.google.com/rss/search?q=entertainment+movies&hl=en-US&gl=US&ceid=US:en'] },
+    health:        { en: ['https://news.google.com/rss/search?q=health+medicine&hl=en-US&gl=US&ceid=US:en'] },
+    science:       { en: ['https://news.google.com/rss/search?q=science+space&hl=en-US&gl=US&ceid=US:en'] },
+    india:         { en: ['https://news.google.com/rss/search?q=India&hl=en-IN&gl=IN&ceid=IN:en'], hi: ['https://news.google.com/rss?hl=hi&gl=IN&ceid=IN:hi'] },
+    world:         { en: ['https://news.google.com/rss/search?q=world+news&hl=en-US&gl=US&ceid=US:en'] },
+    top:           { en: ['https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRFZxYUdjU0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en'] }
+};
+
+// ============================================================
+//  TTS ENGINE — Uses hardcoded GOOGLE_VOICES list
+//  + Falls back to actual device voices via getVoices()
+// ============================================================
+const tts = {
+    synth: window.speechSynthesis,
+    deviceVoices: [],      // actual voices from browser
+    currentLang: 'en',
+
+    init() {
+        const load = () => { this.deviceVoices = this.synth.getVoices(); };
+        if (this.synth.onvoiceschanged !== undefined) this.synth.onvoiceschanged = load;
+        load();
+    },
+
+    // Build voice list: hardcoded Google/System voices + any extra device voices for this lang
+    buildVoiceListForLang(langCode) {
+        const hardcoded = GOOGLE_VOICES[langCode] || [];
+        const langBases = this._getLangBases(langCode);
+
+        // Extra voices from device not in our hardcoded list
+        const hardcodedNames = new Set(hardcoded.map(v => v.name.toLowerCase()));
+        const extra = this.deviceVoices
+            .filter(v => {
+                const voiceLangBase = v.lang.toLowerCase().split('-')[0];
+                return langBases.some(base => voiceLangBase === base) && !hardcodedNames.has(v.name.toLowerCase());
+            })
+            .map(v => ({ name: v.name, lang: v.lang, gender: '🔊', quality: 'Device' }));
+
+        return [...hardcoded, ...extra];
+    },
+
+    _getLangBases(langCode) {
+        const map = {
+            en: ['en'], hi: ['hi'], ta: ['ta'], te: ['te'], kn: ['kn'],
+            mr: ['mr'], bn: ['bn'], ml: ['ml'], or: ['or'],
+            es: ['es'], fr: ['fr'], de: ['de'], ru: ['ru'], ja: ['ja'], ar: ['ar']
+        };
+        return map[langCode] || [langCode];
+    },
+
+    // Populate the voice <select> for a given language
+    populateVoiceSelect(langCode) {
+        const select = document.getElementById('voice-select');
+        const badge = document.getElementById('voice-count-badge');
+        if (!select) return;
+
+        select.innerHTML = '';
+        const voices = this.buildVoiceListForLang(langCode);
+
+        // Group by quality tier
+        const groups = {};
+        voices.forEach(v => {
+            const g = v.quality.startsWith('Google') ? '🎙️ Google Voices' :
+                      v.quality.startsWith('System (macOS)') ? '🍎 macOS Voices' :
+                      v.quality === 'Device' ? '🖥️ Device Voices' : '🖥️ System Voices';
+            if (!groups[g]) groups[g] = [];
+            groups[g].push(v);
+        });
+
+        const savedVoice = localStorage.getItem('selectedVoice');
+        let firstOption = null;
+        let count = 0;
+
+        Object.entries(groups).forEach(([groupLabel, groupVoices]) => {
+            const optgroup = document.createElement('optgroup');
+            optgroup.label = groupLabel;
+            groupVoices.forEach(v => {
+                const opt = document.createElement('option');
+                opt.value = v.name;
+                opt.textContent = `${v.gender} ${v.name}`;
+                if (v.name === savedVoice) opt.selected = true;
+                if (!firstOption) firstOption = opt;
+                optgroup.appendChild(opt);
+                count++;
+            });
+            select.appendChild(optgroup);
+        });
+
+        // Auto-select first if nothing saved
+        if (!savedVoice && firstOption) firstOption.selected = true;
+
+        // Update badge
+        if (badge) badge.textContent = `${count} voice${count !== 1 ? 's' : ''}`;
+    },
+
+    // Get the actual SpeechSynthesisVoice object by name
+    resolveVoice(name) {
+        // Try exact device voice match first
+        const device = this.deviceVoices.find(v => v.name === name);
+        if (device) return device;
+        // Try partial match (for Google voices that vary slightly by OS)
+        return this.deviceVoices.find(v => v.name.toLowerCase().includes(name.toLowerCase().split
         // Try partial match (for Google voices that vary slightly by OS)
         return this.deviceVoices.find(v => v.name.toLowerCase().includes(name.toLowerCase().split(' ')[1] || name.toLowerCase()));
     },
