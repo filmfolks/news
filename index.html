@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>News Flow Pro - AI Flash News</title>
+    <title>News Flow Pro - Flash News</title>
     <style>
         :root {
             --primary: #2563eb; --primary-dark: #1e40af; --bg: #f8fafc;
             --surface: #ffffff; --text: #0f172a; --text-sub: #64748b;
             --border: #e2e8f0; --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-            --success: #10b981; --warning: #f59e0b; --groq: #f97316;
+            --success: #10b981; --warning: #f59e0b; --google: #4285f4;
         }
         [data-theme="dark"] {
             --primary: #60a5fa; --primary-dark: #3b82f6; --bg: #0f172a;
             --surface: #1e293b; --text: #f8fafc; --text-sub: #94a3b8;
             --border: #334155; --shadow: 0 4px 6px -1px rgba(0,0,0,0.5);
-            --groq: #fb923c;
+            --google: #6ea8fe;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
         body {
@@ -44,7 +44,7 @@
             padding: 4px 10px; border-radius: 12px; background: var(--surface); border: 1px solid var(--border);
         }
         .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); animation: pulse 2s infinite; }
-        .status-dot.groq-mode { background: var(--groq); }
+        .status-dot.google-mode { background: var(--google); }
         @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
         .category-bar {
             position: fixed; top: 60px; left: 0; right: 0; height: 44px;
@@ -78,10 +78,10 @@
         .source-badge { background: rgba(16,185,129,0.1); color: var(--success); padding: 6px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; }
         .headline { font-size: 1.5rem; font-weight: 800; line-height: 1.3; margin-bottom: 16px; color: var(--text); }
         .summary-section { background: rgba(37,99,235,0.05); padding: 16px; border-radius: 12px; margin-bottom: 16px; border-left: 3px solid var(--primary); }
-        .groq-section { background: rgba(249,115,22,0.05); border-left: 3px solid var(--groq); }
+        .google-section { background: rgba(66,133,244,0.05); border-left: 3px solid var(--google); }
         .basic-section { background: rgba(245,158,11,0.05); border-left: 3px solid var(--warning); }
         .summary-label { font-size: 0.7rem; color: var(--primary); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-        .summary-label.groq { color: var(--groq); }
+        .summary-label.google { color: var(--google); }
         .body-text { font-size: 1rem; line-height: 1.7; color: var(--text-sub); }
         .attribution { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); font-size: 0.82rem; color: var(--text-sub); }
         .attribution a { color: var(--primary); text-decoration: none; }
@@ -146,7 +146,7 @@
 <header class="header">
     <div class="logo">
         <span>News Flow</span>
-        <span class="logo-badge">AI</span>
+        <span class="logo-badge">PRO</span>
     </div>
     <div class="header-actions">
         <div class="status-indicator" id="status">
@@ -238,93 +238,48 @@ const GOOGLE_VOICES = {
         { name: 'Google US English',                         lang: 'en-US', gender: '♀' },
         { name: 'Google UK English Female',                  lang: 'en-GB', gender: '♀' },
         { name: 'Google UK English Male',                    lang: 'en-GB', gender: '♂' },
-        { name: 'Microsoft Zira - English (United States)',  lang: 'en-US', gender: '♀' },
-        { name: 'Microsoft David - English (United States)', lang: 'en-US', gender: '♂' },
-        { name: 'Samantha', lang: 'en-US', gender: '♀' },
-        { name: 'Alex',     lang: 'en-US', gender: '♂' },
-        { name: 'Victoria', lang: 'en-US', gender: '♀' },
-        { name: 'Karen',    lang: 'en-AU', gender: '♀' },
-        { name: 'Daniel',   lang: 'en-GB', gender: '♂' },
-        { name: 'Rishi',    lang: 'en-IN', gender: '♂' },
     ],
     hi: [
         { name: 'Google हिन्दी',                             lang: 'hi-IN', gender: '♀' },
-        { name: 'Microsoft Hemant - Hindi (India)',          lang: 'hi-IN', gender: '♂' },
-        { name: 'Microsoft Kalpana - Hindi (India)',         lang: 'hi-IN', gender: '♀' },
-        { name: 'Lekha',    lang: 'hi-IN', gender: '♀' },
     ],
     ta: [
         { name: 'Google தமிழ்',                              lang: 'ta-IN', gender: '♀' },
-        { name: 'Microsoft Valluvar - Tamil (India)',        lang: 'ta-IN', gender: '♂' },
     ],
     te: [
         { name: 'Google తెలుగు',                             lang: 'te-IN', gender: '♀' },
-        { name: 'Microsoft Chitra - Telugu (India)',         lang: 'te-IN', gender: '♀' },
-        { name: 'Microsoft Subramanian - Telugu (India)',    lang: 'te-IN', gender: '♂' },
     ],
     kn: [
         { name: 'Google ಕನ್ನಡ',                              lang: 'kn-IN', gender: '♀' },
-        { name: 'Microsoft Dhwani - Kannada (India)',        lang: 'kn-IN', gender: '♀' },
-        { name: 'Microsoft Ravi - Kannada (India)',          lang: 'kn-IN', gender: '♂' },
     ],
     mr: [
         { name: 'Google मराठी',                              lang: 'mr-IN', gender: '♀' },
-        { name: 'Microsoft Aarohi - Marathi (India)',        lang: 'mr-IN', gender: '♀' },
-        { name: 'Microsoft Manohar - Marathi (India)',       lang: 'mr-IN', gender: '♂' },
     ],
     bn: [
         { name: 'Google বাংলা',                              lang: 'bn-IN', gender: '♀' },
-        { name: 'Microsoft Bashkar - Bengali (India)',       lang: 'bn-IN', gender: '♂' },
-        { name: 'Microsoft Tanishaa - Bengali (India)',      lang: 'bn-IN', gender: '♀' },
     ],
     ml: [
         { name: 'Google മലയാളം',                             lang: 'ml-IN', gender: '♀' },
-        { name: 'Microsoft Sobhana - Malayalam (India)',     lang: 'ml-IN', gender: '♀' },
     ],
     or: [
         { name: 'Google ଓଡ଼ିଆ',                              lang: 'or-IN', gender: '♀' },
-        { name: 'Microsoft Subhadra - Odia (India)',         lang: 'or-IN', gender: '♀' },
-        { name: 'Microsoft Kalyan - Odia (India)',           lang: 'or-IN', gender: '♂' },
     ],
     es: [
         { name: 'Google español',                            lang: 'es-ES', gender: '♀' },
-        { name: 'Microsoft Helena - Spanish (Spain)',        lang: 'es-ES', gender: '♀' },
-        { name: 'Microsoft Pablo - Spanish (Spain)',         lang: 'es-ES', gender: '♂' },
-        { name: 'Jorge',    lang: 'es-ES', gender: '♂' },
-        { name: 'Monica',   lang: 'es-ES', gender: '♀' },
     ],
     fr: [
         { name: 'Google français',                           lang: 'fr-FR', gender: '♀' },
-        { name: 'Microsoft Hortense - French (France)',      lang: 'fr-FR', gender: '♀' },
-        { name: 'Microsoft Paul - French (France)',          lang: 'fr-FR', gender: '♂' },
-        { name: 'Thomas',   lang: 'fr-FR', gender: '♂' },
-        { name: 'Aurelie',  lang: 'fr-FR', gender: '♀' },
     ],
     de: [
         { name: 'Google Deutsch',                            lang: 'de-DE', gender: '♀' },
-        { name: 'Microsoft Hedda - German (Germany)',        lang: 'de-DE', gender: '♀' },
-        { name: 'Microsoft Stefan - German (Germany)',       lang: 'de-DE', gender: '♂' },
-        { name: 'Anna',     lang: 'de-DE', gender: '♀' },
-        { name: 'Yannick',  lang: 'de-DE', gender: '♂' },
     ],
     ru: [
         { name: 'Google русский',                            lang: 'ru-RU', gender: '♀' },
-        { name: 'Microsoft Irina - Russian (Russia)',        lang: 'ru-RU', gender: '♀' },
-        { name: 'Microsoft Pavel - Russian (Russia)',        lang: 'ru-RU', gender: '♂' },
-        { name: 'Milena',   lang: 'ru-RU', gender: '♀' },
     ],
     ja: [
         { name: 'Google 日本語',                              lang: 'ja-JP', gender: '♀' },
-        { name: 'Microsoft Haruka - Japanese (Japan)',       lang: 'ja-JP', gender: '♀' },
-        { name: 'Microsoft Ichiro - Japanese (Japan)',       lang: 'ja-JP', gender: '♂' },
-        { name: 'Kyoko',    lang: 'ja-JP', gender: '♀' },
-        { name: 'Otoya',    lang: 'ja-JP', gender: '♂' },
     ],
     ar: [
         { name: 'Google العربية',                            lang: 'ar-XA', gender: '♀' },
-        { name: 'Microsoft Hoda - Arabic (Egypt)',           lang: 'ar-EG', gender: '♀' },
-        { name: 'Microsoft Naayf - Arabic (Saudi Arabia)',   lang: 'ar-SA', gender: '♂' },
-        { name: 'Maged',    lang: 'ar-SA', gender: '♂' },
     ],
 };
 
@@ -338,62 +293,32 @@ const LANG_NAMES = {
     ja:'日本語',   ar:'العربية'
 };
 
-const LANG_FULL = {
-    en:'English',  hi:'Hindi',   ta:'Tamil',    te:'Telugu',
-    kn:'Kannada',  mr:'Marathi', bn:'Bengali',  ml:'Malayalam',
-    or:'Odia',     es:'Spanish', fr:'French',   de:'German',
-    ru:'Russian',  ja:'Japanese',ar:'Arabic'
-};
-
 // ================================================================
-//  RSS FEEDS
+//  NATIVE GOOGLE NEWS URL BUILDER
 // ================================================================
-const LANG_FEEDS = {
-    en: [
-        'https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en',
-        'https://feeds.bbci.co.uk/news/rss.xml',
-        'https://timesofindia.indiatimes.com/rssfeedstopstories.cms'
-    ],
-    hi: [
-        'https://news.google.com/rss?hl=hi&gl=IN&ceid=IN:hi',
-        'https://www.amarujala.com/rss/breaking-news.xml'
-    ],
-    ta: ['https://news.google.com/rss?hl=ta&gl=IN&ceid=IN:ta'],
-    te: ['https://news.google.com/rss?hl=te&gl=IN&ceid=IN:te'],
-    kn: ['https://news.google.com/rss?hl=kn&gl=IN&ceid=IN:kn'],
-    mr: ['https://news.google.com/rss?hl=mr&gl=IN&ceid=IN:mr'],
-    bn: ['https://news.google.com/rss?hl=bn&gl=IN&ceid=IN:bn'],
-    ml: ['https://news.google.com/rss?hl=ml&gl=IN&ceid=IN:ml'],
-    or: ['https://news.google.com/rss?hl=or&gl=IN&ceid=IN:or'],
-    es: ['https://news.google.com/rss?hl=es&gl=ES&ceid=ES:es'],
-    fr: ['https://news.google.com/rss?hl=fr&gl=FR&ceid=FR:fr'],
-    de: ['https://news.google.com/rss?hl=de&gl=DE&ceid=DE:de'],
-    ru: ['https://news.google.com/rss?hl=ru&gl=RU&ceid=RU:ru'],
-    ja: ['https://news.google.com/rss?hl=ja&gl=JP&ceid=JP:ja'],
-    ar: ['https://news.google.com/rss?hl=ar&gl=EG&ceid=EG:ar']
-};
-
 function getCatUrl(cat, lang) {
     const gl  = { en:'US', hi:'IN', ta:'IN', te:'IN', kn:'IN', mr:'IN', bn:'IN', ml:'IN', or:'IN', es:'ES', fr:'FR', de:'DE', ru:'RU', ja:'JP', ar:'EG' };
     const hl  = { en:'en-US', hi:'hi', ta:'ta', te:'te', kn:'kn', mr:'mr', bn:'bn', ml:'ml', or:'or', es:'es', fr:'fr', de:'de', ru:'ru', ja:'ja', ar:'ar' };
     const ceid= { en:'US:en', hi:'IN:hi', ta:'IN:ta', te:'IN:te', kn:'IN:kn', mr:'IN:mr', bn:'IN:bn', ml:'IN:ml', or:'IN:or', es:'ES:es', fr:'FR:fr', de:'DE:de', ru:'RU:ru', ja:'JP:ja', ar:'EG:ar' };
 
-    const queries = {
-        india:         'India+news',
-        world:         'world+news',
-        technology:    'technology',
-        business:      'business+finance',
-        sports:        'sports',
-        entertainment: 'entertainment',
-        health:        'health+medicine',
-        science:       'science+space'
+    // Use native Google News Topics to guarantee native language articles
+    const topics = {
+        india:         'NATION',
+        world:         'WORLD',
+        technology:    'TECHNOLOGY',
+        business:      'BUSINESS',
+        sports:        'SPORTS',
+        entertainment: 'ENTERTAINMENT',
+        health:        'HEALTH',
+        science:       'SCIENCE'
     };
 
-    if (cat === 'top') {
-        return `https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRFZxYUdjU0FtVnVHZ0pWVXlnQVAB?hl=${hl[lang]||'en-US'}&gl=${gl[lang]||'US'}&ceid=${ceid[lang]||'US:en'}`;
+    if (cat === 'all' || cat === 'top') {
+        return `https://news.google.com/rss?hl=${hl[lang]||'en-US'}&gl=${gl[lang]||'US'}&ceid=${ceid[lang]||'US:en'}`;
     }
-    if (queries[cat]) {
-        return `https://news.google.com/rss/search?q=${queries[cat]}&hl=${hl[lang]||'en-US'}&gl=${gl[lang]||'US'}&ceid=${ceid[lang]||'US:en'}`;
+    
+    if (topics[cat]) {
+        return `https://news.google.com/rss/headlines/section/topic/${topics[cat]}?hl=${hl[lang]||'en-US'}&gl=${gl[lang]||'US'}&ceid=${ceid[lang]||'US:en'}`;
     }
     return null;
 }
@@ -417,73 +342,29 @@ async function fetchViaProxy(url) {
             if (!res.ok) continue;
             const text = i === 0 ? (await res.json()).contents || '' : await res.text();
             if (text && text.includes('<item>')) return text;
-        } catch(e) { console.warn(`Proxy ${i} failed:`, e.message); }
+        } catch(e) { console.warn(`Proxy ${i} failed`); }
     }
     return null;
 }
 
 // ================================================================
-//  GROQ API - USING JSON MODE
+//  GOOGLE TRANSLATE API (FREE)
 // ================================================================
-const GROQ_API_KEY = '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';
-const GROQ_URL     = 'https://api.groq.com/openai/v1/chat/completions';
-
-async function groqTranslateBatch(items, targetLang) {
-    if (!items.length) return [];
-    const langName = LANG_FULL[targetLang] || 'English';
-    const isEn     = targetLang === 'en';
-
-    const inputText = items.map((item, i) =>
-        `[${i+1}] TITLE: ${item.title}\nCONTENT: ${(item.description || item.title).substring(0, 300)}`
-    ).join('\n\n');
-
-    const prompt = isEn
-        ? `Summarize each news item in 2 sentences. Return ONLY a JSON object containing an "items" array with "t" (title) and "s" (summary) string keys.
-Example: {"items": [{"t": "title 1", "s": "summary 1"}]}
-News items:\n${inputText}`
-        : `You MUST translate AND summarize each news item into ${langName} language.
-Every single word in "t" and "s" fields MUST be in ${langName} script/language. Do NOT use English.
-Return ONLY a JSON object containing an "items" array with "t" and "s" keys.
-Example: {"items": [{"t": "${langName} title", "s": "${langName} summary"}]}
-News items:\n${inputText}`;
-
+async function googleTranslate(text, targetLang) {
+    if (!text || targetLang === 'en') return text;
     try {
-        const res = await fetch(GROQ_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + GROQ_API_KEY
-            },
-            body: JSON.stringify({
-                model: 'llama-3.3-70b-versatile',
-                response_format: { type: "json_object" },
-                messages: [
-                    {
-                        role: 'system',
-                        content: 'You are a professional news translator and summarizer. Always respond with a valid JSON object containing an "items" array.'
-                    },
-                    { role: 'user', content: prompt }
-                ],
-                temperature: 0.1,
-                max_tokens:  2000
-            }),
-            signal: AbortSignal.timeout(30000)
-        });
-
-        if (!res.ok) { console.warn('Groq HTTP error:', res.status); return []; }
-        const data    = await res.json();
-        const content = data.choices?.[0]?.message?.content?.trim() || '{}';
-
-        const parsed = JSON.parse(content);
-        return Array.isArray(parsed.items) ? parsed.items : [];
-    } catch(e) {
-        console.warn('Groq batch error:', e.message);
-        return [];
+        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        return data[0].map(item => item[0]).join('');
+    } catch (e) {
+        console.warn('Google Translate failed:', e.message);
+        return text;
     }
 }
 
 // ================================================================
-//  STATE
+//  STATE & TTS
 // ================================================================
 let currentLang     = localStorage.getItem('selectedLang')  || 'en';
 let currentCategory = 'all';
@@ -495,12 +376,7 @@ let isPlaying       = false;
 let deviceVoices    = [];
 let isFetching      = false;
 
-// ================================================================
-//  TTS
-// ================================================================
-function loadDeviceVoices() {
-    deviceVoices = window.speechSynthesis.getVoices();
-}
+function loadDeviceVoices() { deviceVoices = window.speechSynthesis.getVoices(); }
 
 function buildVoiceList(langCode) {
     const hardcoded = GOOGLE_VOICES[langCode] || [];
@@ -522,11 +398,7 @@ function populateVoiceSelect(langCode) {
     const saved  = localStorage.getItem('selectedVoice') || currentVoice;
     let count = 0, found = false;
 
-    const groups = {
-        '🎙️ Google Voices':         [],
-        '🖥️ System / macOS Voices': [],
-        '🖥️ Device Voices':         []
-    };
+    const groups = { '🎙️ Google Voices': [], '🖥️ System / macOS Voices': [], '🖥️ Device Voices': [] };
     voices.forEach(v => {
         if      (v.name.startsWith('Google')) groups['🎙️ Google Voices'].push(v);
         else if (v.gender === '🔊')           groups['🖥️ Device Voices'].push(v);
@@ -555,8 +427,7 @@ function populateVoiceSelect(langCode) {
 function resolveVoice(name) {
     if (!name) return null;
     return deviceVoices.find(v => v.name === name)
-        || deviceVoices.find(v => v.name.toLowerCase().includes(
-               name.toLowerCase().replace('google ', '').split(' ')[0]))
+        || deviceVoices.find(v => v.name.toLowerCase().includes(name.toLowerCase().replace('google ', '').split(' ')[0]))
         || null;
 }
 
@@ -570,33 +441,20 @@ function speakItem(item) {
     if (voice) { utt.voice = voice; utt.lang = voice.lang; }
     else utt.lang = GOOGLE_VOICES[currentLang]?.[0]?.lang || 'en-US';
     utt.rate = 0.9; utt.pitch = 1.0; utt.volume = 1.0;
-    utt.onend = () => {
-        isPlaying = false;
-        document.getElementById('play-btn').textContent = '▶';
-        setTimeout(goNext, 1000);
-    };
-    utt.onerror = () => {
-        isPlaying = false;
-        document.getElementById('play-btn').textContent = '▶';
-    };
+    utt.onend = () => { isPlaying = false; document.getElementById('play-btn').textContent = '▶'; setTimeout(goNext, 1000); };
+    utt.onerror = () => { isPlaying = false; document.getElementById('play-btn').textContent = '▶'; };
     synth.speak(utt);
 }
 
 function addPauses(text) {
-    return (text||'').replace(/\. /g,'., ').replace(/: /g,':, ')
-        .replace(/; /g,';, ').replace(/ - /g,', - ')
-        .replace(/\? /g,'?, ').replace(/! /g,'!, ');
+    return (text||'').replace(/\. /g,'., ').replace(/: /g,':, ').replace(/; /g,';, ').replace(/ - /g,', - ').replace(/\? /g,'?, ').replace(/! /g,'!, ');
 }
 
 // ================================================================
 //  HELPERS
 // ================================================================
 function decodeHtml(t) {
-    return (t||'').replace(/<[^>]*>/g,'')
-        .replace(/&nbsp;/g,' ').replace(/&amp;/g,'&')
-        .replace(/&lt;/g,'<').replace(/&gt;/g,'>')
-        .replace(/&#39;/g,"'").replace(/&quot;/g,'"')
-        .replace(/\s+/g,' ').trim();
+    return (t||'').replace(/<[^>]*>/g,'').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&#39;/g,"'").replace(/&quot;/g,'"').replace(/\s+/g,' ').trim();
 }
 
 function basicSummary(text) {
@@ -605,15 +463,7 @@ function basicSummary(text) {
     return s ? s+'.' : text.substring(0,180)+'...';
 }
 
-function getCustomFeeds() {
-    try { return JSON.parse(localStorage.getItem('newsflow_custom_feeds')||'[]').map(f=>f.url); }
-    catch { return []; }
-}
-
-function getManualPosts() {
-    try { return JSON.parse(localStorage.getItem('newsflow_manual')||'[]'); }
-    catch { return []; }
-}
+function getManualPosts() { try { return JSON.parse(localStorage.getItem('newsflow_manual')||'[]'); } catch { return []; } }
 
 function parseRSS(xmlText, sourceHost) {
     const xml   = new DOMParser().parseFromString(xmlText, 'text/xml');
@@ -648,36 +498,18 @@ async function fetchNews() {
     setStatus('⏳ Fetching...');
 
     const urls = [];
-    if (currentCategory === 'all') {
-        (LANG_FEEDS[currentLang] || LANG_FEEDS['en']).forEach(u => urls.push(u));
-    } else {
-        const catUrl = getCatUrl(currentCategory, currentLang);
-        if (catUrl) urls.push(catUrl);
-        const baseFeed = (LANG_FEEDS[currentLang] || LANG_FEEDS['en'])[0];
-        if (baseFeed) urls.push(baseFeed);
-    }
-    getCustomFeeds().forEach(u => urls.push(u));
+    const catUrl = getCatUrl(currentCategory, currentLang);
+    if (catUrl) urls.push(catUrl);
 
     let raw = [];
     for (const url of urls) {
         try {
-            let host = 'News';
-            try { host = new URL(url).hostname.replace('www.',''); } catch {}
-            setStatus(`⏳ Loading ${host}...`);
-
+            setStatus(`⏳ Loading Native News...`);
             const text = await fetchViaProxy(url);
             if (!text) continue;
-
-            const parsed = parseRSS(text, host);
-            raw.push(...parsed);
+            raw.push(...parseRSS(text, 'Google News'));
             if (raw.length >= 25) break;
         } catch(e) {}
-    }
-
-    if (raw.length === 0) {
-        console.warn('All feeds failed, trying BBC fallback...');
-        const fallback = await fetchViaProxy('https://feeds.bbci.co.uk/news/rss.xml');
-        if (fallback) raw.push(...parseRSS(fallback, 'bbc.co.uk'));
     }
 
     if (raw.length === 0) {
@@ -700,35 +532,27 @@ async function fetchNews() {
         const k = item.title.toLowerCase().substring(0,50);
         if (seen.has(k)) return false;
         seen.add(k); return true;
-    }).sort(() => Math.random()-0.5).slice(0,30);
+    });
 
-    // Initial show
     allItems = raw;
     mergeManual();
     renderFeed();
-    setStatus(`📰 ${raw.length} articles — translating to ${LANG_NAMES[currentLang]}...`);
+    setStatus(`📰 Translating summaries to ${LANG_NAMES[currentLang]}...`);
 
-    // Groq Batching
-    const BATCH = 5;
     const nonManual = allItems.filter(i => !i.isManual);
+    for (let i = 0; i < nonManual.length; i++) {
+        const item = nonManual[i];
+        
+        if (currentLang !== 'en') {
+            item.displayTitle = await googleTranslate(item.displayTitle, currentLang);
+            item.displaySummary = await googleTranslate(item.displaySummary, currentLang);
+            item.summaryMode = 'google';
+        }
 
-    for (let b = 0; b < nonManual.length; b += BATCH) {
-        const batch   = nonManual.slice(b, b + BATCH);
-        const results = await groqTranslateBatch(batch, currentLang);
-
-        results.forEach((r, i) => {
-            const item = batch[i];
-            if (!item) return;
-            const idx = allItems.findIndex(a => a.title === item.title && !a.isManual);
-            if (idx === -1) return;
-
-            if (r.t && r.t.trim().length > 2) allItems[idx].displayTitle   = r.t.trim();
-            if (r.s && r.s.trim().length > 2) allItems[idx].displaySummary = r.s.trim();
-            allItems[idx].summaryMode = 'groq';
-        });
-
-        renderFeed();
-        setStatus(`✨ Translating... ${Math.min(b+BATCH, nonManual.length)}/${nonManual.length}`);
+        if (i % 3 === 0 || i === nonManual.length - 1) {
+            renderFeed();
+            setStatus(`✨ Processing... ${i + 1}/${nonManual.length}`);
+        }
     }
 
     try {
@@ -739,7 +563,6 @@ async function fetchNews() {
     } catch(e) {}
 
     isFetching = false;
-    renderFeed();
     setStatus(`✅ ${filteredItems.length} articles`);
 }
 
@@ -768,17 +591,9 @@ function renderFeed() {
     const feed = document.getElementById('feed');
     if (!feed) return;
 
-    filteredItems = currentCategory === 'all'
-        ? [...allItems]
-        : allItems.filter(i => !i.isManual || i.category === currentCategory || i.category === 'all');
+    filteredItems = currentCategory === 'all' ? [...allItems] : allItems.filter(i => !i.isManual || i.category === currentCategory || i.category === 'all');
 
-    if (!filteredItems.length) {
-        feed.innerHTML = `<div class="card-wrapper"><div class="card">
-            <div class="headline">Loading...</div>
-            <div class="body-text">Fetching news, please wait.</div>
-        </div></div>`;
-        return;
-    }
+    if (!filteredItems.length) return;
 
     const existing = feed.querySelectorAll('.card-wrapper');
     if (existing.length === filteredItems.length) {
@@ -790,16 +605,14 @@ function renderFeed() {
             const lbl = cw.querySelector('.summary-label');
             const ss  = cw.querySelector('.summary-section');
             if (lbl) {
-                lbl.className   = 'summary-label' + (item.summaryMode==='groq' ? ' groq' : '');
+                lbl.className   = 'summary-label' + (item.summaryMode==='google' ? ' google' : '');
                 lbl.textContent = item.isManual       ? '📌 Admin Note'
-                    : item.summaryMode==='groq' && currentLang!=='en' ? `⚡ AI (${LANG_NAMES[currentLang]})`
-                    : item.summaryMode==='groq' ? '⚡ Groq AI Summary'
-                    : currentLang !== 'en' ? `⏳ Translating to ${LANG_NAMES[currentLang]}...`
+                    : item.summaryMode==='google' ? `⚡ Google Translate (${LANG_NAMES[currentLang]})`
                     : '📝 Quick Summary';
             }
             if (ss) {
                 ss.className = 'summary-section'
-                    + (item.summaryMode==='groq'  ? ' groq-section'  : '')
+                    + (item.summaryMode==='google'  ? ' google-section'  : '')
                     + (item.summaryMode==='basic' ? ' basic-section' : '');
             }
         });
@@ -807,17 +620,15 @@ function renderFeed() {
         feed.innerHTML = '';
         filteredItems.forEach(item => feed.appendChild(buildCard(item)));
     }
-
     updateStatusDot();
 }
 
 function buildCard(item) {
-    const isGroq   = item.summaryMode === 'groq';
+    const isGoogle = item.summaryMode === 'google';
     const isManual = item.isManual;
     const div      = document.createElement('div');
     div.className  = 'card-wrapper';
-
-    const sectionClass = isGroq ? ' groq-section' : isManual ? '' : ' basic-section';
+    const sectionClass = isGoogle ? ' google-section' : isManual ? '' : ' basic-section';
 
     div.innerHTML = `
         <div class="card">
@@ -829,24 +640,14 @@ function buildCard(item) {
             </div>
             <div class="headline">${item.displayTitle}</div>
             <div class="summary-section${sectionClass}">
-                <div class="summary-label${isGroq ? ' groq' : ''}">
-                    ${isManual
-                        ? '📌 Admin Note'
-                        : isGroq && currentLang !== 'en'
-                            ? `⚡ AI (${LANG_NAMES[currentLang]})`
-                        : isGroq
-                            ? '⚡ Groq AI Summary'
-                        : currentLang !== 'en'
-                            ? `⏳ Translating to ${LANG_NAMES[currentLang]}...`
-                        : '📝 Quick Summary'}
+                <div class="summary-label${isGoogle ? ' google' : ''}">
+                    ${isManual ? '📌 Admin Note' : isGoogle ? `⚡ Google Translate (${LANG_NAMES[currentLang]})` : '📝 Quick Summary'}
                 </div>
                 <div class="body-text">${item.displaySummary}</div>
             </div>
             <div class="attribution">
                 Source: <strong>${item.source}</strong>
-                ${item.link
-                    ? ` &nbsp;·&nbsp; <a href="${item.link}" target="_blank" rel="noopener">Read full article ↗</a>`
-                    : ''}
+                ${item.link ? ` &nbsp;·&nbsp; <a href="${item.link}" target="_blank" rel="noopener">Read full article ↗</a>` : ''}
             </div>
         </div>`;
     return div;
@@ -855,18 +656,9 @@ function buildCard(item) {
 // ================================================================
 //  CONTROLS
 // ================================================================
-function goNext() {
-    stopPlay();
-    if (currentIndex < filteredItems.length-1) { currentIndex++; scrollToIndex(currentIndex); }
-}
-function goPrev() {
-    stopPlay();
-    if (currentIndex > 0) { currentIndex--; scrollToIndex(currentIndex); }
-}
-function scrollToIndex(idx) {
-    document.querySelectorAll('.card-wrapper')[idx]?.scrollIntoView({behavior:'smooth',block:'center'});
-    updateStatusDot();
-}
+function goNext() { stopPlay(); if (currentIndex < filteredItems.length-1) { currentIndex++; scrollToIndex(currentIndex); } }
+function goPrev() { stopPlay(); if (currentIndex > 0) { currentIndex--; scrollToIndex(currentIndex); } }
+function scrollToIndex(idx) { document.querySelectorAll('.card-wrapper')[idx]?.scrollIntoView({behavior:'smooth',block:'center'}); updateStatusDot(); }
 function togglePlay() {
     if (isPlaying) { stopPlay(); return; }
     const item = filteredItems[currentIndex];
@@ -875,20 +667,13 @@ function togglePlay() {
     document.getElementById('play-btn').textContent = '⏸';
     speakItem(item);
 }
-function stopPlay() {
-    isPlaying = false;
-    window.speechSynthesis.cancel();
-    document.getElementById('play-btn').textContent = '▶';
-}
-function setStatus(t) {
-    const el = document.getElementById('status-text');
-    if (el) el.textContent = t;
-}
+function stopPlay() { isPlaying = false; window.speechSynthesis.cancel(); document.getElementById('play-btn').textContent = '▶'; }
+function setStatus(t) { const el = document.getElementById('status-text'); if (el) el.textContent = t; }
 function updateStatusDot() {
     const dot  = document.getElementById('status-dot');
     const txt  = document.getElementById('status-text');
     const item = filteredItems[currentIndex];
-    if (dot) dot.classList.toggle('groq-mode', item?.summaryMode==='groq');
+    if (dot) dot.classList.toggle('google-mode', item?.summaryMode==='google');
     if (txt && filteredItems.length>0) txt.textContent = `${currentIndex+1} / ${filteredItems.length}`;
 }
 
@@ -896,63 +681,37 @@ function updateStatusDot() {
 //  BOOT
 // ================================================================
 document.addEventListener('DOMContentLoaded', () => {
-
     document.body.setAttribute('data-theme', localStorage.getItem('theme')||'light');
     document.getElementById('lang-select').value = currentLang;
 
-    if (window.speechSynthesis.onvoiceschanged !== undefined) {
-        window.speechSynthesis.onvoiceschanged = () => { loadDeviceVoices(); populateVoiceSelect(currentLang); };
-    }
-    loadDeviceVoices();
-    populateVoiceSelect(currentLang);
+    if (window.speechSynthesis.onvoiceschanged !== undefined) window.speechSynthesis.onvoiceschanged = () => { loadDeviceVoices(); populateVoiceSelect(currentLang); };
+    loadDeviceVoices(); populateVoiceSelect(currentLang);
 
     document.getElementById('theme-btn').addEventListener('click', () => {
         const t = document.body.getAttribute('data-theme')==='dark' ? 'light' : 'dark';
-        document.body.setAttribute('data-theme', t);
-        localStorage.setItem('theme', t);
+        document.body.setAttribute('data-theme', t); localStorage.setItem('theme', t);
     });
 
-    document.getElementById('settings-btn').addEventListener('click', () => {
-        document.getElementById('lang-select').value = currentLang;
-        populateVoiceSelect(currentLang);
-        document.getElementById('settings-modal').classList.add('open');
-    });
-    document.getElementById('close-settings').addEventListener('click', () => {
-        document.getElementById('settings-modal').classList.remove('open');
-    });
-    document.getElementById('settings-modal').addEventListener('click', e => {
-        if (e.target.id==='settings-modal')
-            document.getElementById('settings-modal').classList.remove('open');
-    });
+    document.getElementById('settings-btn').addEventListener('click', () => { document.getElementById('settings-modal').classList.add('open'); });
+    document.getElementById('close-settings').addEventListener('click', () => { document.getElementById('settings-modal').classList.remove('open'); });
+    document.getElementById('settings-modal').addEventListener('click', e => { if (e.target.id==='settings-modal') document.getElementById('settings-modal').classList.remove('open'); });
 
-    document.getElementById('lang-select').addEventListener('change', () => {
-        currentLang = document.getElementById('lang-select').value;
-        populateVoiceSelect(currentLang);
-    });
-
-    document.getElementById('voice-select').addEventListener('change', () => {
-        currentVoice = document.getElementById('voice-select').value;
-        if (isPlaying) { stopPlay(); setTimeout(togglePlay, 150); }
-    });
+    document.getElementById('lang-select').addEventListener('change', () => { currentLang = document.getElementById('lang-select').value; populateVoiceSelect(currentLang); });
+    document.getElementById('voice-select').addEventListener('change', () => { currentVoice = document.getElementById('voice-select').value; if (isPlaying) { stopPlay(); setTimeout(togglePlay, 150); } });
 
     document.getElementById('save-prefs-btn').addEventListener('click', () => {
         currentLang  = document.getElementById('lang-select').value;
         currentVoice = document.getElementById('voice-select').value;
-        localStorage.setItem('selectedLang',  currentLang);
-        localStorage.setItem('selectedVoice', currentVoice);
+        localStorage.setItem('selectedLang',  currentLang); localStorage.setItem('selectedVoice', currentVoice);
         document.getElementById('settings-modal').classList.remove('open');
-        isFetching = false;
-        fetchNews();
+        isFetching = false; fetchNews();
     });
 
     document.getElementById('category-bar').addEventListener('click', e => {
-        const btn = e.target.closest('.cat-btn');
-        if (!btn) return;
+        const btn = e.target.closest('.cat-btn'); if (!btn) return;
         document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        currentCategory = btn.getAttribute('data-cat');
-        isFetching = false;
-        fetchNews();
+        btn.classList.add('active'); currentCategory = btn.getAttribute('data-cat');
+        isFetching = false; fetchNews();
     });
 
     document.getElementById('play-btn').addEventListener('click', togglePlay);
@@ -963,31 +722,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const cards   = document.querySelectorAll('.card-wrapper');
         const feedTop = document.getElementById('feed').getBoundingClientRect().top;
         let closest=0, minDist=Infinity;
-        cards.forEach((c,i) => {
-            const d = Math.abs(c.getBoundingClientRect().top - feedTop);
-            if (d < minDist) { minDist=d; closest=i; }
-        });
+        cards.forEach((c,i) => { const d = Math.abs(c.getBoundingClientRect().top - feedTop); if (d < minDist) { minDist=d; closest=i; } });
         if (closest!==currentIndex) { currentIndex=closest; updateStatusDot(); }
     });
 
-    try {
-        const ts      = parseInt(localStorage.getItem('newsflow_cache_ts')||'0');
-        const cacLang = localStorage.getItem('newsflow_cache_lang')||'';
-        const cacCat  = localStorage.getItem('newsflow_cache_cat') ||'';
-        const fresh   = (Date.now()-ts) < 24*60*60*1000;
-        const sameCtx = cacLang===currentLang && cacCat===currentCategory;
-        const cached  = localStorage.getItem('newsflow_cache');
-        if (fresh && sameCtx && cached) {
-            allItems = JSON.parse(cached);
-            mergeManual();
-            renderFeed();
-            setStatus('📦 Cached');
-            setTimeout(() => { isFetching=false; fetchNews(); }, 5000);
-        } else {
-            fetchNews();
-        }
-    } catch(e) { fetchNews(); }
-
+    fetchNews();
 });
 </script>
 
