@@ -8,7 +8,7 @@
         :root {
             --primary: #2563eb; --primary-dark: #1e40af; --bg: #f8fafc;
             --surface: #ffffff; --text: #0f172a; --text-sub: #64748b;
-            --border: #e2e8f0; --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            --border: #e2e8f0; --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
             --success: #10b981; --warning: #f59e0b; --groq: #f97316;
         }
         [data-theme="dark"] {
@@ -17,20 +17,20 @@
             --border: #334155; --shadow: 0 4px 6px -1px rgba(0,0,0,0.5);
             --groq: #fb923c;
         }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
         body {
-            margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background: var(--bg); color: var(--text); height: 100vh; overflow: hidden;
             transition: background 0.3s, color 0.3s;
         }
         .header {
             position: fixed; top: 0; left: 0; right: 0; height: 60px;
-            background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            background: rgba(255,255,255,0.9); backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border); display: flex; align-items: center;
-            justify-content: space-between; padding: 0 20px; z-index: 1000; transition: background 0.3s;
+            justify-content: space-between; padding: 0 20px; z-index: 1000;
         }
-        [data-theme="dark"] .header { background: rgba(30,41,59,0.85); }
-        .logo { font-weight: 800; font-size: 1.25rem; color: var(--primary); letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; }
+        [data-theme="dark"] .header { background: rgba(30,41,59,0.9); }
+        .logo { font-weight: 800; font-size: 1.25rem; color: var(--primary); display: flex; align-items: center; gap: 8px; }
         .logo-badge { background: var(--primary); color: white; font-size: 0.6rem; padding: 2px 6px; border-radius: 4px; font-weight: 700; }
         .header-actions { display: flex; gap: 10px; align-items: center; }
         .icon-btn {
@@ -38,7 +38,7 @@
             border-radius: 8px; width: 40px; height: 40px; display: flex; align-items: center;
             justify-content: center; font-size: 1.1rem; cursor: pointer; transition: all 0.2s;
         }
-        .icon-btn:active { transform: scale(0.95); background: var(--border); }
+        .icon-btn:hover { background: var(--border); }
         .status-indicator {
             display: flex; align-items: center; gap: 6px; font-size: 0.75rem; color: var(--text-sub);
             padding: 4px 10px; border-radius: 12px; background: var(--surface); border: 1px solid var(--border);
@@ -46,8 +46,6 @@
         .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); animation: pulse 2s infinite; }
         .status-dot.groq-mode { background: var(--groq); }
         @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
-
-        /* Category Bar */
         .category-bar {
             position: fixed; top: 60px; left: 0; right: 0; height: 44px;
             background: var(--surface); border-bottom: 1px solid var(--border);
@@ -58,12 +56,9 @@
         .cat-btn {
             white-space: nowrap; padding: 6px 14px; border-radius: 20px;
             border: 1px solid var(--border); background: transparent; color: var(--text-sub);
-            font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
+            font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s; flex-shrink: 0;
         }
         .cat-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
-        .cat-btn:active { transform: scale(0.95); }
-
-        /* Feed */
         .feed-container {
             height: 100vh; padding-top: 114px; padding-bottom: 170px;
             overflow-y: scroll; scroll-snap-type: y mandatory; scroll-behavior: smooth;
@@ -76,365 +71,294 @@
             background: var(--surface); width: 100%; max-width: 700px; padding: 30px;
             border-radius: 24px; border: 1px solid var(--border); box-shadow: var(--shadow);
             display: flex; flex-direction: column; max-height: 68vh; overflow-y: auto;
-            position: relative; transition: transform 0.2s;
         }
-        .card:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -5px rgba(0,0,0,0.15); }
         .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; gap: 12px; flex-wrap: wrap; }
         .badge { background: rgba(37,99,235,0.1); color: var(--primary); padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
         .manual-badge { background: rgba(16,185,129,0.1); color: var(--success); padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
-        .source-badge { background: rgba(16,185,129,0.1); color: var(--success); padding: 6px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+        .source-badge { background: rgba(16,185,129,0.1); color: var(--success); padding: 6px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; }
         .headline { font-size: 1.5rem; font-weight: 800; line-height: 1.3; margin-bottom: 16px; color: var(--text); }
         .summary-section { background: rgba(37,99,235,0.05); padding: 16px; border-radius: 12px; margin-bottom: 16px; border-left: 3px solid var(--primary); }
         .groq-section { background: rgba(249,115,22,0.05); border-left: 3px solid var(--groq); }
         .basic-section { background: rgba(245,158,11,0.05); border-left: 3px solid var(--warning); }
-        .summary-label { font-size: 0.7rem; color: var(--primary); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+        .summary-label { font-size: 0.7rem; color: var(--primary); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
         .summary-label.groq { color: var(--groq); }
-        .body-text { font-size: 1.05rem; line-height: 1.7; color: var(--text-sub); }
-        .attribution { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); font-size: 0.85rem; color: var(--text-sub); font-style: italic; }
-
-        /* Controls */
+        .body-text { font-size: 1rem; line-height: 1.7; color: var(--text-sub); }
+        .attribution { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); font-size: 0.82rem; color: var(--text-sub); }
+        .attribution a { color: var(--primary); text-decoration: none; }
         .controls-bar {
             position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
             background: var(--surface); padding: 12px 30px; border-radius: 50px;
             display: flex; align-items: center; gap: 30px;
             box-shadow: 0 20px 40px -5px rgba(0,0,0,0.3); z-index: 1000; border: 1px solid var(--border);
         }
-        .ctrl-btn { background: none; border: none; font-size: 1.6rem; cursor: pointer; color: var(--text-sub); transition: 0.2s; display: flex; align-items: center; justify-content: center; }
-        .ctrl-btn:active { transform: scale(0.85); color: var(--primary); }
-        .ctrl-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+        .ctrl-btn { background: none; border: none; font-size: 1.6rem; cursor: pointer; color: var(--text-sub); transition: 0.2s; }
+        .ctrl-btn:hover { color: var(--primary); }
         .play-btn { color: var(--primary); font-size: 2.2rem; }
-
-        /* Footer */
         .footer {
-            position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,0.85);
+            position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,0.9);
             border-top: 1px solid var(--border); padding: 8px 20px; text-align: center;
             font-size: 0.75rem; color: var(--text-sub); z-index: 999; backdrop-filter: blur(12px);
         }
-        [data-theme="dark"] .footer { background: rgba(30,41,59,0.85); }
+        [data-theme="dark"] .footer { background: rgba(30,41,59,0.9); }
         .footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
-
-        /* Modal */
         .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 2000;
-            align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s;
+            align-items: center; justify-content: center;
         }
-        .modal.open { display: flex; opacity: 1; }
+        .modal.open { display: flex; }
         .modal-box {
             background: var(--surface); width: 90%; max-width: 500px; padding: 30px;
-            border-radius: 24px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
-            border: 1px solid var(--border); transform: scale(0.9); transition: transform 0.3s;
+            border-radius: 24px; border: 1px solid var(--border);
             max-height: 85vh; overflow-y: auto;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
         }
-        .modal.open .modal-box { transform: scale(1); }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .modal-title { font-size: 1.2rem; font-weight: 800; margin: 0; }
-        .close-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-sub); }
-        label { display: block; font-size: 0.82rem; font-weight: 700; color: var(--text-sub); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-        select, input {
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .modal-title { font-size: 1.2rem; font-weight: 800; }
+        .close-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-sub); line-height: 1; }
+        .form-label { display: block; font-size: 0.8rem; font-weight: 700; color: var(--text-sub); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .form-select {
             width: 100%; padding: 12px 14px; margin-bottom: 20px; border-radius: 12px;
-            border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 0.95rem; outline: none;
+            border: 1px solid var(--border); background: var(--bg); color: var(--text);
+            font-size: 0.95rem; outline: none; cursor: pointer;
         }
-        select:focus { border-color: var(--primary); }
-
-        /* Voice Group Header in select */
-        optgroup { font-weight: 700; font-style: normal; }
-
+        .form-select:focus { border-color: var(--primary); }
+        .voice-select {
+            width: 100%; padding: 4px; margin-bottom: 20px; border-radius: 12px;
+            border: 1px solid var(--border); background: var(--bg); color: var(--text);
+            font-size: 0.88rem; outline: none; height: 180px;
+        }
+        .voice-count { display: inline-block; background: rgba(37,99,235,0.1); color: var(--primary); font-size: 0.7rem; padding: 2px 8px; border-radius: 10px; font-weight: 700; margin-left: 6px; }
+        .info-box { background: rgba(37,99,235,0.05); padding: 10px 14px; border-radius: 8px; font-size: 0.82rem; margin-bottom: 16px; border-left: 3px solid var(--primary); color: var(--text-sub); }
         .save-btn {
             width: 100%; padding: 15px; background: var(--primary); color: white; border: none;
-            border-radius: 14px; font-size: 1rem; font-weight: 700; cursor: pointer;
-            box-shadow: 0 4px 12px rgba(37,99,235,0.3); transition: transform 0.1s, background 0.2s;
+            border-radius: 14px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background 0.2s;
         }
-        .save-btn:active { transform: scale(0.98); }
         .save-btn:hover { background: var(--primary-dark); }
-
-        .voice-count-badge {
-            display: inline-block; background: rgba(37,99,235,0.1); color: var(--primary);
-            font-size: 0.7rem; padding: 2px 8px; border-radius: 10px; font-weight: 700; margin-left: 8px;
-        }
-
-        .info-box {
-            background: rgba(37,99,235,0.05); padding: 10px 14px; border-radius: 8px;
-            font-size: 0.82rem; margin-bottom: 16px; border-left: 3px solid var(--primary); color: var(--text-sub);
-        }
-
         @media (min-width: 768px) {
-            .headline { font-size: 2rem; }
+            .headline { font-size: 1.9rem; }
             .card { padding: 40px; max-width: 800px; }
-            .body-text { font-size: 1.1rem; }
-            .controls-bar { padding: 16px 40px; gap: 40px; }
         }
     </style>
 </head>
 <body data-theme="light">
 
+<!-- HEADER -->
 <header class="header">
-    <div class="logo"><span>News Flow</span><span class="logo-badge">AI</span></div>
+    <div class="logo">
+        <span>News Flow</span>
+        <span class="logo-badge">AI</span>
+    </div>
     <div class="header-actions">
         <div class="status-indicator" id="status">
             <span class="status-dot" id="status-dot"></span>
             <span id="status-text">Loading...</span>
         </div>
-        <button class="icon-btn" onclick="ui.toggleTheme()" title="Toggle Dark Mode">🌓</button>
-        <button class="icon-btn" onclick="ui.openSettings()" title="Preferences">⚙️</button>
+        <button class="icon-btn" id="theme-btn" title="Toggle Dark Mode">🌓</button>
+        <button class="icon-btn" id="settings-btn" title="Settings">⚙️</button>
     </div>
 </header>
 
-<!-- Category Bar -->
-<div class="category-bar">
-    <button class="cat-btn active" onclick="app.filterCategory('all', this)">🌐 All</button>
-    <button class="cat-btn" onclick="app.filterCategory('top', this)">🔥 Top</button>
-    <button class="cat-btn" onclick="app.filterCategory('india', this)">🇮🇳 India</button>
-    <button class="cat-btn" onclick="app.filterCategory('world', this)">🌍 World</button>
-    <button class="cat-btn" onclick="app.filterCategory('technology', this)">💻 Tech</button>
-    <button class="cat-btn" onclick="app.filterCategory('business', this)">💼 Business</button>
-    <button class="cat-btn" onclick="app.filterCategory('sports', this)">⚽ Sports</button>
-    <button class="cat-btn" onclick="app.filterCategory('entertainment', this)">🎬 Entertainment</button>
-    <button class="cat-btn" onclick="app.filterCategory('health', this)">🏥 Health</button>
-    <button class="cat-btn" onclick="app.filterCategory('science', this)">🔬 Science</button>
+<!-- CATEGORY BAR -->
+<div class="category-bar" id="category-bar">
+    <button class="cat-btn active" data-cat="all">🌐 All</button>
+    <button class="cat-btn" data-cat="top">🔥 Top</button>
+    <button class="cat-btn" data-cat="india">🇮🇳 India</button>
+    <button class="cat-btn" data-cat="world">🌍 World</button>
+    <button class="cat-btn" data-cat="technology">💻 Tech</button>
+    <button class="cat-btn" data-cat="business">💼 Business</button>
+    <button class="cat-btn" data-cat="sports">⚽ Sports</button>
+    <button class="cat-btn" data-cat="entertainment">🎬 Entertainment</button>
+    <button class="cat-btn" data-cat="health">🏥 Health</button>
+    <button class="cat-btn" data-cat="science">🔬 Science</button>
 </div>
 
-<!-- Settings Modal -->
-<div class="modal" id="settings">
+<!-- SETTINGS MODAL -->
+<div class="modal" id="settings-modal">
     <div class="modal-box">
         <div class="modal-header">
-            <h2 class="modal-title">⚙️ Preferences</h2>
-            <button class="close-btn" onclick="ui.closeSettings()">✕</button>
+            <span class="modal-title">⚙️ Preferences</span>
+            <button class="close-btn" id="close-settings">✕</button>
         </div>
-
-        <label>News Language</label>
-        <select id="lang-select" onchange="ui.onLangChange()">
-            <option value="en">English</option>
-            <option value="hi">हिंदी (Hindi)</option>
-            <option value="ta">தமிழ் (Tamil)</option>
-            <option value="te">తెలుగు (Telugu)</option>
-            <option value="kn">ಕನ್ನಡ (Kannada)</option>
-            <option value="mr">मराठी (Marathi)</option>
-            <option value="bn">বাংলা (Bengali)</option>
-            <option value="ml">മലയാളം (Malayalam)</option>
-            <option value="or">ଓଡ଼ିଆ (Odia)</option>
-            <option value="es">Español (Spanish)</option>
-            <option value="fr">Français (French)</option>
-            <option value="de">Deutsch (German)</option>
-            <option value="ru">Русский (Russian)</option>
-            <option value="ja">日本語 (Japanese)</option>
-            <option value="ar">العربية (Arabic)</option>
+        <label class="form-label">News Language</label>
+        <select class="form-select" id="lang-select">
+            <option value="en">🌐 English</option>
+            <option value="hi">🇮🇳 हिंदी (Hindi)</option>
+            <option value="ta">🇮🇳 தமிழ் (Tamil)</option>
+            <option value="te">🇮🇳 తెలుగు (Telugu)</option>
+            <option value="kn">🇮🇳 ಕನ್ನಡ (Kannada)</option>
+            <option value="mr">🇮🇳 मराठी (Marathi)</option>
+            <option value="bn">🇮🇳 বাংলা (Bengali)</option>
+            <option value="ml">🇮🇳 മലയാളം (Malayalam)</option>
+            <option value="or">🇮🇳 ଓଡ଼ିଆ (Odia)</option>
+            <option value="es">🇪🇸 Español (Spanish)</option>
+            <option value="fr">🇫🇷 Français (French)</option>
+            <option value="de">🇩🇪 Deutsch (German)</option>
+            <option value="ru">🇷🇺 Русский (Russian)</option>
+            <option value="ja">🇯🇵 日本語 (Japanese)</option>
+            <option value="ar">🇸🇦 العربية (Arabic)</option>
         </select>
 
-        <label>
+        <label class="form-label">
             Narrator Voice
-            <span class="voice-count-badge" id="voice-count-badge">0 voices</span>
+            <span class="voice-count" id="voice-count">0 voices</span>
         </label>
-        <div class="info-box" id="voice-info-box">
-            Showing Google voices for the selected language. Select a voice and it applies instantly — no page reload needed.
-        </div>
-        <select id="voice-select" onchange="ui.onVoiceChange()" size="6" style="height:160px; margin-bottom:16px;"></select>
+        <div class="info-box">Voices filtered for selected language. Changes apply instantly — no reload needed.</div>
+        <select class="voice-select" id="voice-select" size="6"></select>
 
-        <button class="save-btn" onclick="ui.savePrefs()">💾 Save & Apply</button>
+        <button class="save-btn" id="save-prefs-btn">💾 Save & Apply</button>
     </div>
 </div>
 
-<!-- Feed -->
+<!-- FEED -->
 <div class="feed-container" id="feed">
     <div class="card-wrapper">
         <div class="card">
             <div class="card-header"><div class="badge">⚡ WELCOME</div></div>
             <div class="headline">News Flow Pro is Loading...</div>
-            <div class="body-text"><p>Fetching the latest news. Please wait a moment.</p></div>
+            <div class="body-text">Fetching the latest news from around the world. Please wait a moment.</div>
         </div>
     </div>
 </div>
 
-<!-- Controls -->
+<!-- CONTROLS -->
 <div class="controls-bar">
-    <button class="ctrl-btn" onclick="app.prev()" id="prev-btn">⏮</button>
-    <button class="ctrl-btn play-btn" id="play-btn" onclick="app.togglePlay()">▶</button>
-    <button class="ctrl-btn" onclick="app.next()" id="next-btn">⏭</button>
+    <button class="ctrl-btn" id="prev-btn">⏮</button>
+    <button class="ctrl-btn play-btn" id="play-btn">▶</button>
+    <button class="ctrl-btn" id="next-btn">⏭</button>
 </div>
 
 <footer class="footer">
-    Copyright © 2026 | Designed by <a href="https://thosho.github.io/" target="_blank" rel="noopener noreferrer">Thosho Tech</a>
+    Copyright © 2026 | Designed by <a href="https://thosho.github.io/" target="_blank" rel="noopener">Thosho Tech</a>
 </footer>
 
 <script>
-// ============================================================
-//  HARDCODED GOOGLE TTS VOICES — ALL NEWSFLOW LANGUAGES
-//  Format: { name, lang, gender, quality }
-//  These are the actual Google voice names as they appear in
-//  Chrome's Web Speech API speechSynthesis.getVoices()
-// ============================================================
+'use strict';
+
+// ================================================================
+//  HARDCODED GOOGLE TTS VOICES PER LANGUAGE
+// ================================================================
 const GOOGLE_VOICES = {
-
-    // ── ENGLISH (en) ─────────────────────────────────────────
-    'en': [
-        // Google US
-        { name: 'Google US English',           lang: 'en-US', gender: '♀', quality: 'Standard' },
-        { name: 'Google US English Male',       lang: 'en-US', gender: '♂', quality: 'Standard' },
-        // Google UK
-        { name: 'Google UK English Female',     lang: 'en-GB', gender: '♀', quality: 'Standard' },
-        { name: 'Google UK English Male',       lang: 'en-GB', gender: '♂', quality: 'Standard' },
-        // Google India
-        { name: 'Google हिन्दी',               lang: 'hi-IN', gender: '♀', quality: 'Standard' }, // fallback for en-IN
-        // System voices (loaded dynamically, listed as fallback)
-        { name: 'Microsoft Zira - English (United States)',   lang: 'en-US', gender: '♀', quality: 'System' },
-        { name: 'Microsoft David - English (United States)',  lang: 'en-US', gender: '♂', quality: 'System' },
-        { name: 'Microsoft Mark - English (United States)',   lang: 'en-US', gender: '♂', quality: 'System' },
-        { name: 'Samantha',   lang: 'en-US', gender: '♀', quality: 'System (macOS)' },
-        { name: 'Alex',       lang: 'en-US', gender: '♂', quality: 'System (macOS)' },
-        { name: 'Victoria',   lang: 'en-US', gender: '♀', quality: 'System (macOS)' },
-        { name: 'Karen',      lang: 'en-AU', gender: '♀', quality: 'System (macOS)' },
-        { name: 'Daniel',     lang: 'en-GB', gender: '♂', quality: 'System (macOS)' },
-        { name: 'Moira',      lang: 'en-IE', gender: '♀', quality: 'System (macOS)' },
-        { name: 'Tessa',      lang: 'en-ZA', gender: '♀', quality: 'System (macOS)' },
-        { name: 'Rishi',      lang: 'en-IN', gender: '♂', quality: 'System (macOS)' },
+    en: [
+        { name: 'Google US English',                              lang: 'en-US', gender: '♀' },
+        { name: 'Google UK English Female',                       lang: 'en-GB', gender: '♀' },
+        { name: 'Google UK English Male',                         lang: 'en-GB', gender: '♂' },
+        { name: 'Microsoft Zira - English (United States)',       lang: 'en-US', gender: '♀' },
+        { name: 'Microsoft David - English (United States)',      lang: 'en-US', gender: '♂' },
+        { name: 'Microsoft Mark - English (United States)',       lang: 'en-US', gender: '♂' },
+        { name: 'Samantha',  lang: 'en-US', gender: '♀' },
+        { name: 'Alex',      lang: 'en-US', gender: '♂' },
+        { name: 'Victoria',  lang: 'en-US', gender: '♀' },
+        { name: 'Karen',     lang: 'en-AU', gender: '♀' },
+        { name: 'Daniel',    lang: 'en-GB', gender: '♂' },
+        { name: 'Moira',     lang: 'en-IE', gender: '♀' },
+        { name: 'Rishi',     lang: 'en-IN', gender: '♂' },
+        { name: 'Tessa',     lang: 'en-ZA', gender: '♀' },
     ],
-
-    // ── HINDI (hi) ───────────────────────────────────────────
-    'hi': [
-        { name: 'Google हिन्दी',               lang: 'hi-IN', gender: '♀', quality: 'Google' },
-        { name: 'Microsoft Hemant - Hindi (India)',  lang: 'hi-IN', gender: '♂', quality: 'System' },
-        { name: 'Microsoft Kalpana - Hindi (India)', lang: 'hi-IN', gender: '♀', quality: 'System' },
-        { name: 'Lekha',                        lang: 'hi-IN', gender: '♀', quality: 'System (macOS)' },
+    hi: [
+        { name: 'Google हिन्दी',                                  lang: 'hi-IN', gender: '♀' },
+        { name: 'Microsoft Hemant - Hindi (India)',               lang: 'hi-IN', gender: '♂' },
+        { name: 'Microsoft Kalpana - Hindi (India)',              lang: 'hi-IN', gender: '♀' },
+        { name: 'Lekha',     lang: 'hi-IN', gender: '♀' },
     ],
-
-    // ── TAMIL (ta) ───────────────────────────────────────────
-    'ta': [
-        { name: 'Google தமிழ்',                lang: 'ta-IN', gender: '♀', quality: 'Google' },
-        { name: 'Microsoft Valluvar - Tamil (India)', lang: 'ta-IN', gender: '♂', quality: 'System' },
-        { name: 'Ioana',                        lang: 'ta-IN', gender: '♀', quality: 'System (macOS)' },
-        { name: 'Veena',                        lang: 'ta-IN', gender: '♀', quality: 'System (macOS)' },
+    ta: [
+        { name: 'Google தமிழ்',                                   lang: 'ta-IN', gender: '♀' },
+        { name: 'Microsoft Valluvar - Tamil (India)',             lang: 'ta-IN', gender: '♂' },
+        { name: 'Veena',     lang: 'ta-IN', gender: '♀' },
     ],
-
-    // ── TELUGU (te) ──────────────────────────────────────────
-    'te': [
-        { name: 'Google తెలుగు',               lang: 'te-IN', gender: '♀', quality: 'Google' },
-        { name: 'Microsoft Chitra - Telugu (India)', lang: 'te-IN', gender: '♀', quality: 'System' },
-        { name: 'Microsoft Subramanian - Telugu (India)', lang: 'te-IN', gender: '♂', quality: 'System' },
+    te: [
+        { name: 'Google తెలుగు',                                  lang: 'te-IN', gender: '♀' },
+        { name: 'Microsoft Chitra - Telugu (India)',              lang: 'te-IN', gender: '♀' },
+        { name: 'Microsoft Subramanian - Telugu (India)',         lang: 'te-IN', gender: '♂' },
     ],
-
-    // ── KANNADA (kn) ─────────────────────────────────────────
-    'kn': [
-        { name: 'Google ಕನ್ನಡ',               lang: 'kn-IN', gender: '♀', quality: 'Google' },
-        { name: 'Microsoft Dhwani - Kannada (India)', lang: 'kn-IN', gender: '♀', quality: 'System' },
-        { name: 'Microsoft Ravi - Kannada (India)',   lang: 'kn-IN', gender: '♂', quality: 'System' },
+    kn: [
+        { name: 'Google ಕನ್ನಡ',                                  lang: 'kn-IN', gender: '♀' },
+        { name: 'Microsoft Dhwani - Kannada (India)',             lang: 'kn-IN', gender: '♀' },
+        { name: 'Microsoft Ravi - Kannada (India)',               lang: 'kn-IN', gender: '♂' },
     ],
-
-    // ── MARATHI (mr) ─────────────────────────────────────────
-    'mr': [
-        { name: 'Google मराठी',                lang: 'mr-IN', gender: '♀', quality: 'Google' },
-        { name: 'Microsoft Aarohi - Marathi (India)', lang: 'mr-IN', gender: '♀', quality: 'System' },
-        { name: 'Microsoft Manohar - Marathi (India)', lang: 'mr-IN', gender: '♂', quality: 'System' },
+    mr: [
+        { name: 'Google मराठी',                                   lang: 'mr-IN', gender: '♀' },
+        { name: 'Microsoft Aarohi - Marathi (India)',             lang: 'mr-IN', gender: '♀' },
+        { name: 'Microsoft Manohar - Marathi (India)',            lang: 'mr-IN', gender: '♂' },
     ],
-
-    // ── BENGALI (bn) ─────────────────────────────────────────
-    'bn': [
-        { name: 'Google বাংলা',                lang: 'bn-IN', gender: '♀', quality: 'Google' },
-        { name: 'Google বাংলা বাংলাদেশ',      lang: 'bn-BD', gender: '♀', quality: 'Google' },
-        { name: 'Microsoft Bashkar - Bengali (India)',   lang: 'bn-IN', gender: '♂', quality: 'System' },
-        { name: 'Microsoft Tanishaa - Bengali (India)',  lang: 'bn-IN', gender: '♀', quality: 'System' },
-        { name: 'Microsoft Nabanita - Bengali (India)',  lang: 'bn-IN', gender: '♀', quality: 'System' },
+    bn: [
+        { name: 'Google বাংলা',                                   lang: 'bn-IN', gender: '♀' },
+        { name: 'Google বাংলা বাংলাদেশ',                        lang: 'bn-BD', gender: '♀' },
+        { name: 'Microsoft Bashkar - Bengali (India)',            lang: 'bn-IN', gender: '♂' },
+        { name: 'Microsoft Tanishaa - Bengali (India)',           lang: 'bn-IN', gender: '♀' },
     ],
-
-    // ── MALAYALAM (ml) ───────────────────────────────────────
-    'ml': [
-        { name: 'Google മലയാളം',               lang: 'ml-IN', gender: '♀', quality: 'Google' },
-        { name: 'Microsoft Sobhana - Malayalam (India)', lang: 'ml-IN', gender: '♀', quality: 'System' },
+    ml: [
+        { name: 'Google മലയാളം',                                  lang: 'ml-IN', gender: '♀' },
+        { name: 'Microsoft Sobhana - Malayalam (India)',          lang: 'ml-IN', gender: '♀' },
     ],
-
-    // ── ODIA (or) ────────────────────────────────────────────
-    'or': [
-        { name: 'Google ଓଡ଼ିଆ',               lang: 'or-IN', gender: '♀', quality: 'Google' },
-        { name: 'Microsoft Subhadra - Odia (India)', lang: 'or-IN', gender: '♀', quality: 'System' },
-        { name: 'Microsoft Kalyan - Odia (India)',   lang: 'or-IN', gender: '♂', quality: 'System' },
+    or: [
+        { name: 'Google ଓଡ଼ିଆ',                                  lang: 'or-IN', gender: '♀' },
+        { name: 'Microsoft Subhadra - Odia (India)',              lang: 'or-IN', gender: '♀' },
+        { name: 'Microsoft Kalyan - Odia (India)',                lang: 'or-IN', gender: '♂' },
     ],
-
-    // ── SPANISH (es) ─────────────────────────────────────────
-    'es': [
-        { name: 'Google español',              lang: 'es-ES', gender: '♀', quality: 'Google' },
-        { name: 'Google español de Estados Unidos', lang: 'es-US', gender: '♀', quality: 'Google' },
-        { name: 'Microsoft Helena - Spanish (Spain)',    lang: 'es-ES', gender: '♀', quality: 'System' },
-        { name: 'Microsoft Pablo - Spanish (Spain)',     lang: 'es-ES', gender: '♂', quality: 'System' },
-        { name: 'Microsoft Laura - Spanish (Mexico)',    lang: 'es-MX', gender: '♀', quality: 'System' },
-        { name: 'Microsoft Raul - Spanish (Mexico)',     lang: 'es-MX', gender: '♂', quality: 'System' },
-        { name: 'Jorge',   lang: 'es-ES', gender: '♂', quality: 'System (macOS)' },
-        { name: 'Monica',  lang: 'es-ES', gender: '♀', quality: 'System (macOS)' },
-        { name: 'Paulina', lang: 'es-MX', gender: '♀', quality: 'System (macOS)' },
+    es: [
+        { name: 'Google español',                                 lang: 'es-ES', gender: '♀' },
+        { name: 'Google español de Estados Unidos',               lang: 'es-US', gender: '♀' },
+        { name: 'Microsoft Helena - Spanish (Spain)',             lang: 'es-ES', gender: '♀' },
+        { name: 'Microsoft Pablo - Spanish (Spain)',              lang: 'es-ES', gender: '♂' },
+        { name: 'Microsoft Laura - Spanish (Mexico)',             lang: 'es-MX', gender: '♀' },
+        { name: 'Jorge',    lang: 'es-ES', gender: '♂' },
+        { name: 'Monica',   lang: 'es-ES', gender: '♀' },
+        { name: 'Paulina',  lang: 'es-MX', gender: '♀' },
     ],
-
-    // ── FRENCH (fr) ──────────────────────────────────────────
-    'fr': [
-        { name: 'Google français',             lang: 'fr-FR', gender: '♀', quality: 'Google' },
-        { name: 'Microsoft Hortense - French (France)',  lang: 'fr-FR', gender: '♀', quality: 'System' },
-        { name: 'Microsoft Paul - French (France)',      lang: 'fr-FR', gender: '♂', quality: 'System' },
-        { name: 'Microsoft Guillaume - French (Canada)', lang: 'fr-CA', gender: '♂', quality: 'System' },
-        { name: 'Microsoft Caroline - French (Canada)',  lang: 'fr-CA', gender: '♀', quality: 'System' },
-        { name: 'Thomas',  lang: 'fr-FR', gender: '♂', quality: 'System (macOS)' },
-        { name: 'Aurelie', lang: 'fr-FR', gender: '♀', quality: 'System (macOS)' },
+    fr: [
+        { name: 'Google français',                                lang: 'fr-FR', gender: '♀' },
+        { name: 'Microsoft Hortense - French (France)',           lang: 'fr-FR', gender: '♀' },
+        { name: 'Microsoft Paul - French (France)',               lang: 'fr-FR', gender: '♂' },
+        { name: 'Microsoft Caroline - French (Canada)',           lang: 'fr-CA', gender: '♀' },
+        { name: 'Thomas',   lang: 'fr-FR', gender: '♂' },
+        { name: 'Aurelie',  lang: 'fr-FR', gender: '♀' },
     ],
-
-    // ── GERMAN (de) ──────────────────────────────────────────
-    'de': [
-        { name: 'Google Deutsch',              lang: 'de-DE', gender: '♀', quality: 'Google' },
-        { name: 'Microsoft Hedda - German (Germany)',  lang: 'de-DE', gender: '♀', quality: 'System' },
-        { name: 'Microsoft Stefan - German (Germany)', lang: 'de-DE', gender: '♂', quality: 'System' },
-        { name: 'Anna',    lang: 'de-DE', gender: '♀', quality: 'System (macOS)' },
-        { name: 'Yannick', lang: 'de-DE', gender: '♂', quality: 'System (macOS)' },
+    de: [
+        { name: 'Google Deutsch',                                 lang: 'de-DE', gender: '♀' },
+        { name: 'Microsoft Hedda - German (Germany)',             lang: 'de-DE', gender: '♀' },
+        { name: 'Microsoft Stefan - German (Germany)',            lang: 'de-DE', gender: '♂' },
+        { name: 'Anna',     lang: 'de-DE', gender: '♀' },
+        { name: 'Yannick',  lang: 'de-DE', gender: '♂' },
     ],
-
-    // ── RUSSIAN (ru) ─────────────────────────────────────────
-    'ru': [
-        { name: 'Google русский',              lang: 'ru-RU', gender: '♀', quality: 'Google' },
-        { name: 'Microsoft Irina - Russian (Russia)', lang: 'ru-RU', gender: '♀', quality: 'System' },
-        { name: 'Microsoft Pavel - Russian (Russia)', lang: 'ru-RU', gender: '♂', quality: 'System' },
-        { name: 'Milena',  lang: 'ru-RU', gender: '♀', quality: 'System (macOS)' },
-        { name: 'Yuri',    lang: 'ru-RU', gender: '♂', quality: 'System (macOS)' },
+    ru: [
+        { name: 'Google русский',                                 lang: 'ru-RU', gender: '♀' },
+        { name: 'Microsoft Irina - Russian (Russia)',             lang: 'ru-RU', gender: '♀' },
+        { name: 'Microsoft Pavel - Russian (Russia)',             lang: 'ru-RU', gender: '♂' },
+        { name: 'Milena',   lang: 'ru-RU', gender: '♀' },
+        { name: 'Yuri',     lang: 'ru-RU', gender: '♂' },
     ],
-
-    // ── JAPANESE (ja) ────────────────────────────────────────
-    'ja': [
-        { name: 'Google 日本語',               lang: 'ja-JP', gender: '♀', quality: 'Google' },
-        { name: 'Microsoft Haruka - Japanese (Japan)', lang: 'ja-JP', gender: '♀', quality: 'System' },
-        { name: 'Microsoft Ichiro - Japanese (Japan)', lang: 'ja-JP', gender: '♂', quality: 'System' },
-        { name: 'Microsoft Ayumi - Japanese (Japan)',  lang: 'ja-JP', gender: '♀', quality: 'System' },
-        { name: 'Otoya',   lang: 'ja-JP', gender: '♂', quality: 'System (macOS)' },
-        { name: 'Kyoko',   lang: 'ja-JP', gender: '♀', quality: 'System (macOS)' },
+    ja: [
+        { name: 'Google 日本語',                                   lang: 'ja-JP', gender: '♀' },
+        { name: 'Microsoft Haruka - Japanese (Japan)',            lang: 'ja-JP', gender: '♀' },
+        { name: 'Microsoft Ichiro - Japanese (Japan)',            lang: 'ja-JP', gender: '♂' },
+        { name: 'Microsoft Ayumi - Japanese (Japan)',             lang: 'ja-JP', gender: '♀' },
+        { name: 'Kyoko',    lang: 'ja-JP', gender: '♀' },
+        { name: 'Otoya',    lang: 'ja-JP', gender: '♂' },
     ],
-
-    // ── ARABIC (ar) ──────────────────────────────────────────
-    'ar': [
-        { name: 'Google العربية',              lang: 'ar-XA', gender: '♀', quality: 'Google' },
-        { name: 'Microsoft Hoda - Arabic (Egypt)',         lang: 'ar-EG', gender: '♀', quality: 'System' },
-        { name: 'Microsoft Naayf - Arabic (Saudi Arabia)', lang: 'ar-SA', gender: '♂', quality: 'System' },
-        { name: 'Maged',   lang: 'ar-SA', gender: '♂', quality: 'System (macOS)' },
+    ar: [
+        { name: 'Google العربية',                                 lang: 'ar-XA', gender: '♀' },
+        { name: 'Microsoft Hoda - Arabic (Egypt)',                lang: 'ar-EG', gender: '♀' },
+        { name: 'Microsoft Naayf - Arabic (Saudi Arabia)',        lang: 'ar-SA', gender: '♂' },
+        { name: 'Maged',    lang: 'ar-SA', gender: '♂' },
     ],
 };
 
-// ── LANG DISPLAY NAMES ───────────────────────────────────────
-const LANG_NAMES = {
-    en: 'English', hi: 'हिंदी', ta: 'தமிழ்', te: 'తెలుగు', kn: 'ಕನ್ನಡ',
-    mr: 'मराठी', bn: 'বাংলা', ml: 'മലയാളം', or: 'ଓଡ଼ିଆ',
-    es: 'Español', fr: 'Français', de: 'Deutsch', ru: 'Русский', ja: '日本語', ar: 'العربية'
-};
-
-// ── STORAGE KEYS ─────────────────────────────────────────────
-const STORE = {
-    NEWS_CACHE: 'newsflow_cache',
-    MANUAL_NEWS: 'newsflow_manual',
-    CUSTOM_FEEDS: 'newsflow_custom_feeds',
-    CACHE_TS: 'newsflow_cache_ts',
-    CACHE_DURATION: 24 * 60 * 60 * 1000
-};
-
-// ── GROQ CONFIG ──────────────────────────────────────────────
+// ================================================================
+//  CONFIG & FEEDS
+// ================================================================
 const GROQ_API_KEY = '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';
-const CONFIG = {
-    GROQ_API_URL: 'https://api.groq.com/openai/v1/chat/completions',
-    PROXY_URL: 'https://api.allorigins.win/get?url=',
-    GROQ_TIMEOUT: 10000
+
+const PROXY    = 'https://api.allorigins.win/get?url=';
+const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
+
+const LANG_NAMES = {
+    en:'English', hi:'हिंदी', ta:'தமிழ்', te:'తెలుగు', kn:'ಕನ್ನಡ',
+    mr:'मराठी', bn:'বাংলা', ml:'മലയാളം', or:'ଓଡ଼ିଆ',
+    es:'Español', fr:'Français', de:'Deutsch', ru:'Русский', ja:'日本語', ar:'العربية'
 };
 
-// ── RSS FEEDS ────────────────────────────────────────────────
-const BASE_FEEDS = {
+const FEEDS = {
     all: {
         en: ['https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en','https://timesofindia.indiatimes.com/rssfeedstopstories.cms'],
         hi: ['https://news.google.com/rss?hl=hi&gl=IN&ceid=IN:hi','https://www.amarujala.com/rss/breaking-news.xml'],
@@ -450,517 +374,490 @@ const BASE_FEEDS = {
         de: ['https://news.google.com/rss?hl=de&gl=DE&ceid=DE:de'],
         ru: ['https://news.google.com/rss?hl=ru&gl=RU&ceid=RU:ru'],
         ja: ['https://news.google.com/rss?hl=ja&gl=JP&ceid=JP:ja'],
-        ar: ['https://news.google.com/rss?hl=ar&gl=EG&ceid=EG:ar']
+        ar: ['https://news.google.com/rss?hl=ar&gl=EG&ceid=EG:ar'],
     },
+    top:           { en: ['https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRFZxYUdjU0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en'] },
+    india:         { en: ['https://news.google.com/rss/search?q=India&hl=en-IN&gl=IN&ceid=IN:en'], hi: ['https://news.google.com/rss?hl=hi&gl=IN&ceid=IN:hi'] },
+    world:         { en: ['https://news.google.com/rss/search?q=world+news&hl=en-US&gl=US&ceid=US:en'] },
     technology:    { en: ['https://news.google.com/rss/search?q=technology&hl=en-US&gl=US&ceid=US:en'] },
     business:      { en: ['https://news.google.com/rss/search?q=business+finance&hl=en-US&gl=US&ceid=US:en'] },
     sports:        { en: ['https://news.google.com/rss/search?q=sports&hl=en-US&gl=US&ceid=US:en'] },
-    entertainment: { en: ['https://news.google.com/rss/search?q=entertainment+movies&hl=en-US&gl=US&ceid=US:en'] },
+    entertainment: { en: ['https://news.google.com/rss/search?q=entertainment&hl=en-US&gl=US&ceid=US:en'] },
     health:        { en: ['https://news.google.com/rss/search?q=health+medicine&hl=en-US&gl=US&ceid=US:en'] },
     science:       { en: ['https://news.google.com/rss/search?q=science+space&hl=en-US&gl=US&ceid=US:en'] },
-    india:         { en: ['https://news.google.com/rss/search?q=India&hl=en-IN&gl=IN&ceid=IN:en'], hi: ['https://news.google.com/rss?hl=hi&gl=IN&ceid=IN:hi'] },
-    world:         { en: ['https://news.google.com/rss/search?q=world+news&hl=en-US&gl=US&ceid=US:en'] },
-    top:           { en: ['https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRFZxYUdjU0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en'] }
 };
 
-// ============================================================
-//  TTS ENGINE — Uses hardcoded GOOGLE_VOICES list
-//  + Falls back to actual device voices via getVoices()
-// ============================================================
-const tts = {
-    synth: window.speechSynthesis,
-    deviceVoices: [],      // actual voices from browser
-    currentLang: 'en',
+// ================================================================
+//  STATE
+// ================================================================
+let currentLang     = localStorage.getItem('selectedLang')  || 'en';
+let currentCategory = 'all';
+let currentVoice    = localStorage.getItem('selectedVoice') || '';
+let allItems        = [];
+let filteredItems   = [];
+let currentIndex    = 0;
+let isPlaying       = false;
+let deviceVoices    = [];
 
-    init() {
-        const load = () => { this.deviceVoices = this.synth.getVoices(); };
-        if (this.synth.onvoiceschanged !== undefined) this.synth.onvoiceschanged = load;
-        load();
-    },
+// ================================================================
+//  TTS
+// ================================================================
+function loadDeviceVoices() {
+    deviceVoices = window.speechSynthesis.getVoices();
+}
 
-    // Build voice list: hardcoded Google/System voices + any extra device voices for this lang
-    buildVoiceListForLang(langCode) {
-        const hardcoded = GOOGLE_VOICES[langCode] || [];
-        const langBases = this._getLangBases(langCode);
+function buildVoiceList(langCode) {
+    const hardcoded = GOOGLE_VOICES[langCode] || [];
+    const base      = langCode.toLowerCase();
+    const hardNames = new Set(hardcoded.map(v => v.name.toLowerCase()));
 
-        // Extra voices from device not in our hardcoded list
-        const hardcodedNames = new Set(hardcoded.map(v => v.name.toLowerCase()));
-        const extra = this.deviceVoices
-            .filter(v => {
-                const voiceLangBase = v.lang.toLowerCase().split('-')[0];
-                return langBases.some(base => voiceLangBase === base) && !hardcodedNames.has(v.name.toLowerCase());
-            })
-            .map(v => ({ name: v.name, lang: v.lang, gender: '🔊', quality: 'Device' }));
+    // Pick up any extra device voices not in hardcoded list
+    const extras = deviceVoices
+        .filter(v => v.lang.toLowerCase().startsWith(base) && !hardNames.has(v.name.toLowerCase()))
+        .map(v => ({ name: v.name, lang: v.lang, gender: '🔊' }));
 
-        return [...hardcoded, ...extra];
-    },
+    return [...hardcoded, ...extras];
+}
 
-    _getLangBases(langCode) {
-        const map = {
-            en: ['en'], hi: ['hi'], ta: ['ta'], te: ['te'], kn: ['kn'],
-            mr: ['mr'], bn: ['bn'], ml: ['ml'], or: ['or'],
-            es: ['es'], fr: ['fr'], de: ['de'], ru: ['ru'], ja: ['ja'], ar: ['ar']
-        };
-        return map[langCode] || [langCode];
-    },
+function populateVoiceSelect(langCode) {
+    const sel   = document.getElementById('voice-select');
+    const badge = document.getElementById('voice-count');
+    sel.innerHTML = '';
 
-    // Populate the voice <select> for a given language
-    populateVoiceSelect(langCode) {
-        const select = document.getElementById('voice-select');
-        const badge = document.getElementById('voice-count-badge');
-        if (!select) return;
+    const voices = buildVoiceList(langCode);
+    const saved  = localStorage.getItem('selectedVoice') || currentVoice;
+    let   found  = false;
+    let   count  = 0;
 
-        select.innerHTML = '';
-        const voices = this.buildVoiceListForLang(langCode);
+    // Group: Google first, then System/macOS, then Device
+    const groups = { '🎙️ Google Voices': [], '🖥️ System / macOS Voices': [], '🖥️ Device Voices': [] };
+    voices.forEach(v => {
+        if (v.name.startsWith('Google'))   groups['🎙️ Google Voices'].push(v);
+        else if (v.gender === '🔊')        groups['🖥️ Device Voices'].push(v);
+        else                               groups['🖥️ System / macOS Voices'].push(v);
+    });
 
-        // Group by quality tier
-        const groups = {};
-        voices.forEach(v => {
-            const g = v.quality.startsWith('Google') ? '🎙️ Google Voices' :
-                      v.quality.startsWith('System (macOS)') ? '🍎 macOS Voices' :
-                      v.quality === 'Device' ? '🖥️ Device Voices' : '🖥️ System Voices';
-            if (!groups[g]) groups[g] = [];
-            groups[g].push(v);
+    Object.entries(groups).forEach(([label, list]) => {
+        if (list.length === 0) return;
+        const grp = document.createElement('optgroup');
+        grp.label = label;
+        list.forEach(v => {
+            const opt    = document.createElement('option');
+            opt.value    = v.name;
+            opt.textContent = `${v.gender} ${v.name} (${v.lang})`;
+            if (v.name === saved) { opt.selected = true; found = true; }
+            grp.appendChild(opt);
+            count++;
         });
+        sel.appendChild(grp);
+    });
 
-        const savedVoice = localStorage.getItem('selectedVoice');
-        let firstOption = null;
-        let count = 0;
+    // Auto-select first if nothing matched
+    if (!found && sel.options.length > 0) sel.options[0].selected = true;
+    if (badge) badge.textContent = count + ' voice' + (count !== 1 ? 's' : '');
+}
 
-        Object.entries(groups).forEach(([groupLabel, groupVoices]) => {
-            const optgroup = document.createElement('optgroup');
-            optgroup.label = groupLabel;
-            groupVoices.forEach(v => {
-                const opt = document.createElement('option');
-                opt.value = v.name;
-                opt.textContent = `${v.gender} ${v.name}`;
-                if (v.name === savedVoice) opt.selected = true;
-                if (!firstOption) firstOption = opt;
-                optgroup.appendChild(opt);
-                count++;
-            });
-            select.appendChild(optgroup);
-        });
+function resolveVoice(name) {
+    return deviceVoices.find(v => v.name === name)
+        || deviceVoices.find(v => v.name.toLowerCase().includes((name || '').toLowerCase().replace('google ', '')))
+        || null;
+}
 
-        // Auto-select first if nothing saved
-        if (!savedVoice && firstOption) firstOption.selected = true;
+function speakItem(item) {
+    const synth = window.speechSynthesis;
+    synth.cancel();
 
-        // Update badge
-        if (badge) badge.textContent = `${count} voice${count !== 1 ? 's' : ''}`;
-    },
+    const text = addPauses(item.title + '. ' + item.summary);
+    const utt  = new SpeechSynthesisUtterance(text);
 
-    // Get the actual SpeechSynthesisVoice object by name
-    resolveVoice(name) {
-        // Try exact device voice match first
-        const device = this.deviceVoices.find(v => v.name === name);
-        if (device) return device;
-        // Try partial match (for Google voices that vary slightly by OS)
-        return this.deviceVoices.find(v => v.name.toLowerCase().includes(name.toLowerCase().split
-        // Try partial match (for Google voices that vary slightly by OS)
-        return this.deviceVoices.find(v => v.name.toLowerCase().includes(name.toLowerCase().split(' ')[1] || name.toLowerCase()));
-    },
-
-    async speak(text, onEnd) {
-        this.cancel();
-        const enhanced = this.addBasicPauses(text);
-        this.currentUtterance = new SpeechSynthesisUtterance(enhanced);
-
-        const vName = document.getElementById('voice-select')?.value;
-        const voice = this.resolveVoice(vName);
-        if (voice) {
-            this.currentUtterance.voice = voice;
-            this.currentUtterance.lang = voice.lang;
-        } else {
-            // Fallback: set lang manually so browser picks best available voice
-            const langCode = app.currentLang;
-            const hardcoded = GOOGLE_VOICES[langCode]?.[0];
-            if (hardcoded) this.currentUtterance.lang = hardcoded.lang;
-        }
-
-        this.currentUtterance.rate = 0.9;
-        this.currentUtterance.pitch = 1.0;
-        this.currentUtterance.volume = 1.0;
-
-        this.currentUtterance.onend = () => {
-            if (onEnd) onEnd();
-            setTimeout(() => app.next(), 1000);
-        };
-
-        this.currentUtterance.onerror = (e) => {
-            console.warn('TTS error:', e.error);
-            if (onEnd) onEnd();
-        };
-
-        this.synth.speak(this.currentUtterance);
-    },
-
-    addBasicPauses(text) {
-        return text
-            .replace(/\. /g, '., ')
-            .replace(/: /g, ':, ')
-            .replace(/; /g, ';, ')
-            .replace(/ - /g, ', - ')
-            .replace(/\? /g, '?, ')
-            .replace(/! /g, '!, ');
-    },
-
-    cancel() {
-        if (this.synth.speaking || this.synth.pending) this.synth.cancel();
+    const vName = document.getElementById('voice-select').value || currentVoice;
+    const voice = resolveVoice(vName);
+    if (voice) {
+        utt.voice = voice;
+        utt.lang  = voice.lang;
+    } else {
+        // Set lang so browser picks best available voice automatically
+        utt.lang = (GOOGLE_VOICES[currentLang]?.[0]?.lang) || 'en-US';
     }
-};
+    utt.rate   = 0.9;
+    utt.pitch  = 1.0;
+    utt.volume = 1.0;
 
-// ============================================================
-//  GROQ AI SUMMARIZER
-// ============================================================
-const groqAI = {
-    async summarize(text) {
-        if (!GROQ_API_KEY) return null;
-        try {
-            const res = await fetch(CONFIG.GROQ_API_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${GROQ_API_KEY}`
-                },
-                body: JSON.stringify({
-                    model: 'llama-3.3-70b-versatile',
-                    messages: [
-                        { role: 'system', content: 'You are a news summarizer. Provide concise, factual 2-3 sentence summaries.' },
-                        { role: 'user',   content: `Summarize this news in 2-3 clear sentences:\n\n${text}` }
-                    ],
-                    temperature: 0.3,
-                    max_tokens: 200
-                }),
-                signal: AbortSignal.timeout(CONFIG.GROQ_TIMEOUT)
-            });
-            if (!res.ok) return null;
-            const data = await res.json();
-            return data.choices?.[0]?.message?.content?.trim() || null;
-        } catch { return null; }
-    }
-};
-
-// ============================================================
-//  CACHE MANAGER
-// ============================================================
-const cacheManager = {
-    get() {
-        try {
-            const ts = parseInt(localStorage.getItem(STORE.CACHE_TS) || '0');
-            if (Date.now() - ts > STORE.CACHE_DURATION) return null;
-            const data = localStorage.getItem(STORE.NEWS_CACHE);
-            return data ? JSON.parse(data) : null;
-        } catch { return null; }
-    },
-    set(items) {
-        try {
-            localStorage.setItem(STORE.NEWS_CACHE, JSON.stringify(items));
-            localStorage.setItem(STORE.CACHE_TS, Date.now().toString());
-        } catch(e) { console.warn('Cache save failed:', e); }
-    }
-};
-
-// ============================================================
-//  APP CORE
-// ============================================================
-const app = {
-    allItems: [],
-    filteredItems: [],
-    idx: 0,
-    isPlaying: false,
-    currentLang: 'en',
-    currentCategory: 'all',
-
-    async init() {
-        this.currentLang = localStorage.getItem('selectedLang') || 'en';
-
-        // Set saved lang in dropdown
-        const langSel = document.getElementById('lang-select');
-        if (langSel) langSel.value = this.currentLang;
-
-        tts.init();
-        tts.populateVoiceSelect(this.currentLang);
-
-        // Try cache first for instant display
-        const cached = cacheManager.get();
-        if (cached && cached.length > 0) {
-            this.allItems = cached;
-            this.mergeManualNews();
-            this.filterCategory(this.currentCategory, document.querySelector('.cat-btn.active'));
-            this.updateStatus('Cached');
-            // Refresh in background
-            this.fetchNews(true);
-        } else {
-            await this.fetchNews(false);
-        }
-    },
-
-    async fetchNews(background = false) {
-        if (!background) {
-            document.getElementById('status-text').textContent = 'Fetching...';
-        }
-
-        const cat = this.currentCategory;
-        const feedUrls =
-            BASE_FEEDS[cat]?.[this.currentLang] ||
-            BASE_FEEDS['all'][this.currentLang]  ||
-            BASE_FEEDS['all']['en'];
-
-        // Add admin-added custom feeds
-        const customFeeds = this.getCustomFeeds();
-        const allUrls = [...feedUrls, ...customFeeds];
-
-        let allItems = [];
-        for (const url of allUrls) {
-            try {
-                const res  = await fetch(CONFIG.PROXY_URL + encodeURIComponent(url));
-                const data = await res.json();
-                const xml  = new DOMParser().parseFromString(data.contents, 'text/xml');
-                xml.querySelectorAll('item').forEach((item, i) => {
-                    if (i < 12) {
-                        allItems.push({
-                            title:       item.querySelector('title')?.textContent || '',
-                            description: item.querySelector('description')?.textContent?.replace(/<[^>]*>/g, '') || '',
-                            link:        item.querySelector('link')?.textContent || '',
-                            source:      (() => { try { return new URL(url).hostname.replace('www.',''); } catch { return 'News'; } })(),
-                            pubDate:     item.querySelector('pubDate')?.textContent || '',
-                            summaryMode: 'basic',
-                            isManual:    false,
-                            category:    cat
-                        });
-                    }
-                });
-            } catch(e) { console.warn('Feed error:', url, e.message); }
-        }
-
-        // Shuffle and limit
-        allItems = allItems.sort(() => Math.random() - 0.5).slice(0, 25);
-
-        // AI Summarize each item
-        for (let item of allItems) {
-            const text = `${item.title}. ${item.description}`.substring(0, 800);
-            const summary = await groqAI.summarize(text);
-            if (summary) {
-                item.summary     = summary;
-                item.summaryMode = 'groq';
-            } else {
-                item.summary     = this.basicSummary(item.description);
-                item.summaryMode = 'basic';
-            }
-        }
-
-        cacheManager.set(allItems);
-        this.allItems = allItems;
-        this.mergeManualNews();
-        this.filterCategory(this.currentCategory, document.querySelector('.cat-btn.active'));
-    },
-
-    getCustomFeeds() {
-        try {
-            const data = localStorage.getItem(STORE.CUSTOM_FEEDS);
-            return data ? JSON.parse(data).map(f => f.url) : [];
-        } catch { return []; }
-    },
-
-    mergeManualNews() {
-        try {
-            const raw = localStorage.getItem(STORE.MANUAL_NEWS);
-            if (!raw) return;
-            const manual = JSON.parse(raw);
-            this.allItems = this.allItems.filter(i => !i.isManual);
-            manual.forEach(m => {
-                this.allItems.unshift({
-                    title:       m.title,
-                    description: m.body,
-                    summary:     m.summary || m.body.substring(0, 200) + '...',
-                    source:      m.source || 'Admin',
-                    link:        '',
-                    pubDate:     m.date,
-                    summaryMode: 'manual',
-                    isManual:    true,
-                    category:    m.category || 'all'
-                });
-            });
-        } catch(e) { console.warn('Manual news merge error:', e); }
-    },
-
-    basicSummary(text) {
-        const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 20);
-        const s = sentences.slice(0, 2).join('. ').trim();
-        return s ? s + (s.endsWith('.') ? '' : '.') : text.substring(0, 150) + '...';
-    },
-
-    filterCategory(cat, btn) {
-        this.currentCategory = cat;
-        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-        if (btn) btn.classList.add('active');
-        this.filteredItems = cat === 'all'
-            ? [...this.allItems]
-            : this.allItems.filter(i => i.isManual ? (i.category === cat || i.category === 'all') : true);
-        this.idx = 0;
-        this.render();
-    },
-
-    render() {
-        const feed = document.getElementById('feed');
-        feed.innerHTML = '';
-
-        if (this.filteredItems.length === 0) {
-            feed.innerHTML = `
-                <div class="card-wrapper">
-                    <div class="card">
-                        <div class="headline">No news found</div>
-                        <div class="body-text">Try a different category or language.</div>
-                    </div>
-                </div>`;
-            return;
-        }
-
-        this.filteredItems.forEach(item => {
-            const wrapper   = document.createElement('div');
-            wrapper.className = 'card-wrapper';
-            const isGroq   = item.summaryMode === 'groq';
-            const isManual = item.isManual;
-
-            wrapper.innerHTML = `
-                <div class="card">
-                    <div class="card-header">
-                        <div class="${isManual ? 'manual-badge' : 'badge'}">
-                            ${isManual ? '📌 EDITOR\'S PICK' : (LANG_NAMES[this.currentLang] || 'News')}
-                        </div>
-                        <div class="source-badge">📰 ${item.source}</div>
-                    </div>
-                    <div class="headline">${item.title}</div>
-                    <div class="summary-section ${isGroq ? 'groq-section' : isManual ? '' : 'basic-section'}">
-                        <div class="summary-label ${isGroq ? 'groq' : ''}">
-                            ${isManual ? '📌 Admin Summary' : isGroq ? '⚡ Groq AI Summary' : '📝 Quick Summary'}
-                        </div>
-                        <div class="body-text">${item.summary}</div>
-                    </div>
-                    <div class="attribution">
-                        Source: ${item.source}
-                        ${item.link ? `· <a href="${item.link}" target="_blank" rel="noopener" style="color:var(--primary)">Read full article ↗</a>` : ''}
-                    </div>
-                </div>`;
-            feed.appendChild(wrapper);
-        });
-
-        this.updateStatus();
-    },
-
-    togglePlay() { this.isPlaying ? this.pause() : this.play(); },
-
-    play() {
-        const item = this.filteredItems[this.idx];
-        if (!item) return;
-        this.isPlaying = true;
-        document.getElementById('play-btn').textContent = '⏸';
-        tts.speak(`${item.title}. ${item.summary}`, () => {
-            this.isPlaying = false;
-            document.getElementById('play-btn').textContent = '▶';
-        });
-    },
-
-    pause() {
-        this.isPlaying = false;
+    utt.onend = () => {
+        isPlaying = false;
         document.getElementById('play-btn').textContent = '▶';
-        tts.cancel();
-    },
+        setTimeout(() => goNext(), 1000);
+    };
+    utt.onerror = () => {
+        isPlaying = false;
+        document.getElementById('play-btn').textContent = '▶';
+    };
 
-    next() {
-        this.pause();
-        if (this.idx < this.filteredItems.length - 1) {
-            this.idx++;
-            this.scrollToCard();
-        }
-    },
+    synth.speak(utt);
+}
 
-    prev() {
-        this.pause();
-        if (this.idx > 0) {
-            this.idx--;
-            this.scrollToCard();
-        }
-    },
+function addPauses(text) {
+    return text
+        .replace(/\. /g,  '., ')
+        .replace(/: /g,   ':, ')
+        .replace(/; /g,   ';, ')
+        .replace(/ - /g,  ', - ')
+        .replace(/\? /g,  '?, ')
+        .replace(/! /g,   '!, ');
+}
 
-    scrollToCard() {
-        document.querySelectorAll('.card-wrapper')[this.idx]
-            ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        this.updateStatus();
-    },
+// ================================================================
+//  FETCH & SUMMARIZE
+// ================================================================
+async function groqSummarize(text) {
+    try {
+        const res = await fetch(GROQ_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + GROQ_API_KEY },
+            body: JSON.stringify({
+                model: 'llama-3.3-70b-versatile',
+                messages: [
+                    { role: 'system', content: 'You are a news summarizer. Give a concise 2-3 sentence factual summary.' },
+                    { role: 'user',   content: 'Summarize:\n\n' + text }
+                ],
+                temperature: 0.3,
+                max_tokens: 200
+            }),
+            signal: AbortSignal.timeout(10000)
+        });
+        if (!res.ok) return null;
+        const d = await res.json();
+        return d.choices?.[0]?.message?.content?.trim() || null;
+    } catch { return null; }
+}
 
-    updateStatus(label) {
-        const dot = document.getElementById('status-dot');
-        const txt = document.getElementById('status-text');
-        if (dot) dot.classList.toggle('groq-mode', this.filteredItems[this.idx]?.summaryMode === 'groq');
-        if (txt) txt.textContent = label || (this.filteredItems.length > 0 ? `${this.idx + 1} / ${this.filteredItems.length}` : 'Ready');
+function basicSummary(text) {
+    const s = text.split(/[.!?]+/).filter(x => x.trim().length > 20).slice(0, 2).join('. ').trim();
+    return s ? s + '.' : text.substring(0, 150) + '...';
+}
+
+function getCustomFeeds() {
+    try { return JSON.parse(localStorage.getItem('newsflow_custom_feeds') || '[]').map(f => f.url); }
+    catch { return []; }
+}
+
+function getManualPosts() {
+    try { return JSON.parse(localStorage.getItem('newsflow_manual') || '[]'); }
+    catch { return []; }
+}
+
+async function fetchNews() {
+    setStatus('Fetching...');
+
+    const urls = [
+        ...(FEEDS[currentCategory]?.[currentLang] || FEEDS['all'][currentLang] || FEEDS['all']['en']),
+        ...getCustomFeeds()
+    ];
+
+    let raw = [];
+    for (const url of urls) {
+        try {
+            const res  = await fetch(PROXY + encodeURIComponent(url));
+            const data = await res.json();
+            const xml  = new DOMParser().parseFromString(data.contents, 'text/xml');
+            xml.querySelectorAll('item').forEach((item, i) => {
+                if (i < 12) {
+                    raw.push({
+                        title:       (item.querySelector('title')?.textContent       || '').trim(),
+                        description: (item.querySelector('description')?.textContent || '').replace(/<[^>]*>/g, '').trim(),
+                        link:        (item.querySelector('link')?.textContent        || '').trim(),
+                        source:      (() => { try { return new URL(url).hostname.replace('www.',''); } catch { return 'News'; } })(),
+                        pubDate:     item.querySelector('pubDate')?.textContent || '',
+                        isManual:    false,
+                    });
+                }
+            });
+        } catch(e) { console.warn('Feed failed:', url); }
     }
-};
 
-// ============================================================
-//  UI CONTROLLER
-// ============================================================
-const ui = {
-    toggleTheme() {
-        const t = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-        document.body.setAttribute('data-theme', t);
-        localStorage.setItem('theme', t);
-    },
+    raw = raw.sort(() => Math.random() - 0.5).slice(0, 25);
 
-    openSettings() {
-        // Always refresh voice list when opening settings
-        tts.populateVoiceSelect(app.currentLang);
-        document.getElementById('settings').classList.add('open');
-    },
-
-    closeSettings() {
-        document.getElementById('settings').classList.remove('open');
-    },
-
-    onLangChange() {
-        const lang = document.getElementById('lang-select').value;
-        app.currentLang = lang;
-        // Instantly refresh voice list for newly selected language — NO reload
-        tts.populateVoiceSelect(lang);
-    },
-
-    onVoiceChange() {
-        // Voice changes instantly — if currently playing, restart with new voice
-        if (app.isPlaying) {
-            app.pause();
-            setTimeout(() => app.play(), 150);
-        }
-    },
-
-    savePrefs() {
-        const lang  = document.getElementById('lang-select').value;
-        const voice = document.getElementById('voice-select').value;
-
-        localStorage.setItem('selectedLang', lang);
-        localStorage.setItem('selectedVoice', voice);
-        app.currentLang = lang;
-
-        this.closeSettings();
-
-        // Refetch news only if language changed
-        const prevLang = localStorage.getItem('prevLang');
-        if (prevLang !== lang) {
-            localStorage.setItem('prevLang', lang);
-            app.fetchNews(false);
-        }
+    // Summarize
+    for (let item of raw) {
+        const text    = (item.title + '. ' + item.description).substring(0, 800);
+        const summary = await groqSummarize(text);
+        item.summary     = summary || basicSummary(item.description);
+        item.summaryMode = summary ? 'groq' : 'basic';
     }
-};
 
-// ============================================================
-//  BOOT
-// ============================================================
-window.addEventListener('DOMContentLoaded', () => {
+    // Cache
+    try {
+        localStorage.setItem('newsflow_cache', JSON.stringify(raw));
+        localStorage.setItem('newsflow_cache_ts', Date.now().toString());
+    } catch(e) {}
+
+    allItems = raw;
+    mergeManual();
+    applyFilter();
+}
+
+function mergeManual() {
+    const manual = getManualPosts();
+    allItems = allItems.filter(i => !i.isManual);
+    manual.forEach(m => {
+        allItems.unshift({
+            title:       m.title,
+            description: m.body || '',
+            summary:     m.summary || (m.body || '').substring(0, 200) + '...',
+            source:      m.source || 'Admin',
+            link:        '',
+            pubDate:     m.date || '',
+            summaryMode: 'manual',
+            isManual:    true,
+            category:    m.category || 'all'
+        });
+    });
+}
+
+function applyFilter() {
+    filteredItems = currentCategory === 'all'
+        ? [...allItems]
+        : allItems.filter(i => !i.isManual || i.category === currentCategory || i.category === 'all');
+    currentIndex = 0;
+    renderFeed();
+}
+
+// ================================================================
+//  RENDER
+// ================================================================
+function renderFeed() {
+    const feed = document.getElementById('feed');
+    feed.innerHTML = '';
+
+    if (filteredItems.length === 0) {
+        feed.innerHTML = `<div class="card-wrapper"><div class="card">
+            <div class="headline">No news found</div>
+            <div class="body-text">Try a different category or language.</div>
+        </div></div>`;
+        setStatus('No news');
+        return;
+    }
+
+    filteredItems.forEach((item) => {
+        const isGroq   = item.summaryMode === 'groq';
+        const isManual = item.isManual;
+        const div      = document.createElement('div');
+        div.className  = 'card-wrapper';
+        div.innerHTML  = `
+            <div class="card">
+                <div class="card-header">
+                    <div class="${isManual ? 'manual-badge' : 'badge'}">
+                        ${isManual ? '📌 EDITOR\'S PICK' : LANG_NAMES[currentLang] || 'News'}
+                    </div>
+                    <div class="source-badge">📰 ${item.source}</div>
+                </div>
+                <div class="headline">${item.title}</div>
+                <div class="summary-section ${isGroq ? 'groq-section' : isManual ? '' : 'basic-section'}">
+                    <div class="summary-label ${isGroq ? 'groq' : ''}">
+                        ${isManual ? '📌 Admin Note' : isGroq ? '⚡ Groq AI Summary' : '📝 Quick Summary'}
+                    </div>
+                    <div class="body-text">${item.summary}</div>
+                </div>
+                <div class="attribution">
+                    Source: <strong>${item.source}</strong>
+                    ${item.link ? ` &nbsp;·&nbsp; <a href="${item.link}" target="_blank" rel="noopener">Read full article ↗</a>` : ''}
+                </div>
+            </div>`;
+        feed.appendChild(div);
+    });
+
+    updateStatusDot();
+}
+
+// ================================================================
+//  CONTROLS
+// ================================================================
+function goNext() {
+    stopPlay();
+    if (currentIndex < filteredItems.length - 1) {
+        currentIndex++;
+        scrollToIndex(currentIndex);
+    }
+}
+
+function goPrev() {
+    stopPlay();
+    if (currentIndex > 0) {
+        currentIndex--;
+        scrollToIndex(currentIndex);
+    }
+}
+
+function scrollToIndex(idx) {
+    const cards = document.querySelectorAll('.card-wrapper');
+    if (cards[idx]) cards[idx].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    updateStatusDot();
+}
+
+function togglePlay() {
+    if (isPlaying) {
+        stopPlay();
+    } else {
+        const item = filteredItems[currentIndex];
+        if (!item) return;
+        isPlaying = true;
+        document.getElementById('play-btn').textContent = '⏸';
+        speakItem(item);
+    }
+}
+
+function stopPlay() {
+    isPlaying = false;
+    window.speechSynthesis.cancel();
+    document.getElementById('play-btn').textContent = '▶';
+}
+
+// ================================================================
+//  STATUS
+// ================================================================
+function setStatus(text) {
+    const el = document.getElementById('status-text');
+    if (el) el.textContent = text;
+}
+
+function updateStatusDot() {
+    const dot  = document.getElementById('status-dot');
+    const txt  = document.getElementById('status-text');
+    const item = filteredItems[currentIndex];
+    if (dot) dot.classList.toggle('groq-mode', item?.summaryMode === 'groq');
+    if (txt) txt.textContent = filteredItems.length > 0
+        ? `${currentIndex + 1} / ${filteredItems.length}`
+        : 'Ready';
+}
+
+// ================================================================
+//  WIRE UP ALL BUTTONS — single DOMContentLoaded block
+// ================================================================
+document.addEventListener('DOMContentLoaded', () => {
+
     // Apply saved theme
     const theme = localStorage.getItem('theme') || 'light';
     document.body.setAttribute('data-theme', theme);
-    // Boot app
-    app.init();
-});
+
+    // Set saved lang
+    const langSel = document.getElementById('lang-select');
+    langSel.value = currentLang;
+
+    // Load device voices
+    if (window.speechSynthesis.onvoiceschanged !== undefined) {
+        window.speechSynthesis.onvoiceschanged = () => {
+            loadDeviceVoices();
+            populateVoiceSelect(currentLang);
+        };
+    }
+    loadDeviceVoices();
+    populateVoiceSelect(currentLang);
+
+    // ── Theme toggle ──────────────────────────────────────────
+    document.getElementById('theme-btn').addEventListener('click', () => {
+        const t = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        document.body.setAttribute('data-theme', t);
+        localStorage.setItem('theme', t);
+    });
+
+    // ── Settings open / close ────────────────────────────────
+    document.getElementById('settings-btn').addEventListener('click', () => {
+        populateVoiceSelect(currentLang);
+        document.getElementById('settings-modal').classList.add('open');
+    });
+    document.getElementById('close-settings').addEventListener('click', () => {
+        document.getElementById('settings-modal').classList.remove('open');
+    });
+    // Close on backdrop click
+    document.getElementById('settings-modal').addEventListener('click', (e) => {
+        if (e.target === document.getElementById('settings-modal')) {
+            document.getElementById('settings-modal').classList.remove('open');
+        }
+    });
+
+    // ── Language change → refresh voice list instantly ───────
+    document.getElementById('lang-select').addEventListener('change', () => {
+        currentLang = document.getElementById('lang-select').value;
+        populateVoiceSelect(currentLang);
+    });
+
+    // ── Voice change → apply instantly ───────────────────────
+    document.getElementById('voice-select').addEventListener('change', () => {
+        currentVoice = document.getElementById('voice-select').value;
+        if (isPlaying) { stopPlay(); setTimeout(togglePlay, 150); }
+    });
+
+    // ── Save preferences ─────────────────────────────────────
+    document.getElementById('save-prefs-btn').addEventListener('click', () => {
+        const newLang  = document.getElementById('lang-select').value;
+        const newVoice = document.getElementById('voice-select').value;
+        const langChanged = newLang !== currentLang;
+
+        currentLang  = newLang;
+        currentVoice = newVoice;
+        localStorage.setItem('selectedLang',  currentLang);
+        localStorage.setItem('selectedVoice', currentVoice);
+
+        document.getElementById('settings-modal').classList.remove('open');
+
+        if (langChanged) fetchNews();
+    });
+
+    // ── Category buttons ──────────────────────────────────────
+    document.getElementById('category-bar').addEventListener('click', (e) => {
+        const btn = e.target.closest('.cat-btn');
+        if (!btn) return;
+        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentCategory = btn.getAttribute('data-cat');
+        stopPlay();
+        fetchNews();
+    });
+
+    // ── Playback controls ─────────────────────────────────────
+    document.getElementById('play-btn').addEventListener('click', togglePlay);
+    document.getElementById('next-btn').addEventListener('click', goNext);
+    document.getElementById('prev-btn').addEventListener('click', goPrev);
+
+    // ── Track scroll position to update index ─────────────────
+    const feedEl = document.getElementById('feed');
+    feedEl.addEventListener('scroll', () => {
+        const cards = document.querySelectorAll('.card-wrapper');
+        const feedTop = feedEl.getBoundingClientRect().top;
+        let closest = 0;
+        let minDist = Infinity;
+        cards.forEach((card, i) => {
+            const dist = Math.abs(card.getBoundingClientRect().top - feedTop);
+            if (dist < minDist) { minDist = dist; closest = i; }
+        });
+        if (closest !== currentIndex) {
+            currentIndex = closest;
+            updateStatusDot();
+        }
+    });
+
+    // ── Load from cache or fetch fresh ───────────────────────
+    try {
+        const cacheTs = parseInt(localStorage.getItem('newsflow_cache_ts') || '0');
+        const cacheOk = (Date.now() - cacheTs) < 24 * 60 * 60 * 1000;
+        const cached  = localStorage.getItem('newsflow_cache');
+
+        if (cacheOk && cached) {
+            allItems = JSON.parse(cached);
+            mergeManual();
+            applyFilter();
+            setStatus('Cached — refreshing...');
+            // Refresh in background
+            fetchNews();
+        } else {
+            fetchNews();
+        }
+    } catch(e) {
+        fetchNews();
+    }
+
+}); // end DOMContentLoaded
 </script>
 </body>
 </html>
+       
