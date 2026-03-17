@@ -862,31 +862,41 @@ function buildCard(item) {
     const isManual = item.isManual;
     const div      = document.createElement('div');
     div.className  = 'card-wrapper';
-    div.innerHTML  = `
+
+    // Fix: correct ternary for summary-section class
+    const sectionClass = isGroq ? ' groq-section' : isManual ? '' : ' basic-section';
+
+    div.innerHTML = `
         <div class="card">
             <div class="card-header">
                 <div class="${isManual ? 'manual-badge' : 'badge'}">
-                    ${isManual ? '📌 EDITOR\'S PICK' : LANG_NAMES[currentLang]||'News'}
+                    ${isManual ? '📌 EDITOR\'S PICK' : LANG_NAMES[currentLang] || 'News'}
                 </div>
                 <div class="source-badge">📰 ${item.source}</div>
             </div>
             <div class="headline">${item.displayTitle}</div>
-            <div class="summary-section${isGroq?' groq-section':isManual?':' basic-section'}">
-                <div class="summary-label${isGroq?' groq':''}">
-                    ${isManual ? '📌 Admin Note'
-                      : isGroq && currentLang!=='en' ? `⚡ AI (${LANG_NAMES[currentLang]})`
-                      : isGroq ? '⚡ Groq AI Summary'
-                      : '📝 Quick Summary'}
+            <div class="summary-section${sectionClass}">
+                <div class="summary-label${isGroq ? ' groq' : ''}">
+                    ${isManual
+                        ? '📌 Admin Note'
+                        : isGroq && currentLang !== 'en'
+                            ? `⚡ AI (${LANG_NAMES[currentLang]})`
+                            : isGroq
+                                ? '⚡ Groq AI Summary'
+                                : '📝 Quick Summary'}
                 </div>
                 <div class="body-text">${item.displaySummary}</div>
             </div>
             <div class="attribution">
                 Source: <strong>${item.source}</strong>
-                ${item.link?` &nbsp;·&nbsp; <a href="${item.link}" target="_blank" rel="noopener">Read full article ↗</a>`:''}
+                ${item.link
+                    ? ` &nbsp;·&nbsp; <a href="${item.link}" target="_blank" rel="noopener">Read full article ↗</a>`
+                    : ''}
             </div>
         </div>`;
     return div;
 }
+
 
 // ================================================================
 //  CONTROLS
