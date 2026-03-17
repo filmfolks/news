@@ -1,163 +1,408 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Flash News Flow</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: system-ui, -apple-system, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-        .container { max-width: 900px; margin: 0 auto; }
-        .header { text-align: center; color: white; padding: 40px 0; }
-        .header h1 { font-size: 3rem; margin-bottom: 10px; }
-        .controls { 
-            background: rgba(255,255,255,0.95); 
-            padding: 20px; 
-            border-radius: 15px; 
-            margin-bottom: 20px;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        select, button { 
-            padding: 12px 20px; 
-            border-radius: 8px; 
-            border: none;
-            font-size: 1rem;
-            cursor: pointer;
-        }
-        button { background: #667eea; color: white; font-weight: bold; }
-        button:hover { background: #5568d3; }
-        .feed { background: white; border-radius: 15px; padding: 30px; }
-        .news-card { 
-            background: #f8f9fa; 
-            padding: 20px; 
-            margin-bottom: 15px;
-            border-radius: 10px;
-            cursor: pointer;
-            border-left: 4px solid #667eea;
-            transition: all 0.3s;
-        }
-        .news-card:hover { transform: translateX(5px); background: #e9ecef; }
-        .news-card.playing { border-left-color: #28a745; background: #d4edda; }
-        .title { font-size: 1.2rem; font-weight: bold; margin-bottom: 10px; color: #212529; }
-        .summary { color: #495057; line-height: 1.6; margin-bottom: 10px; }
-        .meta { font-size: 0.85rem; color: #6c757d; }
-        .loading { text-align: center; padding: 50px; color: #6c757d; font-size: 1.1rem; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>🎙️ Flash News Flow</h1>
-            <p>AI-Powered Audio News</p>
-        </div>
-        
-        <div class="controls">
-            <select id="lang" onchange="loadNews()">
-                <option value="en">🇬🇧 English</option>
-                <option value="hi">🇮🇳 हिंदी</option>
-                <option value="ta">🇮🇳 தமிழ்</option>
-            </select>
-            <button onclick="loadNews()">🔄 Refresh</button>
-            <button onclick="playAll()">▶️ Play All</button>
-            <button onclick="window.speechSynthesis.cancel()">⏹️ Stop</button>
-        </div>
-        
-        <div class="feed" id="feed">
-            <div class="loading">Loading news...</div>
-        </div>
-    </div>
+        // Try partial match (for Google voices that vary slightly by OS)
+        return this.deviceVoices.find(v => v.name.toLowerCase().includes(name.toLowerCase().split(' ')[1] || name.toLowerCase()));
+    },
 
-    <script>
-        let allNews = [];
-        let speech = window.speechSynthesis;
+    async speak(text, onEnd) {
+        this.cancel();
+        const enhanced = this.addBasicPauses(text);
+        this.currentUtterance = new SpeechSynthesisUtterance(enhanced);
 
-        async function loadNews() {
-            const lang = document.getElementById('lang').value;
-            const feed = document.getElementById('feed');
-            feed.innerHTML = '<div class="loading">⏳ Loading...</div>';
-            
+        const vName = document.getElementById('voice-select')?.value;
+        const voice = this.resolveVoice(vName);
+        if (voice) {
+            this.currentUtterance.voice = voice;
+            this.currentUtterance.lang = voice.lang;
+        } else {
+            // Fallback: set lang manually so browser picks best available voice
+            const langCode = app.currentLang;
+            const hardcoded = GOOGLE_VOICES[langCode]?.[0];
+            if (hardcoded) this.currentUtterance.lang = hardcoded.lang;
+        }
+
+        this.currentUtterance.rate = 0.9;
+        this.currentUtterance.pitch = 1.0;
+        this.currentUtterance.volume = 1.0;
+
+        this.currentUtterance.onend = () => {
+            if (onEnd) onEnd();
+            setTimeout(() => app.next(), 1000);
+        };
+
+        this.currentUtterance.onerror = (e) => {
+            console.warn('TTS error:', e.error);
+            if (onEnd) onEnd();
+        };
+
+        this.synth.speak(this.currentUtterance);
+    },
+
+    addBasicPauses(text) {
+        return text
+            .replace(/\. /g, '., ')
+            .replace(/: /g, ':, ')
+            .replace(/; /g, ';, ')
+            .replace(/ - /g, ', - ')
+            .replace(/\? /g, '?, ')
+            .replace(/! /g, '!, ');
+    },
+
+    cancel() {
+        if (this.synth.speaking || this.synth.pending) this.synth.cancel();
+    }
+};
+
+// ============================================================
+//  GROQ AI SUMMARIZER
+// ============================================================
+const groqAI = {
+    async summarize(text) {
+        if (!GROQ_API_KEY) return null;
+        try {
+            const res = await fetch(CONFIG.GROQ_API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${GROQ_API_KEY}`
+                },
+                body: JSON.stringify({
+                    model: 'llama-3.3-70b-versatile',
+                    messages: [
+                        { role: 'system', content: 'You are a news summarizer. Provide concise, factual 2-3 sentence summaries.' },
+                        { role: 'user',   content: `Summarize this news in 2-3 clear sentences:\n\n${text}` }
+                    ],
+                    temperature: 0.3,
+                    max_tokens: 200
+                }),
+                signal: AbortSignal.timeout(CONFIG.GROQ_TIMEOUT)
+            });
+            if (!res.ok) return null;
+            const data = await res.json();
+            return data.choices?.[0]?.message?.content?.trim() || null;
+        } catch { return null; }
+    }
+};
+
+// ============================================================
+//  CACHE MANAGER
+// ============================================================
+const cacheManager = {
+    get() {
+        try {
+            const ts = parseInt(localStorage.getItem(STORE.CACHE_TS) || '0');
+            if (Date.now() - ts > STORE.CACHE_DURATION) return null;
+            const data = localStorage.getItem(STORE.NEWS_CACHE);
+            return data ? JSON.parse(data) : null;
+        } catch { return null; }
+    },
+    set(items) {
+        try {
+            localStorage.setItem(STORE.NEWS_CACHE, JSON.stringify(items));
+            localStorage.setItem(STORE.CACHE_TS, Date.now().toString());
+        } catch(e) { console.warn('Cache save failed:', e); }
+    }
+};
+
+// ============================================================
+//  APP CORE
+// ============================================================
+const app = {
+    allItems: [],
+    filteredItems: [],
+    idx: 0,
+    isPlaying: false,
+    currentLang: 'en',
+    currentCategory: 'all',
+
+    async init() {
+        this.currentLang = localStorage.getItem('selectedLang') || 'en';
+
+        // Set saved lang in dropdown
+        const langSel = document.getElementById('lang-select');
+        if (langSel) langSel.value = this.currentLang;
+
+        tts.init();
+        tts.populateVoiceSelect(this.currentLang);
+
+        // Try cache first for instant display
+        const cached = cacheManager.get();
+        if (cached && cached.length > 0) {
+            this.allItems = cached;
+            this.mergeManualNews();
+            this.filterCategory(this.currentCategory, document.querySelector('.cat-btn.active'));
+            this.updateStatus('Cached');
+            // Refresh in background
+            this.fetchNews(true);
+        } else {
+            await this.fetchNews(false);
+        }
+    },
+
+    async fetchNews(background = false) {
+        if (!background) {
+            document.getElementById('status-text').textContent = 'Fetching...';
+        }
+
+        const cat = this.currentCategory;
+        const feedUrls =
+            BASE_FEEDS[cat]?.[this.currentLang] ||
+            BASE_FEEDS['all'][this.currentLang]  ||
+            BASE_FEEDS['all']['en'];
+
+        // Add admin-added custom feeds
+        const customFeeds = this.getCustomFeeds();
+        const allUrls = [...feedUrls, ...customFeeds];
+
+        let allItems = [];
+        for (const url of allUrls) {
             try {
-                // Read from news.json (saved by bot)
-                const res = await fetch(`news.json?t=${Date.now()}`);
+                const res  = await fetch(CONFIG.PROXY_URL + encodeURIComponent(url));
                 const data = await res.json();
-                
-                allNews = [];
-                
-                data.forEach(item => {
-                    if (item.lang === lang && item.news) {
-                        item.news.forEach(n => allNews.push(n));
+                const xml  = new DOMParser().parseFromString(data.contents, 'text/xml');
+                xml.querySelectorAll('item').forEach((item, i) => {
+                    if (i < 12) {
+                        allItems.push({
+                            title:       item.querySelector('title')?.textContent || '',
+                            description: item.querySelector('description')?.textContent?.replace(/<[^>]*>/g, '') || '',
+                            link:        item.querySelector('link')?.textContent || '',
+                            source:      (() => { try { return new URL(url).hostname.replace('www.',''); } catch { return 'News'; } })(),
+                            pubDate:     item.querySelector('pubDate')?.textContent || '',
+                            summaryMode: 'basic',
+                            isManual:    false,
+                            category:    cat
+                        });
                     }
                 });
-                
-                if (allNews.length === 0) {
-                    feed.innerHTML = '<div class="loading">📭 No news found. Run bot first!</div>';
-                    return;
-                }
-                
-                feed.innerHTML = allNews.map((n, i) => `
-                    <div class="news-card" id="card-${i}" onclick="play(${i})">
-                        <div class="title">${n.title}</div>
-                        <div class="summary">${n.summary}</div>
-                        <div class="meta">📰 ${n.source} • 🕒 ${new Date(n.time).toLocaleString()}</div>
-                    </div>
-                `).join('');
-                
-            } catch(e) {
-                feed.innerHTML = `<div class="loading">❌ Error: ${e.message}<br><br>Make sure news.json exists in same folder!</div>`;
+            } catch(e) { console.warn('Feed error:', url, e.message); }
+        }
+
+        // Shuffle and limit
+        allItems = allItems.sort(() => Math.random() - 0.5).slice(0, 25);
+
+        // AI Summarize each item
+        for (let item of allItems) {
+            const text = `${item.title}. ${item.description}`.substring(0, 800);
+            const summary = await groqAI.summarize(text);
+            if (summary) {
+                item.summary     = summary;
+                item.summaryMode = 'groq';
+            } else {
+                item.summary     = this.basicSummary(item.description);
+                item.summaryMode = 'basic';
             }
         }
-        
-        function play(i) {
-            speech.cancel();
-            const n = allNews[i];
-            const u = new SpeechSynthesisUtterance(`${n.title}. ${n.summary}`);
-            u.rate = 0.9;
-            
-            document.querySelectorAll('.news-card').forEach((c, j) => {
-                c.classList.toggle('playing', i === j);
-            });
-            
-            u.onend = () => {
-                document.getElementById(`card-${i}`)?.classList.remove('playing');
-            };
-            
-            speech.speak(u);
-        }
-        
-        function playAll() {
-            if (allNews.length === 0) return;
-            let i = 0;
-            
-            function next() {
-                if (i >= allNews.length) return;
-                speech.cancel();
-                const n = allNews[i];
-                const u = new SpeechSynthesisUtterance(`${n.title}. ${n.summary}`);
-                u.rate = 0.9;
-                
-                document.querySelectorAll('.news-card').forEach((c, j) => {
-                    c.classList.toggle('playing', i === j);
+
+        cacheManager.set(allItems);
+        this.allItems = allItems;
+        this.mergeManualNews();
+        this.filterCategory(this.currentCategory, document.querySelector('.cat-btn.active'));
+    },
+
+    getCustomFeeds() {
+        try {
+            const data = localStorage.getItem(STORE.CUSTOM_FEEDS);
+            return data ? JSON.parse(data).map(f => f.url) : [];
+        } catch { return []; }
+    },
+
+    mergeManualNews() {
+        try {
+            const raw = localStorage.getItem(STORE.MANUAL_NEWS);
+            if (!raw) return;
+            const manual = JSON.parse(raw);
+            this.allItems = this.allItems.filter(i => !i.isManual);
+            manual.forEach(m => {
+                this.allItems.unshift({
+                    title:       m.title,
+                    description: m.body,
+                    summary:     m.summary || m.body.substring(0, 200) + '...',
+                    source:      m.source || 'Admin',
+                    link:        '',
+                    pubDate:     m.date,
+                    summaryMode: 'manual',
+                    isManual:    true,
+                    category:    m.category || 'all'
                 });
-                
-                u.onend = () => {
-                    document.getElementById(`card-${i}`)?.classList.remove('playing');
-                    i++;
-                    next();
-                };
-                
-                speech.speak(u);
-            }
-            
-            next();
+            });
+        } catch(e) { console.warn('Manual news merge error:', e); }
+    },
+
+    basicSummary(text) {
+        const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 20);
+        const s = sentences.slice(0, 2).join('. ').trim();
+        return s ? s + (s.endsWith('.') ? '' : '.') : text.substring(0, 150) + '...';
+    },
+
+    filterCategory(cat, btn) {
+        this.currentCategory = cat;
+        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+        if (btn) btn.classList.add('active');
+        this.filteredItems = cat === 'all'
+            ? [...this.allItems]
+            : this.allItems.filter(i => i.isManual ? (i.category === cat || i.category === 'all') : true);
+        this.idx = 0;
+        this.render();
+    },
+
+    render() {
+        const feed = document.getElementById('feed');
+        feed.innerHTML = '';
+
+        if (this.filteredItems.length === 0) {
+            feed.innerHTML = `
+                <div class="card-wrapper">
+                    <div class="card">
+                        <div class="headline">No news found</div>
+                        <div class="body-text">Try a different category or language.</div>
+                    </div>
+                </div>`;
+            return;
         }
-        
-        loadNews();
-    </script>
+
+        this.filteredItems.forEach(item => {
+            const wrapper   = document.createElement('div');
+            wrapper.className = 'card-wrapper';
+            const isGroq   = item.summaryMode === 'groq';
+            const isManual = item.isManual;
+
+            wrapper.innerHTML = `
+                <div class="card">
+                    <div class="card-header">
+                        <div class="${isManual ? 'manual-badge' : 'badge'}">
+                            ${isManual ? '📌 EDITOR\'S PICK' : (LANG_NAMES[this.currentLang] || 'News')}
+                        </div>
+                        <div class="source-badge">📰 ${item.source}</div>
+                    </div>
+                    <div class="headline">${item.title}</div>
+                    <div class="summary-section ${isGroq ? 'groq-section' : isManual ? '' : 'basic-section'}">
+                        <div class="summary-label ${isGroq ? 'groq' : ''}">
+                            ${isManual ? '📌 Admin Summary' : isGroq ? '⚡ Groq AI Summary' : '📝 Quick Summary'}
+                        </div>
+                        <div class="body-text">${item.summary}</div>
+                    </div>
+                    <div class="attribution">
+                        Source: ${item.source}
+                        ${item.link ? `· <a href="${item.link}" target="_blank" rel="noopener" style="color:var(--primary)">Read full article ↗</a>` : ''}
+                    </div>
+                </div>`;
+            feed.appendChild(wrapper);
+        });
+
+        this.updateStatus();
+    },
+
+    togglePlay() { this.isPlaying ? this.pause() : this.play(); },
+
+    play() {
+        const item = this.filteredItems[this.idx];
+        if (!item) return;
+        this.isPlaying = true;
+        document.getElementById('play-btn').textContent = '⏸';
+        tts.speak(`${item.title}. ${item.summary}`, () => {
+            this.isPlaying = false;
+            document.getElementById('play-btn').textContent = '▶';
+        });
+    },
+
+    pause() {
+        this.isPlaying = false;
+        document.getElementById('play-btn').textContent = '▶';
+        tts.cancel();
+    },
+
+    next() {
+        this.pause();
+        if (this.idx < this.filteredItems.length - 1) {
+            this.idx++;
+            this.scrollToCard();
+        }
+    },
+
+    prev() {
+        this.pause();
+        if (this.idx > 0) {
+            this.idx--;
+            this.scrollToCard();
+        }
+    },
+
+    scrollToCard() {
+        document.querySelectorAll('.card-wrapper')[this.idx]
+            ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        this.updateStatus();
+    },
+
+    updateStatus(label) {
+        const dot = document.getElementById('status-dot');
+        const txt = document.getElementById('status-text');
+        if (dot) dot.classList.toggle('groq-mode', this.filteredItems[this.idx]?.summaryMode === 'groq');
+        if (txt) txt.textContent = label || (this.filteredItems.length > 0 ? `${this.idx + 1} / ${this.filteredItems.length}` : 'Ready');
+    }
+};
+
+// ============================================================
+//  UI CONTROLLER
+// ============================================================
+const ui = {
+    toggleTheme() {
+        const t = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        document.body.setAttribute('data-theme', t);
+        localStorage.setItem('theme', t);
+    },
+
+    openSettings() {
+        // Always refresh voice list when opening settings
+        tts.populateVoiceSelect(app.currentLang);
+        document.getElementById('settings').classList.add('open');
+    },
+
+    closeSettings() {
+        document.getElementById('settings').classList.remove('open');
+    },
+
+    onLangChange() {
+        const lang = document.getElementById('lang-select').value;
+        app.currentLang = lang;
+        // Instantly refresh voice list for newly selected language — NO reload
+        tts.populateVoiceSelect(lang);
+    },
+
+    onVoiceChange() {
+        // Voice changes instantly — if currently playing, restart with new voice
+        if (app.isPlaying) {
+            app.pause();
+            setTimeout(() => app.play(), 150);
+        }
+    },
+
+    savePrefs() {
+        const lang  = document.getElementById('lang-select').value;
+        const voice = document.getElementById('voice-select').value;
+
+        localStorage.setItem('selectedLang', lang);
+        localStorage.setItem('selectedVoice', voice);
+        app.currentLang = lang;
+
+        this.closeSettings();
+
+        // Refetch news only if language changed
+        const prevLang = localStorage.getItem('prevLang');
+        if (prevLang !== lang) {
+            localStorage.setItem('prevLang', lang);
+            app.fetchNews(false);
+        }
+    }
+};
+
+// ============================================================
+//  BOOT
+// ============================================================
+window.addEventListener('DOMContentLoaded', () => {
+    // Apply saved theme
+    const theme = localStorage.getItem('theme') || 'light';
+    document.body.setAttribute('data-theme', theme);
+    // Boot app
+    app.init();
+});
+</script>
 </body>
 </html>
