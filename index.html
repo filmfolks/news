@@ -240,117 +240,141 @@
 // ================================================================
 const GOOGLE_VOICES = {
     en: [
-        { name: 'Google US English',                              lang: 'en-US', gender: '♀' },
-        { name: 'Google UK English Female',                       lang: 'en-GB', gender: '♀' },
-        { name: 'Google UK English Male',                         lang: 'en-GB', gender: '♂' },
-        { name: 'Microsoft Zira - English (United States)',       lang: 'en-US', gender: '♀' },
-        { name: 'Microsoft David - English (United States)',      lang: 'en-US', gender: '♂' },
-        { name: 'Microsoft Mark - English (United States)',       lang: 'en-US', gender: '♂' },
-        { name: 'Samantha',  lang: 'en-US', gender: '♀' },
-        { name: 'Alex',      lang: 'en-US', gender: '♂' },
-        { name: 'Victoria',  lang: 'en-US', gender: '♀' },
-        { name: 'Karen',     lang: 'en-AU', gender: '♀' },
-        { name: 'Daniel',    lang: 'en-GB', gender: '♂' },
-        { name: 'Moira',     lang: 'en-IE', gender: '♀' },
-        { name: 'Rishi',     lang: 'en-IN', gender: '♂' },
-        { name: 'Tessa',     lang: 'en-ZA', gender: '♀' },
+        { name: 'Google US English',                         lang: 'en-US', gender: '♀' },
+        { name: 'Google UK English Female',                  lang: 'en-GB', gender: '♀' },
+        { name: 'Google UK English Male',                    lang: 'en-GB', gender: '♂' },
+        { name: 'Microsoft Zira - English (United States)',  lang: 'en-US', gender: '♀' },
+        { name: 'Microsoft David - English (United States)', lang: 'en-US', gender: '♂' },
+        { name: 'Microsoft Mark - English (United States)',  lang: 'en-US', gender: '♂' },
+        { name: 'Samantha', lang: 'en-US', gender: '♀' },
+        { name: 'Alex',     lang: 'en-US', gender: '♂' },
+        { name: 'Victoria', lang: 'en-US', gender: '♀' },
+        { name: 'Karen',    lang: 'en-AU', gender: '♀' },
+        { name: 'Daniel',   lang: 'en-GB', gender: '♂' },
+        { name: 'Moira',    lang: 'en-IE', gender: '♀' },
+        { name: 'Rishi',    lang: 'en-IN', gender: '♂' },
     ],
     hi: [
-        { name: 'Google हिन्दी',                                  lang: 'hi-IN', gender: '♀' },
-        { name: 'Microsoft Hemant - Hindi (India)',               lang: 'hi-IN', gender: '♂' },
-        { name: 'Microsoft Kalpana - Hindi (India)',              lang: 'hi-IN', gender: '♀' },
-        { name: 'Lekha',     lang: 'hi-IN', gender: '♀' },
+        { name: 'Google हिन्दी',                             lang: 'hi-IN', gender: '♀' },
+        { name: 'Microsoft Hemant - Hindi (India)',          lang: 'hi-IN', gender: '♂' },
+        { name: 'Microsoft Kalpana - Hindi (India)',         lang: 'hi-IN', gender: '♀' },
+        { name: 'Lekha', lang: 'hi-IN', gender: '♀' },
     ],
     ta: [
-        { name: 'Google தமிழ்',                                   lang: 'ta-IN', gender: '♀' },
-        { name: 'Microsoft Valluvar - Tamil (India)',             lang: 'ta-IN', gender: '♂' },
-        { name: 'Veena',     lang: 'ta-IN', gender: '♀' },
+        { name: 'Google தமிழ்',                              lang: 'ta-IN', gender: '♀' },
+        { name: 'Microsoft Valluvar - Tamil (India)',        lang: 'ta-IN', gender: '♂' },
     ],
     te: [
-        { name: 'Google తెలుగు',                                  lang: 'te-IN', gender: '♀' },
-        { name: 'Microsoft Chitra - Telugu (India)',              lang: 'te-IN', gender: '♀' },
-        { name: 'Microsoft Subramanian - Telugu (India)',         lang: 'te-IN', gender: '♂' },
+        { name: 'Google తెలుగు',                             lang: 'te-IN', gender: '♀' },
+        { name: 'Microsoft Chitra - Telugu (India)',         lang: 'te-IN', gender: '♀' },
+        { name: 'Microsoft Subramanian - Telugu (India)',    lang: 'te-IN', gender: '♂' },
     ],
     kn: [
-        { name: 'Google ಕನ್ನಡ',                                  lang: 'kn-IN', gender: '♀' },
-        { name: 'Microsoft Dhwani - Kannada (India)',             lang: 'kn-IN', gender: '♀' },
-        { name: 'Microsoft Ravi - Kannada (India)',               lang: 'kn-IN', gender: '♂' },
+        { name: 'Google ಕನ್ನಡ',                             lang: 'kn-IN', gender: '♀' },
+        { name: 'Microsoft Dhwani - Kannada (India)',        lang: 'kn-IN', gender: '♀' },
+        { name: 'Microsoft Ravi - Kannada (India)',          lang: 'kn-IN', gender: '♂' },
     ],
     mr: [
-        { name: 'Google मराठी',                                   lang: 'mr-IN', gender: '♀' },
-        { name: 'Microsoft Aarohi - Marathi (India)',             lang: 'mr-IN', gender: '♀' },
-        { name: 'Microsoft Manohar - Marathi (India)',            lang: 'mr-IN', gender: '♂' },
+        { name: 'Google मराठी',                              lang: 'mr-IN', gender: '♀' },
+        { name: 'Microsoft Aarohi - Marathi (India)',        lang: 'mr-IN', gender: '♀' },
+        { name: 'Microsoft Manohar - Marathi (India)',       lang: 'mr-IN', gender: '♂' },
     ],
     bn: [
-        { name: 'Google বাংলা',                                   lang: 'bn-IN', gender: '♀' },
-        { name: 'Google বাংলা বাংলাদেশ',                        lang: 'bn-BD', gender: '♀' },
-        { name: 'Microsoft Bashkar - Bengali (India)',            lang: 'bn-IN', gender: '♂' },
-        { name: 'Microsoft Tanishaa - Bengali (India)',           lang: 'bn-IN', gender: '♀' },
+        { name: 'Google বাংলা',                              lang: 'bn-IN', gender: '♀' },
+        { name: 'Microsoft Bashkar - Bengali (India)',       lang: 'bn-IN', gender: '♂' },
+        { name: 'Microsoft Tanishaa - Bengali (India)',      lang: 'bn-IN', gender: '♀' },
     ],
     ml: [
-        { name: 'Google മലയാളം',                                  lang: 'ml-IN', gender: '♀' },
-        { name: 'Microsoft Sobhana - Malayalam (India)',          lang: 'ml-IN', gender: '♀' },
+        { name: 'Google മലയാളം',                             lang: 'ml-IN', gender: '♀' },
+        { name: 'Microsoft Sobhana - Malayalam (India)',     lang: 'ml-IN', gender: '♀' },
     ],
     or: [
-        { name: 'Google ଓଡ଼ିଆ',                                  lang: 'or-IN', gender: '♀' },
-        { name: 'Microsoft Subhadra - Odia (India)',              lang: 'or-IN', gender: '♀' },
-        { name: 'Microsoft Kalyan - Odia (India)',                lang: 'or-IN', gender: '♂' },
+        { name: 'Google ଓଡ଼ିଆ',                             lang: 'or-IN', gender: '♀' },
+        { name: 'Microsoft Subhadra - Odia (India)',         lang: 'or-IN', gender: '♀' },
+        { name: 'Microsoft Kalyan - Odia (India)',           lang: 'or-IN', gender: '♂' },
     ],
     es: [
-        { name: 'Google español',                                 lang: 'es-ES', gender: '♀' },
-        { name: 'Google español de Estados Unidos',               lang: 'es-US', gender: '♀' },
-        { name: 'Microsoft Helena - Spanish (Spain)',             lang: 'es-ES', gender: '♀' },
-        { name: 'Microsoft Pablo - Spanish (Spain)',              lang: 'es-ES', gender: '♂' },
-        { name: 'Microsoft Laura - Spanish (Mexico)',             lang: 'es-MX', gender: '♀' },
-        { name: 'Jorge',    lang: 'es-ES', gender: '♂' },
-        { name: 'Monica',   lang: 'es-ES', gender: '♀' },
-        { name: 'Paulina',  lang: 'es-MX', gender: '♀' },
+        { name: 'Google español',                            lang: 'es-ES', gender: '♀' },
+        { name: 'Google español de Estados Unidos',          lang: 'es-US', gender: '♀' },
+        { name: 'Microsoft Helena - Spanish (Spain)',        lang: 'es-ES', gender: '♀' },
+        { name: 'Microsoft Pablo - Spanish (Spain)',         lang: 'es-ES', gender: '♂' },
+        { name: 'Jorge',   lang: 'es-ES', gender: '♂' },
+        { name: 'Monica',  lang: 'es-ES', gender: '♀' },
     ],
     fr: [
-        { name: 'Google français',                                lang: 'fr-FR', gender: '♀' },
-        { name: 'Microsoft Hortense - French (France)',           lang: 'fr-FR', gender: '♀' },
-        { name: 'Microsoft Paul - French (France)',               lang: 'fr-FR', gender: '♂' },
-        { name: 'Microsoft Caroline - French (Canada)',           lang: 'fr-CA', gender: '♀' },
-        { name: 'Thomas',   lang: 'fr-FR', gender: '♂' },
-        { name: 'Aurelie',  lang: 'fr-FR', gender: '♀' },
+        { name: 'Google français',                           lang: 'fr-FR', gender: '♀' },
+        { name: 'Microsoft Hortense - French (France)',      lang: 'fr-FR', gender: '♀' },
+        { name: 'Microsoft Paul - French (France)',          lang: 'fr-FR', gender: '♂' },
+        { name: 'Thomas',  lang: 'fr-FR', gender: '♂' },
+        { name: 'Aurelie', lang: 'fr-FR', gender: '♀' },
     ],
     de: [
-        { name: 'Google Deutsch',                                 lang: 'de-DE', gender: '♀' },
-        { name: 'Microsoft Hedda - German (Germany)',             lang: 'de-DE', gender: '♀' },
-        { name: 'Microsoft Stefan - German (Germany)',            lang: 'de-DE', gender: '♂' },
-        { name: 'Anna',     lang: 'de-DE', gender: '♀' },
-        { name: 'Yannick',  lang: 'de-DE', gender: '♂' },
+        { name: 'Google Deutsch',                            lang: 'de-DE', gender: '♀' },
+        { name: 'Microsoft Hedda - German (Germany)',        lang: 'de-DE', gender: '♀' },
+        { name: 'Microsoft Stefan - German (Germany)',       lang: 'de-DE', gender: '♂' },
+        { name: 'Anna',    lang: 'de-DE', gender: '♀' },
+        { name: 'Yannick', lang: 'de-DE', gender: '♂' },
     ],
     ru: [
-        { name: 'Google русский',                                 lang: 'ru-RU', gender: '♀' },
-        { name: 'Microsoft Irina - Russian (Russia)',             lang: 'ru-RU', gender: '♀' },
-        { name: 'Microsoft Pavel - Russian (Russia)',             lang: 'ru-RU', gender: '♂' },
-        { name: 'Milena',   lang: 'ru-RU', gender: '♀' },
-        { name: 'Yuri',     lang: 'ru-RU', gender: '♂' },
+        { name: 'Google русский',                            lang: 'ru-RU', gender: '♀' },
+        { name: 'Microsoft Irina - Russian (Russia)',        lang: 'ru-RU', gender: '♀' },
+        { name: 'Microsoft Pavel - Russian (Russia)',        lang: 'ru-RU', gender: '♂' },
+        { name: 'Milena',  lang: 'ru-RU', gender: '♀' },
     ],
     ja: [
-        { name: 'Google 日本語',                                   lang: 'ja-JP', gender: '♀' },
-        { name: 'Microsoft Haruka - Japanese (Japan)',            lang: 'ja-JP', gender: '♀' },
-        { name: 'Microsoft Ichiro - Japanese (Japan)',            lang: 'ja-JP', gender: '♂' },
-        { name: 'Microsoft Ayumi - Japanese (Japan)',             lang: 'ja-JP', gender: '♀' },
-        { name: 'Kyoko',    lang: 'ja-JP', gender: '♀' },
-        { name: 'Otoya',    lang: 'ja-JP', gender: '♂' },
+        { name: 'Google 日本語',                              lang: 'ja-JP', gender: '♀' },
+        { name: 'Microsoft Haruka - Japanese (Japan)',       lang: 'ja-JP', gender: '♀' },
+        { name: 'Microsoft Ichiro - Japanese (Japan)',       lang: 'ja-JP', gender: '♂' },
+        { name: 'Kyoko',   lang: 'ja-JP', gender: '♀' },
+        { name: 'Otoya',   lang: 'ja-JP', gender: '♂' },
     ],
     ar: [
-        { name: 'Google العربية',                                 lang: 'ar-XA', gender: '♀' },
-        { name: 'Microsoft Hoda - Arabic (Egypt)',                lang: 'ar-EG', gender: '♀' },
-        { name: 'Microsoft Naayf - Arabic (Saudi Arabia)',        lang: 'ar-SA', gender: '♂' },
-        { name: 'Maged',    lang: 'ar-SA', gender: '♂' },
+        { name: 'Google العربية',                            lang: 'ar-XA', gender: '♀' },
+        { name: 'Microsoft Hoda - Arabic (Egypt)',           lang: 'ar-EG', gender: '♀' },
+        { name: 'Microsoft Naayf - Arabic (Saudi Arabia)',   lang: 'ar-SA', gender: '♂' },
+        { name: 'Maged',   lang: 'ar-SA', gender: '♂' },
     ],
 };
 
 // ================================================================
-//  CONFIG & FEEDS
+//  PROXIES — tries each one until one works
+// ================================================================
+const PROXIES = [
+    url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
+    url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+    url => `https://thingproxy.freeboard.io/fetch/${url}`,
+];
+
+async function fetchViaProxy(url) {
+    for (let i = 0; i < PROXIES.length; i++) {
+        try {
+            const proxyUrl = PROXIES[i](url);
+            const res = await fetch(proxyUrl, { signal: AbortSignal.timeout(8000) });
+            if (!res.ok) continue;
+
+            // allorigins returns JSON with .contents
+            // corsproxy.io and thingproxy return raw text
+            let text = '';
+            if (i === 0) {
+                const json = await res.json();
+                text = json.contents;
+            } else {
+                text = await res.text();
+            }
+
+            if (text && text.includes('<item>')) return text;
+        } catch(e) {
+            console.warn(`Proxy ${i} failed for ${url}:`, e.message);
+        }
+    }
+    return null;
+}
+
+// ================================================================
+//  CONFIG
 // ================================================================
 const GROQ_API_KEY = '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';
-
-const PROXY    = 'https://api.allorigins.win/get?url=';
-const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
+const GROQ_URL     = 'https://api.groq.com/openai/v1/chat/completions';
 
 const LANG_NAMES = {
     en:'English', hi:'हिंदी', ta:'தமிழ்', te:'తెలుగు', kn:'ಕನ್ನಡ',
@@ -360,8 +384,15 @@ const LANG_NAMES = {
 
 const FEEDS = {
     all: {
-        en: ['https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en','https://timesofindia.indiatimes.com/rssfeedstopstories.cms'],
-        hi: ['https://news.google.com/rss?hl=hi&gl=IN&ceid=IN:hi','https://www.amarujala.com/rss/breaking-news.xml'],
+        en: [
+            'https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en',
+            'https://feeds.bbci.co.uk/news/rss.xml',
+            'https://timesofindia.indiatimes.com/rssfeedstopstories.cms'
+        ],
+        hi: [
+            'https://news.google.com/rss?hl=hi&gl=IN&ceid=IN:hi',
+            'https://www.amarujala.com/rss/breaking-news.xml'
+        ],
         ta: ['https://news.google.com/rss?hl=ta&gl=IN&ceid=IN:ta'],
         te: ['https://news.google.com/rss?hl=te&gl=IN&ceid=IN:te'],
         kn: ['https://news.google.com/rss?hl=kn&gl=IN&ceid=IN:kn'],
@@ -376,15 +407,15 @@ const FEEDS = {
         ja: ['https://news.google.com/rss?hl=ja&gl=JP&ceid=JP:ja'],
         ar: ['https://news.google.com/rss?hl=ar&gl=EG&ceid=EG:ar'],
     },
-    top:           { en: ['https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRFZxYUdjU0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en'] },
+    top:           { en: ['https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRFZxYUdjU0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en', 'https://feeds.bbci.co.uk/news/rss.xml'] },
     india:         { en: ['https://news.google.com/rss/search?q=India&hl=en-IN&gl=IN&ceid=IN:en'], hi: ['https://news.google.com/rss?hl=hi&gl=IN&ceid=IN:hi'] },
-    world:         { en: ['https://news.google.com/rss/search?q=world+news&hl=en-US&gl=US&ceid=US:en'] },
-    technology:    { en: ['https://news.google.com/rss/search?q=technology&hl=en-US&gl=US&ceid=US:en'] },
-    business:      { en: ['https://news.google.com/rss/search?q=business+finance&hl=en-US&gl=US&ceid=US:en'] },
-    sports:        { en: ['https://news.google.com/rss/search?q=sports&hl=en-US&gl=US&ceid=US:en'] },
-    entertainment: { en: ['https://news.google.com/rss/search?q=entertainment&hl=en-US&gl=US&ceid=US:en'] },
-    health:        { en: ['https://news.google.com/rss/search?q=health+medicine&hl=en-US&gl=US&ceid=US:en'] },
-    science:       { en: ['https://news.google.com/rss/search?q=science+space&hl=en-US&gl=US&ceid=US:en'] },
+    world:         { en: ['https://news.google.com/rss/search?q=world+news&hl=en-US&gl=US&ceid=US:en', 'https://feeds.bbci.co.uk/news/world/rss.xml'] },
+    technology:    { en: ['https://news.google.com/rss/search?q=technology&hl=en-US&gl=US&ceid=US:en', 'https://feeds.bbci.co.uk/news/technology/rss.xml'] },
+    business:      { en: ['https://news.google.com/rss/search?q=business+finance&hl=en-US&gl=US&ceid=US:en', 'https://feeds.bbci.co.uk/news/business/rss.xml'] },
+    sports:        { en: ['https://news.google.com/rss/search?q=sports&hl=en-US&gl=US&ceid=US:en', 'https://feeds.bbci.co.uk/sport/rss.xml'] },
+    entertainment: { en: ['https://news.google.com/rss/search?q=entertainment&hl=en-US&gl=US&ceid=US:en', 'https://feeds.bbci.co.uk/news/entertainment_and_arts/rss.xml'] },
+    health:        { en: ['https://news.google.com/rss/search?q=health+medicine&hl=en-US&gl=US&ceid=US:en', 'https://feeds.bbci.co.uk/news/health/rss.xml'] },
+    science:       { en: ['https://news.google.com/rss/search?q=science+space&hl=en-US&gl=US&ceid=US:en', 'https://feeds.bbci.co.uk/news/science_and_environment/rss.xml'] },
 };
 
 // ================================================================
@@ -410,12 +441,9 @@ function buildVoiceList(langCode) {
     const hardcoded = GOOGLE_VOICES[langCode] || [];
     const base      = langCode.toLowerCase();
     const hardNames = new Set(hardcoded.map(v => v.name.toLowerCase()));
-
-    // Pick up any extra device voices not in hardcoded list
-    const extras = deviceVoices
+    const extras    = deviceVoices
         .filter(v => v.lang.toLowerCase().startsWith(base) && !hardNames.has(v.name.toLowerCase()))
         .map(v => ({ name: v.name, lang: v.lang, gender: '🔊' }));
-
     return [...hardcoded, ...extras];
 }
 
@@ -426,24 +454,28 @@ function populateVoiceSelect(langCode) {
 
     const voices = buildVoiceList(langCode);
     const saved  = localStorage.getItem('selectedVoice') || currentVoice;
-    let   found  = false;
-    let   count  = 0;
+    let count = 0;
+    let found = false;
 
-    // Group: Google first, then System/macOS, then Device
-    const groups = { '🎙️ Google Voices': [], '🖥️ System / macOS Voices': [], '🖥️ Device Voices': [] };
+    const groups = {
+        '🎙️ Google Voices':       [],
+        '🖥️ System / macOS Voices': [],
+        '🖥️ Device Voices':        []
+    };
+
     voices.forEach(v => {
-        if (v.name.startsWith('Google'))   groups['🎙️ Google Voices'].push(v);
-        else if (v.gender === '🔊')        groups['🖥️ Device Voices'].push(v);
-        else                               groups['🖥️ System / macOS Voices'].push(v);
+        if (v.name.startsWith('Google')) groups['🎙️ Google Voices'].push(v);
+        else if (v.gender === '🔊')      groups['🖥️ Device Voices'].push(v);
+        else                             groups['🖥️ System / macOS Voices'].push(v);
     });
 
     Object.entries(groups).forEach(([label, list]) => {
-        if (list.length === 0) return;
+        if (!list.length) return;
         const grp = document.createElement('optgroup');
         grp.label = label;
         list.forEach(v => {
-            const opt    = document.createElement('option');
-            opt.value    = v.name;
+            const opt = document.createElement('option');
+            opt.value = v.name;
             opt.textContent = `${v.gender} ${v.name} (${v.lang})`;
             if (v.name === saved) { opt.selected = true; found = true; }
             grp.appendChild(opt);
@@ -452,62 +484,46 @@ function populateVoiceSelect(langCode) {
         sel.appendChild(grp);
     });
 
-    // Auto-select first if nothing matched
     if (!found && sel.options.length > 0) sel.options[0].selected = true;
     if (badge) badge.textContent = count + ' voice' + (count !== 1 ? 's' : '');
 }
 
 function resolveVoice(name) {
+    if (!name) return null;
     return deviceVoices.find(v => v.name === name)
-        || deviceVoices.find(v => v.name.toLowerCase().includes((name || '').toLowerCase().replace('google ', '')))
+        || deviceVoices.find(v => v.name.toLowerCase().includes(name.toLowerCase().replace('google ', '').split(' ')[0]))
         || null;
 }
 
 function speakItem(item) {
     const synth = window.speechSynthesis;
     synth.cancel();
-
     const text = addPauses(item.title + '. ' + item.summary);
     const utt  = new SpeechSynthesisUtterance(text);
-
     const vName = document.getElementById('voice-select').value || currentVoice;
     const voice = resolveVoice(vName);
-    if (voice) {
-        utt.voice = voice;
-        utt.lang  = voice.lang;
-    } else {
-        // Set lang so browser picks best available voice automatically
-        utt.lang = (GOOGLE_VOICES[currentLang]?.[0]?.lang) || 'en-US';
-    }
-    utt.rate   = 0.9;
-    utt.pitch  = 1.0;
-    utt.volume = 1.0;
-
+    if (voice) { utt.voice = voice; utt.lang = voice.lang; }
+    else utt.lang = GOOGLE_VOICES[currentLang]?.[0]?.lang || 'en-US';
+    utt.rate = 0.9; utt.pitch = 1.0; utt.volume = 1.0;
     utt.onend = () => {
         isPlaying = false;
         document.getElementById('play-btn').textContent = '▶';
-        setTimeout(() => goNext(), 1000);
+        setTimeout(goNext, 1000);
     };
     utt.onerror = () => {
         isPlaying = false;
         document.getElementById('play-btn').textContent = '▶';
     };
-
     synth.speak(utt);
 }
 
 function addPauses(text) {
-    return text
-        .replace(/\. /g,  '., ')
-        .replace(/: /g,   ':, ')
-        .replace(/; /g,   ';, ')
-        .replace(/ - /g,  ', - ')
-        .replace(/\? /g,  '?, ')
-        .replace(/! /g,   '!, ');
+    return text.replace(/\. /g,'., ').replace(/: /g,':, ').replace(/; /g,';, ')
+               .replace(/ - /g,', - ').replace(/\? /g,'?, ').replace(/! /g,'!, ');
 }
 
 // ================================================================
-//  FETCH & SUMMARIZE
+//  GROQ SUMMARIZER
 // ================================================================
 async function groqSummarize(text) {
     try {
@@ -532,10 +548,14 @@ async function groqSummarize(text) {
 }
 
 function basicSummary(text) {
+    if (!text || text.trim().length < 10) return 'No summary available.';
     const s = text.split(/[.!?]+/).filter(x => x.trim().length > 20).slice(0, 2).join('. ').trim();
-    return s ? s + '.' : text.substring(0, 150) + '...';
+    return s ? s + '.' : text.substring(0, 180) + '...';
 }
 
+// ================================================================
+//  FETCH NEWS
+// ================================================================
 function getCustomFeeds() {
     try { return JSON.parse(localStorage.getItem('newsflow_custom_feeds') || '[]').map(f => f.url); }
     catch { return []; }
@@ -547,45 +567,97 @@ function getManualPosts() {
 }
 
 async function fetchNews() {
-    setStatus('Fetching...');
+    setStatus('⏳ Fetching...');
+    stopPlay();
 
     const urls = [
-        ...(FEEDS[currentCategory]?.[currentLang] || FEEDS['all'][currentLang] || FEEDS['all']['en']),
+        ...(FEEDS[currentCategory]?.[currentLang]
+            || FEEDS[currentCategory]?.['en']
+            || FEEDS['all'][currentLang]
+            || FEEDS['all']['en']),
         ...getCustomFeeds()
     ];
 
+    console.log('Fetching feeds:', urls);
+
     let raw = [];
+
     for (const url of urls) {
         try {
-            const res  = await fetch(PROXY + encodeURIComponent(url));
-            const data = await res.json();
-            const xml  = new DOMParser().parseFromString(data.contents, 'text/xml');
-            xml.querySelectorAll('item').forEach((item, i) => {
-                if (i < 12) {
-                    raw.push({
-                        title:       (item.querySelector('title')?.textContent       || '').trim(),
-                        description: (item.querySelector('description')?.textContent || '').replace(/<[^>]*>/g, '').trim(),
-                        link:        (item.querySelector('link')?.textContent        || '').trim(),
-                        source:      (() => { try { return new URL(url).hostname.replace('www.',''); } catch { return 'News'; } })(),
-                        pubDate:     item.querySelector('pubDate')?.textContent || '',
-                        isManual:    false,
-                    });
-                }
+            const text = await fetchViaProxy(url);
+            if (!text) { console.warn('No content from:', url); continue; }
+
+            const xml = new DOMParser().parseFromString(text, 'text/xml');
+            const items = xml.querySelectorAll('item');
+            console.log(`Got ${items.length} items from ${url}`);
+
+            items.forEach((item, i) => {
+                if (i >= 10) return;
+                const title = item.querySelector('title')?.textContent?.trim() || '';
+                const desc  = (item.querySelector('description')?.textContent || '')
+                    .replace(/<[^>]*>/g, '').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&')
+                    .replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&#39;/g,"'")
+                    .replace(/&quot;/g,'"').trim();
+                const link  = item.querySelector('link')?.textContent?.trim() || '';
+
+                if (!title || title.length < 5) return;
+
+                let source = 'News';
+                try { source = new URL(url).hostname.replace('www.',''); } catch {}
+
+                raw.push({ title, description: desc, link, source, isManual: false, summaryMode: 'basic', summary: '' });
             });
-        } catch(e) { console.warn('Feed failed:', url); }
+        } catch(e) {
+            console.warn('Feed error:', url, e.message);
+        }
     }
 
-    raw = raw.sort(() => Math.random() - 0.5).slice(0, 25);
+    console.log('Total raw items:', raw.length);
 
-    // Summarize
-    for (let item of raw) {
-        const text    = (item.title + '. ' + item.description).substring(0, 800);
-        const summary = await groqSummarize(text);
-        item.summary     = summary || basicSummary(item.description);
-        item.summaryMode = summary ? 'groq' : 'basic';
+    if (raw.length === 0) {
+        // Show friendly error with retry
+        setStatus('❌ No feeds loaded');
+        document.getElementById('feed').innerHTML = `
+            <div class="card-wrapper">
+                <div class="card">
+                    <div class="card-header"><div class="badge">⚠️ CONNECTION</div></div>
+                    <div class="headline">Could not load news</div>
+                    <div class="body-text">
+                        The RSS proxy may be temporarily unavailable.<br><br>
+                        <strong>Try these fixes:</strong><br>
+                        • Wait 30 seconds and tap Retry<br>
+                        • Switch to a different category<br>
+                        • Check your internet connection
+                    </div>
+                    <div class="attribution" style="margin-top:16px;">
+                        <button onclick="fetchNews()" style="padding:10px 24px;background:var(--primary);color:white;border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;">
+                            🔄 Retry
+                        </button>
+                    </div>
+                </div>
+            </div>`;
+        return;
     }
 
-    // Cache
+    // Deduplicate by title
+    const seen = new Set();
+    raw = raw.filter(item => {
+        const key = item.title.toLowerCase().substring(0, 60);
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+    });
+
+    // Shuffle and limit
+    raw = raw.sort(() => Math.random() - 0.5).slice(0, 30);
+
+    // Show items immediately with basic summary first
+    raw.forEach(item => {
+        item.summary     = basicSummary(item.description || item.title);
+        item.summaryMode = 'basic';
+    });
+
+    // Save to cache and render immediately
     try {
         localStorage.setItem('newsflow_cache', JSON.stringify(raw));
         localStorage.setItem('newsflow_cache_ts', Date.now().toString());
@@ -594,6 +666,30 @@ async function fetchNews() {
     allItems = raw;
     mergeManual();
     applyFilter();
+    setStatus('✅ Loaded — AI summarizing...');
+
+    // Now enhance with Groq AI summaries in background
+    let groqCount = 0;
+    for (let i = 0; i < allItems.length; i++) {
+        if (allItems[i].isManual) continue;
+        const text = (allItems[i].title + '. ' + allItems[i].description).substring(0, 800);
+        const summary = await groqSummarize(text);
+        if (summary) {
+            allItems[i].summary     = summary;
+            allItems[i].summaryMode = 'groq';
+            groqCount++;
+            // Re-render every 5 summaries to show progress
+            if (groqCount % 5 === 0) {
+                mergeManual();
+                applyFilter();
+            }
+        }
+    }
+
+    // Final render with all AI summaries
+    mergeManual();
+    applyFilter();
+    setStatus(`✅ ${filteredItems.length} articles`);
 }
 
 function mergeManual() {
@@ -601,12 +697,12 @@ function mergeManual() {
     allItems = allItems.filter(i => !i.isManual);
     manual.forEach(m => {
         allItems.unshift({
-            title:       m.title,
-            description: m.body || '',
+            title:       m.title || 'Untitled',
+            description: m.body  || '',
             summary:     m.summary || (m.body || '').substring(0, 200) + '...',
-            source:      m.source || 'Admin',
+            source:      m.source  || 'Admin',
             link:        '',
-            pubDate:     m.date || '',
+            pubDate:     m.date    || '',
             summaryMode: 'manual',
             isManual:    true,
             category:    m.category || 'all'
@@ -629,21 +725,23 @@ function renderFeed() {
     const feed = document.getElementById('feed');
     feed.innerHTML = '';
 
-    if (filteredItems.length === 0) {
+    if (!filteredItems.length) {
         feed.innerHTML = `<div class="card-wrapper"><div class="card">
             <div class="headline">No news found</div>
-            <div class="body-text">Try a different category or language.</div>
+            <div class="body-text">Try a different category or tap Retry.</div>
+            <div style="margin-top:16px;">
+                <button onclick="fetchNews()" style="padding:10px 24px;background:var(--primary);color:white;border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;">🔄 Retry</button>
+            </div>
         </div></div>`;
-        setStatus('No news');
         return;
     }
 
-    filteredItems.forEach((item) => {
+    filteredItems.forEach(item => {
         const isGroq   = item.summaryMode === 'groq';
         const isManual = item.isManual;
-        const div      = document.createElement('div');
-        div.className  = 'card-wrapper';
-        div.innerHTML  = `
+        const div = document.createElement('div');
+        div.className = 'card-wrapper';
+        div.innerHTML = `
             <div class="card">
                 <div class="card-header">
                     <div class="${isManual ? 'manual-badge' : 'badge'}">
@@ -712,9 +810,6 @@ function stopPlay() {
     document.getElementById('play-btn').textContent = '▶';
 }
 
-// ================================================================
-//  STATUS
-// ================================================================
 function setStatus(text) {
     const el = document.getElementById('status-text');
     if (el) el.textContent = text;
@@ -725,25 +820,21 @@ function updateStatusDot() {
     const txt  = document.getElementById('status-text');
     const item = filteredItems[currentIndex];
     if (dot) dot.classList.toggle('groq-mode', item?.summaryMode === 'groq');
-    if (txt) txt.textContent = filteredItems.length > 0
-        ? `${currentIndex + 1} / ${filteredItems.length}`
-        : 'Ready';
+    if (txt && filteredItems.length > 0) txt.textContent = `${currentIndex + 1} / ${filteredItems.length}`;
 }
 
 // ================================================================
-//  WIRE UP ALL BUTTONS — single DOMContentLoaded block
+//  BOOT
 // ================================================================
 document.addEventListener('DOMContentLoaded', () => {
 
     // Apply saved theme
-    const theme = localStorage.getItem('theme') || 'light';
-    document.body.setAttribute('data-theme', theme);
+    document.body.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
 
-    // Set saved lang
-    const langSel = document.getElementById('lang-select');
-    langSel.value = currentLang;
+    // Set saved language
+    document.getElementById('lang-select').value = currentLang;
 
-    // Load device voices
+    // Load TTS voices
     if (window.speechSynthesis.onvoiceschanged !== undefined) {
         window.speechSynthesis.onvoiceschanged = () => {
             loadDeviceVoices();
@@ -753,102 +844,94 @@ document.addEventListener('DOMContentLoaded', () => {
     loadDeviceVoices();
     populateVoiceSelect(currentLang);
 
-    // ── Theme toggle ──────────────────────────────────────────
+    // Theme toggle
     document.getElementById('theme-btn').addEventListener('click', () => {
         const t = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
         document.body.setAttribute('data-theme', t);
         localStorage.setItem('theme', t);
     });
 
-    // ── Settings open / close ────────────────────────────────
+    // Settings open
     document.getElementById('settings-btn').addEventListener('click', () => {
         populateVoiceSelect(currentLang);
+        document.getElementById('lang-select').value = currentLang;
         document.getElementById('settings-modal').classList.add('open');
     });
+
+    // Settings close
     document.getElementById('close-settings').addEventListener('click', () => {
         document.getElementById('settings-modal').classList.remove('open');
     });
+
     // Close on backdrop click
     document.getElementById('settings-modal').addEventListener('click', (e) => {
-        if (e.target === document.getElementById('settings-modal')) {
+        if (e.target.id === 'settings-modal')
             document.getElementById('settings-modal').classList.remove('open');
-        }
     });
 
-    // ── Language change → refresh voice list instantly ───────
+    // Language change → refresh voices instantly
     document.getElementById('lang-select').addEventListener('change', () => {
         currentLang = document.getElementById('lang-select').value;
         populateVoiceSelect(currentLang);
     });
 
-    // ── Voice change → apply instantly ───────────────────────
+    // Voice change → apply instantly
     document.getElementById('voice-select').addEventListener('change', () => {
         currentVoice = document.getElementById('voice-select').value;
         if (isPlaying) { stopPlay(); setTimeout(togglePlay, 150); }
     });
 
-    // ── Save preferences ─────────────────────────────────────
+    // Save preferences
     document.getElementById('save-prefs-btn').addEventListener('click', () => {
         const newLang  = document.getElementById('lang-select').value;
         const newVoice = document.getElementById('voice-select').value;
         const langChanged = newLang !== currentLang;
-
         currentLang  = newLang;
         currentVoice = newVoice;
         localStorage.setItem('selectedLang',  currentLang);
         localStorage.setItem('selectedVoice', currentVoice);
-
         document.getElementById('settings-modal').classList.remove('open');
-
         if (langChanged) fetchNews();
     });
 
-    // ── Category buttons ──────────────────────────────────────
+    // Category buttons
     document.getElementById('category-bar').addEventListener('click', (e) => {
         const btn = e.target.closest('.cat-btn');
         if (!btn) return;
         document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         currentCategory = btn.getAttribute('data-cat');
-        stopPlay();
         fetchNews();
     });
 
-    // ── Playback controls ─────────────────────────────────────
+    // Playback controls
     document.getElementById('play-btn').addEventListener('click', togglePlay);
     document.getElementById('next-btn').addEventListener('click', goNext);
     document.getElementById('prev-btn').addEventListener('click', goPrev);
 
-    // ── Track scroll position to update index ─────────────────
-    const feedEl = document.getElementById('feed');
-    feedEl.addEventListener('scroll', () => {
-        const cards = document.querySelectorAll('.card-wrapper');
-        const feedTop = feedEl.getBoundingClientRect().top;
-        let closest = 0;
-        let minDist = Infinity;
+    // Scroll tracking
+    document.getElementById('feed').addEventListener('scroll', () => {
+        const cards   = document.querySelectorAll('.card-wrapper');
+        const feedTop = document.getElementById('feed').getBoundingClientRect().top;
+        let closest = 0, minDist = Infinity;
         cards.forEach((card, i) => {
             const dist = Math.abs(card.getBoundingClientRect().top - feedTop);
             if (dist < minDist) { minDist = dist; closest = i; }
         });
-        if (closest !== currentIndex) {
-            currentIndex = closest;
-            updateStatusDot();
-        }
+        if (closest !== currentIndex) { currentIndex = closest; updateStatusDot(); }
     });
 
-    // ── Load from cache or fetch fresh ───────────────────────
+    // Load from cache or fetch
     try {
-        const cacheTs = parseInt(localStorage.getItem('newsflow_cache_ts') || '0');
-        const cacheOk = (Date.now() - cacheTs) < 24 * 60 * 60 * 1000;
-        const cached  = localStorage.getItem('newsflow_cache');
-
-        if (cacheOk && cached) {
+        const ts     = parseInt(localStorage.getItem('newsflow_cache_ts') || '0');
+        const fresh  = (Date.now() - ts) < 24 * 60 * 60 * 1000;
+        const cached = localStorage.getItem('newsflow_cache');
+        if (fresh && cached) {
             allItems = JSON.parse(cached);
             mergeManual();
             applyFilter();
-            setStatus('Cached — refreshing...');
-            // Refresh in background
-            fetchNews();
+            setStatus('📦 Cached — refreshing...');
+            fetchNews(); // background refresh
         } else {
             fetchNews();
         }
@@ -856,8 +939,9 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchNews();
     }
 
-}); // end DOMContentLoaded
+});
 </script>
+
 </body>
 </html>
        
