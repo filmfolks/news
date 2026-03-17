@@ -236,7 +236,7 @@
 'use strict';
 
 // ================================================================
-//  HARDCODED GOOGLE TTS VOICES PER LANGUAGE
+//  GOOGLE TTS VOICES
 // ================================================================
 const GOOGLE_VOICES = {
     en: [
@@ -245,20 +245,18 @@ const GOOGLE_VOICES = {
         { name: 'Google UK English Male',                    lang: 'en-GB', gender: '♂' },
         { name: 'Microsoft Zira - English (United States)',  lang: 'en-US', gender: '♀' },
         { name: 'Microsoft David - English (United States)', lang: 'en-US', gender: '♂' },
-        { name: 'Microsoft Mark - English (United States)',  lang: 'en-US', gender: '♂' },
         { name: 'Samantha', lang: 'en-US', gender: '♀' },
         { name: 'Alex',     lang: 'en-US', gender: '♂' },
         { name: 'Victoria', lang: 'en-US', gender: '♀' },
         { name: 'Karen',    lang: 'en-AU', gender: '♀' },
         { name: 'Daniel',   lang: 'en-GB', gender: '♂' },
-        { name: 'Moira',    lang: 'en-IE', gender: '♀' },
         { name: 'Rishi',    lang: 'en-IN', gender: '♂' },
     ],
     hi: [
         { name: 'Google हिन्दी',                             lang: 'hi-IN', gender: '♀' },
         { name: 'Microsoft Hemant - Hindi (India)',          lang: 'hi-IN', gender: '♂' },
         { name: 'Microsoft Kalpana - Hindi (India)',         lang: 'hi-IN', gender: '♀' },
-        { name: 'Lekha', lang: 'hi-IN', gender: '♀' },
+        { name: 'Lekha',    lang: 'hi-IN', gender: '♀' },
     ],
     ta: [
         { name: 'Google தமிழ்',                              lang: 'ta-IN', gender: '♀' },
@@ -298,86 +296,135 @@ const GOOGLE_VOICES = {
         { name: 'Google español de Estados Unidos',          lang: 'es-US', gender: '♀' },
         { name: 'Microsoft Helena - Spanish (Spain)',        lang: 'es-ES', gender: '♀' },
         { name: 'Microsoft Pablo - Spanish (Spain)',         lang: 'es-ES', gender: '♂' },
-        { name: 'Jorge',   lang: 'es-ES', gender: '♂' },
-        { name: 'Monica',  lang: 'es-ES', gender: '♀' },
+        { name: 'Jorge',    lang: 'es-ES', gender: '♂' },
+        { name: 'Monica',   lang: 'es-ES', gender: '♀' },
     ],
     fr: [
         { name: 'Google français',                           lang: 'fr-FR', gender: '♀' },
         { name: 'Microsoft Hortense - French (France)',      lang: 'fr-FR', gender: '♀' },
         { name: 'Microsoft Paul - French (France)',          lang: 'fr-FR', gender: '♂' },
-        { name: 'Thomas',  lang: 'fr-FR', gender: '♂' },
-        { name: 'Aurelie', lang: 'fr-FR', gender: '♀' },
+        { name: 'Thomas',   lang: 'fr-FR', gender: '♂' },
+        { name: 'Aurelie',  lang: 'fr-FR', gender: '♀' },
     ],
     de: [
         { name: 'Google Deutsch',                            lang: 'de-DE', gender: '♀' },
         { name: 'Microsoft Hedda - German (Germany)',        lang: 'de-DE', gender: '♀' },
         { name: 'Microsoft Stefan - German (Germany)',       lang: 'de-DE', gender: '♂' },
-        { name: 'Anna',    lang: 'de-DE', gender: '♀' },
-        { name: 'Yannick', lang: 'de-DE', gender: '♂' },
+        { name: 'Anna',     lang: 'de-DE', gender: '♀' },
+        { name: 'Yannick',  lang: 'de-DE', gender: '♂' },
     ],
     ru: [
         { name: 'Google русский',                            lang: 'ru-RU', gender: '♀' },
         { name: 'Microsoft Irina - Russian (Russia)',        lang: 'ru-RU', gender: '♀' },
         { name: 'Microsoft Pavel - Russian (Russia)',        lang: 'ru-RU', gender: '♂' },
-        { name: 'Milena',  lang: 'ru-RU', gender: '♀' },
+        { name: 'Milena',   lang: 'ru-RU', gender: '♀' },
     ],
     ja: [
         { name: 'Google 日本語',                              lang: 'ja-JP', gender: '♀' },
         { name: 'Microsoft Haruka - Japanese (Japan)',       lang: 'ja-JP', gender: '♀' },
         { name: 'Microsoft Ichiro - Japanese (Japan)',       lang: 'ja-JP', gender: '♂' },
-        { name: 'Kyoko',   lang: 'ja-JP', gender: '♀' },
-        { name: 'Otoya',   lang: 'ja-JP', gender: '♂' },
+        { name: 'Kyoko',    lang: 'ja-JP', gender: '♀' },
+        { name: 'Otoya',    lang: 'ja-JP', gender: '♂' },
     ],
     ar: [
         { name: 'Google العربية',                            lang: 'ar-XA', gender: '♀' },
         { name: 'Microsoft Hoda - Arabic (Egypt)',           lang: 'ar-EG', gender: '♀' },
         { name: 'Microsoft Naayf - Arabic (Saudi Arabia)',   lang: 'ar-SA', gender: '♂' },
-        { name: 'Maged',   lang: 'ar-SA', gender: '♂' },
+        { name: 'Maged',    lang: 'ar-SA', gender: '♂' },
     ],
 };
 
 // ================================================================
-//  LANGUAGE NAMES & FULL NAMES FOR GROQ TRANSLATION
+//  LANGUAGE META
 // ================================================================
 const LANG_NAMES = {
     en:'English', hi:'हिंदी', ta:'தமிழ்', te:'తెలుగు', kn:'ಕನ್ನಡ',
-    mr:'मराठी', bn:'বাংলা', ml:'മലയാളം', or:'ଓଡ଼ିଆ',
-    es:'Español', fr:'Français', de:'Deutsch', ru:'Русский', ja:'日本語', ar:'العربية'
+    mr:'मराठी',   bn:'বাংলা', ml:'മലയാളം', or:'ଓଡ଼ିଆ',
+    es:'Español', fr:'Français', de:'Deutsch', ru:'Русский',
+    ja:'日本語',   ar:'العربية'
 };
 
 const LANG_FULL = {
-    en:'English', hi:'Hindi', ta:'Tamil', te:'Telugu', kn:'Kannada',
+    en:'English', hi:'Hindi', ta:'Tamil',   te:'Telugu', kn:'Kannada',
     mr:'Marathi', bn:'Bengali', ml:'Malayalam', or:'Odia',
-    es:'Spanish', fr:'French', de:'German', ru:'Russian', ja:'Japanese', ar:'Arabic'
+    es:'Spanish', fr:'French', de:'German', ru:'Russian',
+    ja:'Japanese', ar:'Arabic'
 };
 
 // ================================================================
-//  ALL FEEDS USE ENGLISH RSS — non-English gets AI translated
+//  RSS FEEDS — Primary: native language Google News
+//              Fallback: English BBC/TOI (always works)
 // ================================================================
-const FEEDS = {
-    all:           ['https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en',
-                    'https://feeds.bbci.co.uk/news/rss.xml',
-                    'https://timesofindia.indiatimes.com/rssfeedstopstories.cms'],
-    top:           ['https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRFZxYUdjU0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en',
-                    'https://feeds.bbci.co.uk/news/rss.xml'],
-    india:         ['https://news.google.com/rss/search?q=India&hl=en-IN&gl=IN&ceid=IN:en',
-                    'https://timesofindia.indiatimes.com/rssfeedstopstories.cms',
-                    'https://indianexpress.com/feed/'],
-    world:         ['https://news.google.com/rss/search?q=world+news&hl=en-US&gl=US&ceid=US:en',
-                    'https://feeds.bbci.co.uk/news/world/rss.xml'],
-    technology:    ['https://news.google.com/rss/search?q=technology&hl=en-US&gl=US&ceid=US:en',
-                    'https://feeds.bbci.co.uk/news/technology/rss.xml'],
-    business:      ['https://news.google.com/rss/search?q=business+finance&hl=en-US&gl=US&ceid=US:en',
-                    'https://feeds.bbci.co.uk/news/business/rss.xml'],
-    sports:        ['https://news.google.com/rss/search?q=sports&hl=en-US&gl=US&ceid=US:en',
-                    'https://feeds.bbci.co.uk/sport/rss.xml'],
-    entertainment: ['https://news.google.com/rss/search?q=entertainment&hl=en-US&gl=US&ceid=US:en',
-                    'https://feeds.bbci.co.uk/news/entertainment_and_arts/rss.xml'],
-    health:        ['https://news.google.com/rss/search?q=health+medicine&hl=en-US&gl=US&ceid=US:en',
-                    'https://feeds.bbci.co.uk/news/health/rss.xml'],
-    science:       ['https://news.google.com/rss/search?q=science+space&hl=en-US&gl=US&ceid=US:en',
-                    'https://feeds.bbci.co.uk/news/science_and_environment/rss.xml'],
+const LANG_FEEDS = {
+    en: [
+        'https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en',
+        'https://feeds.bbci.co.uk/news/rss.xml',
+        'https://timesofindia.indiatimes.com/rssfeedstopstories.cms'
+    ],
+    hi: [
+        'https://news.google.com/rss?hl=hi&gl=IN&ceid=IN:hi',
+        'https://www.amarujala.com/rss/breaking-news.xml',
+        'https://www.bhaskar.com/rss-feed/1061/'
+    ],
+    ta: [
+        'https://news.google.com/rss?hl=ta&gl=IN&ceid=IN:ta'
+    ],
+    te: [
+        'https://news.google.com/rss?hl=te&gl=IN&ceid=IN:te'
+    ],
+    kn: [
+        'https://news.google.com/rss?hl=kn&gl=IN&ceid=IN:kn'
+    ],
+    mr: [
+        'https://news.google.com/rss?hl=mr&gl=IN&ceid=IN:mr'
+    ],
+    bn: [
+        'https://news.google.com/rss?hl=bn&gl=IN&ceid=IN:bn'
+    ],
+    ml: [
+        'https://news.google.com/rss?hl=ml&gl=IN&ceid=IN:ml'
+    ],
+    or: [
+        'https://news.google.com/rss?hl=or&gl=IN&ceid=IN:or'
+    ],
+    es: [
+        'https://news.google.com/rss?hl=es&gl=ES&ceid=ES:es'
+    ],
+    fr: [
+        'https://news.google.com/rss?hl=fr&gl=FR&ceid=FR:fr'
+    ],
+    de: [
+        'https://news.google.com/rss?hl=de&gl=DE&ceid=DE:de'
+    ],
+    ru: [
+        'https://news.google.com/rss?hl=ru&gl=RU&ceid=RU:ru'
+    ],
+    ja: [
+        'https://news.google.com/rss?hl=ja&gl=JP&ceid=JP:ja'
+    ],
+    ar: [
+        'https://news.google.com/rss?hl=ar&gl=EG&ceid=EG:ar'
+    ]
 };
+
+// Category-specific feeds (English, supplemented)
+const CAT_FEEDS = {
+    top:           'https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRFZxYUdjU0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en',
+    india:         'https://news.google.com/rss/search?q=India&hl=en-IN&gl=IN&ceid=IN:en',
+    world:         'https://news.google.com/rss/search?q=world+news&hl=en-US&gl=US&ceid=US:en',
+    technology:    'https://news.google.com/rss/search?q=technology&hl=en-US&gl=US&ceid=US:en',
+    business:      'https://news.google.com/rss/search?q=business+finance&hl=en-US&gl=US&ceid=US:en',
+    sports:        'https://news.google.com/rss/search?q=sports&hl=en-US&gl=US&ceid=US:en',
+    entertainment: 'https://news.google.com/rss/search?q=entertainment&hl=en-US&gl=US&ceid=US:en',
+    health:        'https://news.google.com/rss/search?q=health+medicine&hl=en-US&gl=US&ceid=US:en',
+    science:       'https://news.google.com/rss/search?q=science+space&hl=en-US&gl=US&ceid=US:en',
+};
+
+// English fallback feeds (used if native lang feed fails)
+const FALLBACK_FEEDS = [
+    'https://feeds.bbci.co.uk/news/rss.xml',
+    'https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en'
+];
 
 // ================================================================
 //  PROXY FETCHER — 3 fallbacks
@@ -393,39 +440,49 @@ async function fetchViaProxy(url) {
         try {
             const res = await fetch(PROXIES[i](url), { signal: AbortSignal.timeout(9000) });
             if (!res.ok) continue;
-            let text = '';
-            if (i === 0) {
-                const j = await res.json();
-                text = j.contents || '';
-            } else {
-                text = await res.text();
-            }
-            if (text && text.length > 200) return text;
+            const text = i === 0
+                ? (await res.json()).contents || ''
+                : await res.text();
+            if (text && text.includes('<item>')) return text;
         } catch(e) {
-            console.warn(`Proxy ${i} failed:`, e.message);
+            console.warn(`Proxy ${i} failed for ${url}:`, e.message);
         }
     }
     return null;
 }
 
 // ================================================================
-//  GROQ — Summarize + Translate in ONE call
+//  GROQ — Summarize only (English) OR Summarize + Translate
 // ================================================================
 const GROQ_API_KEY = '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';
 const GROQ_URL     = 'https://api.groq.com/openai/v1/chat/completions';
 
-async function groqSummarizeAndTranslate(title, description, targetLang) {
-    const langName = LANG_FULL[targetLang] || 'English';
-    const isEnglish = targetLang === 'en';
+async function groqProcess(title, description, targetLang) {
+    const langName  = LANG_FULL[targetLang] || 'English';
+    const needsTranslation = targetLang !== 'en';
 
-    const prompt = isEnglish
-        ? `Summarize this news in 2-3 clear English sentences:\n\nTitle: ${title}\n\n${description}`
-        : `Summarize this news in 2-3 sentences AND translate the summary AND the title into ${langName}. 
-Return ONLY a JSON object with this format (no extra text):
-{"title":"translated title here","summary":"translated summary here"}
+    // Detect if title is already in the target language
+    // (Google News native feeds return content in that language already)
+    // We still summarize, but skip translation if already in target lang
+    const systemPrompt = needsTranslation
+        ? `You are a news summarizer and translator. The user wants news in ${langName}.
+           The input may already be in ${langName} or in English.
+           Always respond with ONLY valid JSON, no markdown, no extra text.`
+        : `You are a concise news summarizer. Respond with ONLY valid JSON, no markdown.`;
+
+    const userPrompt = needsTranslation
+        ? `Summarize in 2-3 sentences AND make sure both title and summary are in ${langName}.
+If the input is already in ${langName}, summarize it. If it's in English, translate and summarize.
+Return ONLY this JSON:
+{"title":"title in ${langName}","summary":"2-3 sentence summary in ${langName}"}
 
 Title: ${title}
-Content: ${description}`;
+Content: ${description.substring(0, 600)}`
+        : `Summarize in 2-3 clear sentences.
+Return ONLY this JSON:
+{"title":"${title.replace(/"/g,"'")}","summary":"your summary here"}
+
+Content: ${description.substring(0, 600)}`;
 
     try {
         const res = await fetch(GROQ_URL, {
@@ -437,46 +494,32 @@ Content: ${description}`;
             body: JSON.stringify({
                 model: 'llama-3.3-70b-versatile',
                 messages: [
-                    {
-                        role: 'system',
-                        content: isEnglish
-                            ? 'You are a concise news summarizer.'
-                            : `You are a news summarizer and translator. Always respond with valid JSON only.`
-                    },
-                    { role: 'user', content: prompt }
+                    { role: 'system', content: systemPrompt },
+                    { role: 'user',   content: userPrompt   }
                 ],
                 temperature: 0.3,
-                max_tokens: 300
+                max_tokens:  400
             }),
-            signal: AbortSignal.timeout(12000)
+            signal: AbortSignal.timeout(15000)
         });
 
         if (!res.ok) return null;
-        const data = await res.json();
+        const data    = await res.json();
         const content = data.choices?.[0]?.message?.content?.trim();
         if (!content) return null;
 
-        if (isEnglish) {
-            return { title: null, summary: content };
-        } else {
-            // Parse JSON response for translation
-            try {
-                // Extract JSON even if wrapped in markdown code block
-                const jsonMatch = content.match(/\{[\s\S]*\}/);
-                if (jsonMatch) {
-                    const parsed = JSON.parse(jsonMatch[0]);
-                    return {
-                        title:   parsed.title   || null,
-                        summary: parsed.summary || null
-                    };
-                }
-            } catch(e) {
-                // If JSON parse fails, use raw content as summary
-                return { title: null, summary: content };
-            }
+        // Extract JSON robustly
+        const match = content.match(/\{[\s\S]*?\}/);
+        if (match) {
+            const parsed = JSON.parse(match[0]);
+            return {
+                title:   (parsed.title   || '').trim() || null,
+                summary: (parsed.summary || '').trim() || null
+            };
         }
+        return null;
     } catch(e) {
-        console.warn('Groq failed:', e.message);
+        console.warn('Groq error:', e.message);
         return null;
     }
 }
@@ -492,6 +535,7 @@ let filteredItems   = [];
 let currentIndex    = 0;
 let isPlaying       = false;
 let deviceVoices    = [];
+let isFetching      = false;
 
 // ================================================================
 //  TTS
@@ -526,9 +570,9 @@ function populateVoiceSelect(langCode) {
         '🖥️ Device Voices':         []
     };
     voices.forEach(v => {
-        if (v.name.startsWith('Google')) groups['🎙️ Google Voices'].push(v);
-        else if (v.gender === '🔊')      groups['🖥️ Device Voices'].push(v);
-        else                             groups['🖥️ System / macOS Voices'].push(v);
+        if      (v.name.startsWith('Google')) groups['🎙️ Google Voices'].push(v);
+        else if (v.gender === '🔊')           groups['🖥️ Device Voices'].push(v);
+        else                                  groups['🖥️ System / macOS Voices'].push(v);
     });
 
     Object.entries(groups).forEach(([label, list]) => {
@@ -554,15 +598,15 @@ function resolveVoice(name) {
     if (!name) return null;
     return deviceVoices.find(v => v.name === name)
         || deviceVoices.find(v => v.name.toLowerCase().includes(
-               name.toLowerCase().replace('google ','').split(' ')[0]))
+               name.toLowerCase().replace('google ', '').split(' ')[0]))
         || null;
 }
 
 function speakItem(item) {
     const synth = window.speechSynthesis;
     synth.cancel();
-    const text = addPauses(item.displayTitle + '. ' + item.displaySummary);
-    const utt  = new SpeechSynthesisUtterance(text);
+    const text  = addPauses((item.displayTitle || '') + '. ' + (item.displaySummary || ''));
+    const utt   = new SpeechSynthesisUtterance(text);
     const vName = document.getElementById('voice-select')?.value || currentVoice;
     const voice = resolveVoice(vName);
     if (voice) { utt.voice = voice; utt.lang = voice.lang; }
@@ -581,27 +625,28 @@ function speakItem(item) {
 }
 
 function addPauses(text) {
-    return (text || '').replace(/\. /g,'., ').replace(/: /g,':, ')
-        .replace(/; /g,';, ').replace(/ - /g,', - ')
-        .replace(/\? /g,'?, ').replace(/! /g,'!, ');
+    return (text || '')
+        .replace(/\. /g, '., ').replace(/: /g,  ':, ')
+        .replace(/; /g,  ';, ').replace(/ - /g, ', - ')
+        .replace(/\? /g, '?, ').replace(/! /g,  '!, ');
 }
 
 // ================================================================
 //  HELPERS
 // ================================================================
+function decodeHtml(text) {
+    return (text || '')
+        .replace(/<[^>]*>/g, '')
+        .replace(/&nbsp;/g,' ').replace(/&amp;/g,'&')
+        .replace(/&lt;/g,'<').replace(/&gt;/g,'>')
+        .replace(/&#39;/g,"'").replace(/&quot;/g,'"')
+        .replace(/\s+/g,' ').trim();
+}
+
 function basicSummary(text) {
     if (!text || text.trim().length < 10) return 'Tap "Read full article" for details.';
     const s = text.split(/[.!?]+/).filter(x => x.trim().length > 20).slice(0, 2).join('. ').trim();
     return s ? s + '.' : text.substring(0, 180) + '...';
-}
-
-function decodeHtml(text) {
-    return (text || '')
-        .replace(/<[^>]*>/g, '')
-        .replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&')
-        .replace(/&lt;/g, '<').replace(/&gt;/g, '>')
-        .replace(/&#39;/g, "'").replace(/&quot;/g, '"')
-        .replace(/\s+/g, ' ').trim();
 }
 
 function getCustomFeeds() {
@@ -614,59 +659,103 @@ function getManualPosts() {
     catch { return []; }
 }
 
+function parseRSS(text, sourceHost) {
+    const xml   = new DOMParser().parseFromString(text, 'text/xml');
+    const items = [];
+    xml.querySelectorAll('item').forEach((el, i) => {
+        if (i >= 12) return;
+        const title = decodeHtml(el.querySelector('title')?.textContent || '');
+        const desc  = decodeHtml(el.querySelector('description')?.textContent || '');
+        const link  = (el.querySelector('link')?.textContent || '').trim();
+        if (!title || title.length < 4) return;
+        items.push({
+            title,
+            description:    desc,
+            link,
+            source:         sourceHost,
+            isManual:       false,
+            displayTitle:   title,   // shown to user (may be translated later)
+            displaySummary: basicSummary(desc),
+            summaryMode:    'basic'
+        });
+    });
+    return items;
+}
+
 // ================================================================
-//  FETCH NEWS
+//  FETCH NEWS — native lang feeds first, then fallback
 // ================================================================
 async function fetchNews() {
-    setStatus('⏳ Fetching...');
+    if (isFetching) return;
+    isFetching = true;
     stopPlay();
+    setStatus('⏳ Fetching news...');
 
-    const feedUrls = [
-        ...(FEEDS[currentCategory] || FEEDS['all']),
-        ...getCustomFeeds()
-    ];
+    const isNativeEn = currentLang === 'en';
+
+    // Build URL list:
+    // 1. Native language Google News (for this lang)
+    // 2. Category-specific feed (English, for category context)
+    // 3. Admin custom feeds
+    let urlsToTry = [];
+
+    if (currentCategory === 'all') {
+        urlsToTry = [...(LANG_FEEDS[currentLang] || LANG_FEEDS['en'])];
+    } else {
+        // For categories: use English category feed + native lang general feed
+        urlsToTry = [
+            CAT_FEEDS[currentCategory],
+            ...(LANG_FEEDS[currentLang] || [])
+        ].filter(Boolean);
+    }
+
+    // Add admin custom feeds
+    urlsToTry.push(...getCustomFeeds());
 
     let raw = [];
 
-    for (const url of feedUrls) {
+    for (const url of urlsToTry) {
         try {
+            setStatus(`⏳ Loading ${new URL(url).hostname}...`);
             const text = await fetchViaProxy(url);
-            if (!text) continue;
+            if (!text) { console.warn('No data from:', url); continue; }
 
-            const xml   = new DOMParser().parseFromString(text, 'text/xml');
-            const items = xml.querySelectorAll('item');
+            let host = 'News';
+            try { host = new URL(url).hostname.replace('www.', ''); } catch {}
 
-            items.forEach((item, i) => {
-                if (i >= 10) return;
-                const title = decodeHtml(item.querySelector('title')?.textContent || '');
-                const desc  = decodeHtml(item.querySelector('description')?.textContent || '');
-                const link  = (item.querySelector('link')?.textContent || '').trim();
-                if (!title || title.length < 5) return;
+            const parsed = parseRSS(text, host);
+            console.log(`✅ ${parsed.length} items from ${host}`);
+            raw.push(...parsed);
 
-                let source = 'News';
-                try { source = new URL(url).hostname.replace('www.', ''); } catch {}
+            // Stop early if we have enough native items
+            if (raw.length >= 20) break;
+        } catch(e) {
+            console.warn('Feed failed:', url, e.message);
+        }
+    }
 
-                raw.push({
-                    title, description: desc, link, source,
-                    isManual: false,
-                    // displayTitle and displaySummary = what user sees (may be translated)
-                    displayTitle:   title,
-                    displaySummary: basicSummary(desc),
-                    summaryMode: 'basic'
-                });
-            });
-        } catch(e) { console.warn('Feed error:', url, e.message); }
+    // If still nothing, try English fallback
+    if (raw.length === 0) {
+        console.warn('Native feeds failed, trying fallback...');
+        for (const url of FALLBACK_FEEDS) {
+            const text = await fetchViaProxy(url);
+            if (text) {
+                let host = 'News';
+                try { host = new URL(url).hostname.replace('www.', ''); } catch {}
+                raw.push(...parseRSS(text, host));
+                if (raw.length > 0) break;
+            }
+        }
     }
 
     if (raw.length === 0) {
-        setStatus('❌ Failed');
+        isFetching = false;
+        setStatus('❌ No news loaded');
         document.getElementById('feed').innerHTML = `
             <div class="card-wrapper"><div class="card">
-                <div class="card-header"><div class="badge">⚠️ ERROR</div></div>
+                <div class="card-header"><div class="badge">⚠️ CONNECTION</div></div>
                 <div class="headline">Could not load news</div>
-                <div class="body-text">
-                    All RSS proxies failed. Please check your connection and try again.
-                </div>
+                <div class="body-text">All RSS sources failed. Check your internet connection and try again.</div>
                 <div style="margin-top:20px;">
                     <button onclick="fetchNews()" style="padding:12px 28px;background:var(--primary);color:white;border:none;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;">🔄 Retry</button>
                 </div>
@@ -674,64 +763,78 @@ async function fetchNews() {
         return;
     }
 
-    // Deduplicate
+    // Deduplicate by title
     const seen = new Set();
     raw = raw.filter(item => {
         const key = item.title.toLowerCase().substring(0, 50);
         if (seen.has(key)) return false;
         seen.add(key); return true;
-    }).sort(() => Math.random() - 0.5).slice(0, 30);
+    });
 
-    // Show immediately with basic summaries
+    raw = raw.sort(() => Math.random() - 0.5).slice(0, 30);
+
+    // ── STEP 1: Show immediately with basic summaries ──────────
     allItems = raw;
     mergeManual();
     applyFilter();
-    setStatus(`📰 ${raw.length} articles — translating...`);
+    setStatus(`📰 ${raw.length} articles • AI processing...`);
 
-    // Now AI: summarize (English) OR summarize+translate (other languages)
-    let done = 0;
+    // ── STEP 2: Groq AI — summarize (EN) or translate+summarize ─
+    // Key fix: we update allItems[i] directly, then re-render
+    const needsTranslation = currentLang !== 'en';
+    let processed = 0;
+
     for (let i = 0; i < allItems.length; i++) {
         const item = allItems[i];
-        if (item.isManual) continue;
+        if (item.isManual || item.summaryMode === 'groq') continue;
 
-        const result = await groqSummarizeAndTranslate(
+        // For native non-English feeds, content is ALREADY in the lang
+        // Still summarize but tell Groq the language
+        const result = await groqProcess(
             item.title,
             item.description,
             currentLang
         );
 
         if (result) {
-            if (result.title)   item.displayTitle   = result.title;
-            if (result.summary) item.displaySummary = result.summary;
-            item.summaryMode = 'groq';
+            // Update the item IN PLACE in allItems array
+            if (result.title   && result.title.length   > 3) allItems[i].displayTitle   = result.title;
+            if (result.summary && result.summary.length > 5) allItems[i].displaySummary = result.summary;
+            allItems[i].summaryMode = 'groq';
         }
 
-        done++;
-        // Re-render every 5 items so user sees progress
-        if (done % 5 === 0) {
-            mergeManual();
-            applyFilter();
-            setStatus(`✨ Translating ${done}/${allItems.filter(x=>!x.isManual).length}...`);
+        processed++;
+
+        // Re-render every 3 items so user sees live updates
+        if (processed % 3 === 0) {
+            renderFeed(); // direct render, no applyFilter() which would reset
+            setStatus(`✨ AI: ${processed}/${allItems.filter(x => !x.isManual).length} done...`);
         }
     }
 
     // Final render
-    mergeManual();
-    applyFilter();
+    renderFeed();
 
-    // Cache
+    // Cache with language tag
     try {
-        localStorage.setItem('newsflow_cache', JSON.stringify(allItems));
-        localStorage.setItem('newsflow_cache_ts', Date.now().toString());
+        localStorage.setItem('newsflow_cache',      JSON.stringify(allItems));
+        localStorage.setItem('newsflow_cache_ts',   Date.now().toString());
         localStorage.setItem('newsflow_cache_lang', currentLang);
+        localStorage.setItem('newsflow_cache_cat',  currentCategory);
     } catch(e) {}
 
+    isFetching = false;
     setStatus(`✅ ${filteredItems.length} articles`);
 }
 
+// ================================================================
+//  MERGE MANUAL POSTS
+// ================================================================
 function mergeManual() {
     const manual = getManualPosts();
+    // Remove old manual items
     allItems = allItems.filter(i => !i.isManual);
+    // Add manual items at top
     manual.forEach(m => {
         allItems.unshift({
             title:          m.title || 'Untitled',
@@ -747,6 +850,9 @@ function mergeManual() {
     });
 }
 
+// ================================================================
+//  FILTER & RENDER
+// ================================================================
 function applyFilter() {
     filteredItems = currentCategory === 'all'
         ? [...allItems]
@@ -755,57 +861,95 @@ function applyFilter() {
     renderFeed();
 }
 
-// ================================================================
-//  RENDER
-// ================================================================
 function renderFeed() {
     const feed = document.getElementById('feed');
-    feed.innerHTML = '';
+    if (!feed) return;
+
+    // Rebuild filteredItems from allItems based on current filter
+    filteredItems = currentCategory === 'all'
+        ? [...allItems]
+        : allItems.filter(i => !i.isManual || i.category === currentCategory || i.category === 'all');
 
     if (!filteredItems.length) {
         feed.innerHTML = `<div class="card-wrapper"><div class="card">
-            <div class="headline">No articles yet</div>
-            <div class="body-text">Loading your news feed...</div>
+            <div class="headline">Loading articles...</div>
+            <div class="body-text">Please wait while we fetch your news.</div>
         </div></div>`;
         return;
     }
 
-    filteredItems.forEach(item => {
-        const isGroq   = item.summaryMode === 'groq';
-        const isManual = item.isManual;
-        const div      = document.createElement('div');
-        div.className  = 'card-wrapper';
-        div.innerHTML  = `
-            <div class="card">
-                <div class="card-header">
-                    <div class="${isManual ? 'manual-badge' : 'badge'}">
-                        ${isManual ? '📌 EDITOR\'S PICK' : LANG_NAMES[currentLang] || 'News'}
-                    </div>
-                    <div class="source-badge">📰 ${item.source}</div>
-                </div>
-                <div class="headline">${item.displayTitle}</div>
-                <div class="summary-section ${isGroq ? 'groq-section' : isManual ? '' : 'basic-section'}">
-                    <div class="summary-label ${isGroq ? 'groq' : ''}">
-                        ${isManual ? '📌 Admin Note'
-                          : isGroq && currentLang !== 'en' ? `⚡ AI Summary (${LANG_NAMES[currentLang]})`
-                          : isGroq ? '⚡ Groq AI Summary'
-                          : '📝 Quick Summary'}
-                    </div>
-                    <div class="body-text">${item.displaySummary}</div>
-                </div>
-                <div class="attribution">
-                    Source: <strong>${item.source}</strong>
-                    ${item.link ? ` &nbsp;·&nbsp; <a href="${item.link}" target="_blank" rel="noopener">Read full article ↗</a>` : ''}
-                </div>
-            </div>`;
-        feed.appendChild(div);
-    });
+    // Keep scroll position — only re-render changed cards
+    const prevCount = feed.querySelectorAll('.card-wrapper').length;
+    if (prevCount !== filteredItems.length) {
+        // Full re-render if count changed
+        feed.innerHTML = '';
+        filteredItems.forEach(item => feed.appendChild(buildCard(item)));
+    } else {
+        // Patch existing cards (update text only)
+        const cards = feed.querySelectorAll('.card-wrapper');
+        filteredItems.forEach((item, i) => {
+            const card = cards[i];
+            if (!card) return;
+            const hl  = card.querySelector('.headline');
+            const sum = card.querySelector('.body-text');
+            const lbl = card.querySelector('.summary-label');
+            if (hl  && hl.textContent  !== item.displayTitle)   hl.textContent  = item.displayTitle;
+            if (sum && sum.textContent !== item.displaySummary) sum.textContent = item.displaySummary;
+            if (lbl) {
+                lbl.className = 'summary-label' + (item.summaryMode === 'groq' ? ' groq' : '');
+                lbl.textContent = item.isManual       ? '📌 Admin Note'
+                    : item.summaryMode === 'groq' && currentLang !== 'en'
+                    ? `⚡ AI Summary (${LANG_NAMES[currentLang]})`
+                    : item.summaryMode === 'groq' ? '⚡ Groq AI Summary'
+                    : '📝 Quick Summary';
+            }
+            // Update summary section class
+            const ss = card.querySelector('.summary-section');
+            if (ss) {
+                ss.className = 'summary-section'
+                    + (item.summaryMode === 'groq'   ? ' groq-section'  : '')
+                    + (item.summaryMode === 'basic'  ? ' basic-section' : '');
+            }
+        });
+    }
 
     updateStatusDot();
 }
 
+function buildCard(item) {
+    const isGroq   = item.summaryMode === 'groq';
+    const isManual = item.isManual;
+    const div      = document.createElement('div');
+    div.className  = 'card-wrapper';
+    div.innerHTML  = `
+        <div class="card">
+            <div class="card-header">
+                <div class="${isManual ? 'manual-badge' : 'badge'}">
+                    ${isManual ? '📌 EDITOR\'S PICK' : LANG_NAMES[currentLang] || 'News'}
+                </div>
+                <div class="source-badge">📰 ${item.source}</div>
+            </div>
+            <div class="headline">${item.displayTitle}</div>
+            <div class="summary-section${isGroq ? ' groq-section' : isManual ? '' : ' basic-section'}">
+                <div class="summary-label${isGroq ? ' groq' : ''}">
+                    ${isManual ? '📌 Admin Note'
+                      : isGroq && currentLang !== 'en'
+                        ? `⚡ AI Summary (${LANG_NAMES[currentLang]})`
+                        : isGroq ? '⚡ Groq AI Summary'
+                        : '📝 Quick Summary'}
+                </div>
+                <div class="body-text">${item.displaySummary}</div>
+            </div>
+            <div class="attribution">
+                Source: <strong>${item.source}</strong>
+                ${item.link ? ` &nbsp;·&nbsp; <a href="${item.link}" target="_blank" rel="noopener">Read full article ↗</a>` : ''}
+            </div>
+        </div>`;
+    return div;
+}
+
 // ================================================================
-//  PLAYBACK
+//  PLAYBACK CONTROLS
 // ================================================================
 function goNext() {
     stopPlay();
@@ -814,7 +958,6 @@ function goNext() {
         scrollToIndex(currentIndex);
     }
 }
-
 function goPrev() {
     stopPlay();
     if (currentIndex > 0) {
@@ -822,13 +965,11 @@ function goPrev() {
         scrollToIndex(currentIndex);
     }
 }
-
 function scrollToIndex(idx) {
-    const cards = document.querySelectorAll('.card-wrapper');
-    if (cards[idx]) cards[idx].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    document.querySelectorAll('.card-wrapper')[idx]
+        ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     updateStatusDot();
 }
-
 function togglePlay() {
     if (isPlaying) { stopPlay(); return; }
     const item = filteredItems[currentIndex];
@@ -837,18 +978,15 @@ function togglePlay() {
     document.getElementById('play-btn').textContent = '⏸';
     speakItem(item);
 }
-
 function stopPlay() {
     isPlaying = false;
     window.speechSynthesis.cancel();
     document.getElementById('play-btn').textContent = '▶';
 }
-
 function setStatus(text) {
     const el = document.getElementById('status-text');
     if (el) el.textContent = text;
 }
-
 function updateStatusDot() {
     const dot  = document.getElementById('status-dot');
     const txt  = document.getElementById('status-text');
@@ -866,11 +1004,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
     document.getElementById('lang-select').value = currentLang;
 
+    // TTS voices
     if (window.speechSynthesis.onvoiceschanged !== undefined) {
-        window.speechSynthesis.onvoiceschanged = () => {
-            loadDeviceVoices();
-            populateVoiceSelect(currentLang);
-        };
+        window.speechSynthesis.onvoiceschanged = () => { loadDeviceVoices(); populateVoiceSelect(currentLang); };
     }
     loadDeviceVoices();
     populateVoiceSelect(currentLang);
@@ -882,7 +1018,7 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('theme', t);
     });
 
-    // Settings open/close
+    // Settings
     document.getElementById('settings-btn').addEventListener('click', () => {
         document.getElementById('lang-select').value = currentLang;
         populateVoiceSelect(currentLang);
@@ -896,29 +1032,29 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('settings-modal').classList.remove('open');
     });
 
-    // Language change → refresh voices instantly, no reload
+    // Language dropdown → refresh voice list instantly
     document.getElementById('lang-select').addEventListener('change', () => {
         currentLang = document.getElementById('lang-select').value;
         populateVoiceSelect(currentLang);
     });
 
-    // Voice change → instant
+    // Voice → instant apply
     document.getElementById('voice-select').addEventListener('change', () => {
         currentVoice = document.getElementById('voice-select').value;
         if (isPlaying) { stopPlay(); setTimeout(togglePlay, 150); }
     });
 
-    // Save preferences
+    // Save preferences → fetch fresh news in new language
     document.getElementById('save-prefs-btn').addEventListener('click', () => {
         const newLang  = document.getElementById('lang-select').value;
         const newVoice = document.getElementById('voice-select').value;
-        const changed  = newLang !== currentLang;
         currentLang  = newLang;
         currentVoice = newVoice;
         localStorage.setItem('selectedLang',  currentLang);
         localStorage.setItem('selectedVoice', currentVoice);
         document.getElementById('settings-modal').classList.remove('open');
-        // Always refetch so Groq translates into new language
+        // Always refetch so AI processes in new language
+        isFetching = false;
         fetchNews();
     });
 
@@ -929,6 +1065,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         currentCategory = btn.getAttribute('data-cat');
+        isFetching = false;
         fetchNews();
     });
 
@@ -937,7 +1074,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('next-btn').addEventListener('click', goNext);
     document.getElementById('prev-btn').addEventListener('click', goPrev);
 
-    // Scroll tracking
+    // Scroll → update index
     document.getElementById('feed').addEventListener('scroll', () => {
         const cards   = document.querySelectorAll('.card-wrapper');
         const feedTop = document.getElementById('feed').getBoundingClientRect().top;
@@ -949,19 +1086,21 @@ document.addEventListener('DOMContentLoaded', () => {
         if (closest !== currentIndex) { currentIndex = closest; updateStatusDot(); }
     });
 
-    // Load cache or fetch
+    // Load from cache if same lang+category, else fetch fresh
     try {
-        const ts       = parseInt(localStorage.getItem('newsflow_cache_ts') || '0');
+        const ts       = parseInt(localStorage.getItem('newsflow_cache_ts')   || '0');
+        const cacLang  = localStorage.getItem('newsflow_cache_lang')  || '';
+        const cacCat   = localStorage.getItem('newsflow_cache_cat')   || '';
         const fresh    = (Date.now() - ts) < 24 * 60 * 60 * 1000;
-        const sameLang = localStorage.getItem('newsflow_cache_lang') === currentLang;
+        const sameCtx  = cacLang === currentLang && cacCat === currentCategory;
         const cached   = localStorage.getItem('newsflow_cache');
-        if (fresh && sameLang && cached) {
+
+        if (fresh && sameCtx && cached) {
             allItems = JSON.parse(cached);
             mergeManual();
             applyFilter();
             setStatus('📦 Cached');
-            // background refresh
-            setTimeout(fetchNews, 3000);
+            setTimeout(fetchNews, 5000); // background refresh after 5s
         } else {
             fetchNews();
         }
@@ -969,6 +1108,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 </script>
+
 
 
 </body>
